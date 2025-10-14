@@ -1,0 +1,22 @@
+{
+  "name": "fleetcare-ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.14.1",
+    "axios": "^1.4.0",
+    "redux": "^4.2.1",
+    "react-redux": "^8.1.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.20",
+    "@vitejs/plugin-react": "^4.0.0"
+  }
+}
