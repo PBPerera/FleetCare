@@ -412,3 +412,140 @@
   .signup-form { max-height: 300px; }
   .gradient-btn { width: 180px; }
 }
+
+
+/* ForgotEmail page styles */
+.forgot-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  color: #0b1b2b;
+}
+
+/* Top blue header */
+.topbar {
+  height: 64px;
+  background: #4fb0ff;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.06);
+}
+
+.back-arrow {
+  font-size: 20px;
+  color: rgba(0,0,0,0.9);
+  text-decoration: none;
+  margin-right: 12px;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 4px;
+  background: white;
+  padding: 4px;
+}
+
+.brand-text {
+  font-weight: 700;
+  color: #071422;
+}
+
+/* Page main area */
+.forgot-main {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+}
+
+/* Card in the center */
+.forgot-card {
+  width: 540px;
+  max-width: calc(100% - 48px);
+  background: linear-gradient(180deg, #efefef, #e8e8e8);
+  border-radius: 14px;
+  padding: 36px 40px;
+  box-shadow:
+    0 6px 10px rgba(0,0,0,0.06),
+    8px 10px 18px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Title */
+.forgot-card h2 {
+  margin: 0 0 22px;
+  font-size: 22px;
+  color: #111;
+}
+
+/* Input field */
+.forgot-card .field {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.forgot-card input[type="email"] {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(75, 150, 220, 0.45);
+  background: white;
+  outline: none;
+  font-size: 14px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.forgot-card input[type="email"]:focus {
+  border-color: rgba(43,154,246,0.9);
+  box-shadow: 0 8px 20px rgba(43,154,246,0.06);
+}
+
+/* error */
+.form-error {
+  color: #b33;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+/* button row */
+.btn-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+.btn {
+  padding: 10px 22px;
+  border-radius: 18px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+}
+.gradient-btn {
+  background: linear-gradient(90deg,#5d2bff 0%,#5b7bff 40%, #56b5ff 100%);
+  box-shadow: 0 8px 20px rgba(61,35,255,0.12);
+  min-width: 240px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .forgot-card { padding: 24px; width: 92%; }
+  .brand-text { display: none; }
+  .brand-logo { margin-left: 6px; }
+  .gradient-btn { min-width: 200px; }
+}
