@@ -53,14 +53,7 @@ export default function Signup() {
 
   return (
     <div className="signup-root">
-      <div className="lc-topbar">
-        <div className="lc-brand">
-          <div className="lc-logo" />
-          <div className="lc-brand-text">FleetCare</div>
-        </div>
-        <div className="lc-user-circle" />
-      </div>
-
+      
       <main className="signup-main">
         <div className="signup-card-wrapper">
           <form className="signup-card" onSubmit={handleSubmit}>
