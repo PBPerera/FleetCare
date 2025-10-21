@@ -1,0 +1,67 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../services/api';
+
+export default function LoginScreen() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
+  const nav = useNavigate();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    const res = await login({ username, password });
+    setLoading(false);
+    if (res.ok) {
+      localStorage.setItem('user', JSON.stringify(res.user));
+      if (res.user.role === 'admin') nav('/admin');
+      else nav('/staff');
+    } else {
+      alert(res.message || 'Login failed');
+    }
+  }
+
+  return (
+    <div className="lc-page">
+      <header className="lc-topbar">
+        <div className="lc-brand"><div className="lc-logo">⚙️</div><div className="lc-brand-text">FleetCare</div></div>
+      </header>
+
+      <main className="lc-main">
+        <div className="lc-card">
+          <div className="lc-left">
+            <h1 className="lc-welcome">WELCOME !</h1>
+            <p className="lc-desc">
+              A monitoring Vehicle Management System built to simplify fleet operations.
+              We help organizations track vehicles, manage drivers and streamline requests efficiently.
+            </p>
+          </div>
+
+          <div className="lc-right">
+            <h2 className="lc-heading">Welcome back to FleetCare</h2>
+
+            <form className="lc-form" onSubmit={handleSubmit}>
+              <label className="lc-label">Username</label>
+              <input className="lc-input" value={username} onChange={e=>setUsername(e.target.value)} placeholder="Enter your Username" required />
+
+              <label className="lc-label">Password</label>
+              <div className="lc-pwd-row">
+                <input className="lc-input" type={showPwd ? 'text' : 'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Enter your password" required />
+                <button type="button" className="lc-eye" onClick={()=>setShowPwd(s=>!s)}>{showPwd ? '🙈' : '👁️'}</button>
+              </div>
+
+              <button className="lc-btn" type="submit" disabled={loading}>{loading ? 'Logging...' : 'Login'}</button>
+            </form>
+
+            <div className="lc-links">
+              <div>Don't have an account? <a href="/signup">Sign Up</a></div>
+              <div><a href="/forgot">Forgot Password</a></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

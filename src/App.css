@@ -1,0 +1,259 @@
+/* App.css - FleetCare styling for onboard/login/auth/dash */
+
+/* -------------------------
+   Reset / Base
+   ------------------------- */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif; background: #fff; color: #111; }
+
+/* -------------------------
+   Topbar / Header (global)
+   ------------------------- */
+.lc-topbar {
+  height: 66px;
+  background: linear-gradient(90deg,#4ac1ff 0%, #1e90ff 100%);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 0 22px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+}
+.lc-brand { display:flex; gap:12px; align-items:center; }
+.lc-logo {
+  width:34px;
+  height:34px;
+  border-radius:6px;
+  background-image: url("./assets/logo-small.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.lc-brand-text { font-weight:700; color:#07243a; font-size:18px; }
+.lc-user-circle {
+  width:36px; height:36px; border-radius:50%;
+  border:2px solid rgba(0,0,0,0.08); background:transparent;
+}
+
+/* -------------------------
+   Generic Buttons / helpers
+   ------------------------- */
+.lc-btn {
+  margin-top:8px;
+  padding:12px 18px;
+  border-radius:10px;
+  border:0;
+  cursor:pointer;
+  font-weight:700;
+  color:white;
+  background: linear-gradient(90deg, #5b00f7 0%, #4ac1ff 100%);
+  box-shadow: 0 6px 18px rgba(74,0,224,0.18);
+}
+.lc-btn:disabled { opacity:0.7; cursor:default; }
+
+.lc-btn-outline {
+  background:transparent;
+  color:#0b1620;
+  border:1px solid rgba(0,0,0,0.06);
+  box-shadow:none;
+  padding:10px 14px;
+  border-radius:8px;
+}
+
+.lc-btn-secondary {
+  background:#f0f0f2;
+  color:#222;
+  box-shadow:none;
+  border:1px solid rgba(0,0,0,0.04);
+}
+
+/* -------------------------
+   Login Card / Form
+   ------------------------- */
+.lc-main { padding:34px; display:flex; justify-content:center; align-items:flex-start; }
+.lc-card {
+  width:980px;
+  height:520px;
+  display:flex;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  border: 2px solid rgba(120,50,50,0.15);
+  box-shadow: 0 6px 18px rgba(16,24,40,0.08);
+}
+
+/* left gradient panel */
+.lc-left {
+  flex:1.05;
+  padding:44px;
+  background: linear-gradient(135deg, #6fc6ff 0%, #dff4ff 40%, #ffffff 100%);
+  display:flex; flex-direction:column; justify-content:center;
+}
+.lc-welcome { font-size:48px; font-weight:800; color:#071a39; margin:0 0 14px; letter-spacing:1px; }
+.lc-desc { max-width:480px; color:#0d2c4a; line-height:1.45; font-size:15px; margin:0 }
+
+/* right form panel */
+.lc-right {
+  flex:0.85;
+  padding:48px;
+  background: #e9e7e7;
+  display:flex; flex-direction:column; justify-content:flex-start;
+}
+.lc-heading { margin:0 0 18px; font-size:22px; font-weight:700; color:#0b1620; }
+
+/* form */
+.lc-form { display:flex; flex-direction:column; gap:12px; margin-top:8px; }
+.lc-label { font-size:12px; color:#8d8d92; margin-bottom:6px; }
+.lc-input {
+  padding:12px 14px; border-radius:8px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:#f7f7f8; font-size:14px; outline:none;
+}
+.lc-input:focus { box-shadow:0 2px 10px rgba(12,58,100,0.06); border-color:rgba(11,131,216,0.18); }
+
+/* password row */
+.lc-pwd-row { position:relative; display:flex; align-items:center; }
+.lc-pwd-row .lc-input { flex:1; padding-right:44px; }
+.lc-eye { position:absolute; right:8px; top:8px; height:36px; width:36px; border-radius:6px; border:0; background:transparent; cursor:pointer; font-size:16px; }
+
+/* links area */
+.lc-links { display:flex; justify-content:space-between; margin-top:18px; color:#8d8d92; font-size:13px; }
+.lc-links a { color:#2b6fb3; text-decoration:none }
+
+/* -------------------------
+   Small centered auth card (OTP/reset)
+   ------------------------- */
+.lc-centered-page { display:flex; align-items:center; justify-content:center; padding:80px 20px; }
+.lc-small-card {
+  width:480px; padding:28px; background:#f0f0f0; border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.12);
+  border:1px solid rgba(0,0,0,0.04); text-align:center;
+}
+.lc-small-card h3 { margin:0 0 8px; }
+.lc-otp { width:48px; height:48px; text-align:center; font-size:18px; border-radius:8px; border:1px solid #cfe7ff; }
+
+/* -------------------------
+   Dashboard layout
+   ------------------------- */
+.dash-root { display:flex; min-height:100vh; }
+.dash-side {
+  width:220px;
+  background:linear-gradient(180deg,#dff4ff,#fff);
+  display:flex; flex-direction:column; padding:12px;
+  border-right:1px solid rgba(0,0,0,0.05);
+}
+.dash-brand { font-weight:700; font-size:18px; padding:12px; }
+.dash-nav { display:flex; flex-direction:column; gap:8px; padding:8px 0; }
+.dash-item { background:transparent; border:0; text-align:left; padding:10px 12px; border-radius:6px; cursor:pointer; color:#0b1620; }
+.dash-item.active { background:#8fd3ff; color:#063247; box-shadow: inset 0 0 0 1px rgba(10,60,100,0.06); }
+.dash-main { flex:1; padding:20px 40px; }
+.dash-header { display:flex; justify-content:center; align-items:center; padding:18px 0; }
+.dash-org { background:linear-gradient(90deg,#dff4ff,#8fd3ff); padding:8px 24px; border-radius:8px; font-size:26px; font-weight:800; }
+.dash-grid { margin-top:24px; background:#eaf6ff; padding:28px; border-radius:12px; display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+.dash-card { background:linear-gradient(180deg,#e6f6ff,#8fd3ff); border-radius:8px; height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.08); }
+.dash-photo { width:80px; height:80px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:10px; }
+
+/* -------------------------
+   Signup page (card + button)
+   ------------------------- */
+.signup-root { min-height:100vh; background:#ffffff; font-family: "Segoe UI", Roboto, Arial; }
+.signup-main { padding: 28px; display:flex; flex-direction:column; align-items:center; }
+.signup-card-wrapper { width: 100%; max-width: 1100px; padding: 8px; }
+.signup-card {
+  background: #dedede;
+  border-radius: 14px;
+  padding: 36px 44px;
+  border: 1px solid rgba(128, 64, 64, 0.25);
+  box-shadow: 0 6px 0 rgba(0,0,0,0.06);
+  height: 520px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+.signup-title { text-align:center; font-size:26px; margin:0 0 18px 0; font-weight:700; color:#111; }
+.signup-field { margin-bottom:18px; display:flex; flex-direction:column; }
+.signup-field label { font-size:13px; color:#222; margin-bottom:8px; }
+.signup-field input { height:28px; padding:10px 12px; border-radius:14px; border:none; background:white; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03); }
+.lc-btn.big-center {
+  margin: 0 auto; padding: 12px 28px; border-radius: 12px; border:none; color:white; font-weight:700;
+  background: linear-gradient(90deg,#5a0bff 0%, #3aa6ff 100%); box-shadow: 0 8px 18px rgba(58,166,255,0.16); cursor:pointer; min-width:220px;
+}
+.lc-btn.big-center:disabled { opacity:0.6; cursor:not-allowed; }
+.signup-card::-webkit-scrollbar { width:14px; }
+.signup-card::-webkit-scrollbar-thumb { background: linear-gradient(#c7c7c7,#9e9e9e); border-radius:8px; border-left:4px solid rgba(0,0,0,0.02); }
+
+/* -------------------------
+   OnBoard page styles (single consolidated block)
+   ------------------------- */
+.onboard-root { min-height:100vh; background:#fff; color:#111; font-family: "Segoe UI", Roboto, Arial; }
+
+/* header/topbar specific adjustments */
+.onboard-topbar { display:flex; justify-content:space-between; align-items:center; padding:8px 22px; background:#5fb2ff; box-shadow:0 1px 0 rgba(0,0,0,0.06); height:66px; }
+.top-links a { margin-left:18px; color:#033049; text-decoration:none; font-weight:600; }
+
+/* hero */
+.onboard-main { display:flex; flex-direction:column; gap:32px; align-items:center; padding-bottom:48px; }
+.onboard-hero {
+  width:100%;
+  max-width:980px;
+  text-align:center;
+  padding:28px 18px 12px 18px;
+  background:linear-gradient(180deg,#fff,#eaf6ff);
+  border-radius:6px;
+  position:relative;
+  margin-top:18px;
+}
+.onboard-hero .onboard-hero-logo { width:72px; height:72px; margin:6px auto 8px; display:block; }
+.onboard-hero h1 { margin:6px 0; font-size:28px; line-height:1.05; font-weight:800; color:#06243a; }
+.onboard-sub { margin:12px 0 18px 0; color:#0a2436; font-weight:500; }
+
+/* call-to-action button */
+.onboard-login-btn .lc-btn { padding:10px 18px; border-radius:22px; background: linear-gradient(90deg,#5a0bff 0%, #3aa6ff 100%); color:#fff; border:0; font-weight:700; box-shadow:0 8px 18px rgba(58,166,255,0.16); cursor:pointer; }
+
+/* wave separator */
+.wave-sep { height:36px; width:100%; margin-top:14px; background: radial-gradient(circle at 50% 0%, rgba(74,193,255,0.25) 0%, rgba(74,193,255,0.06) 45%, transparent 46%); border-bottom-left-radius:50% 24px; border-bottom-right-radius:50% 24px; }
+
+/* image band and small feature cards */
+.image-band { width:100%; max-width:1200px; position:relative; }
+.hero-image {
+  height:240px;
+  background-image: url("./assets/hero.jpg");
+  background-size:cover; background-position:center;
+  border-radius:6px; filter:brightness(0.95);
+}
+.feature-cards { position:relative; display:flex; gap:18px; margin-top:-56px; justify-content:center; }
+.fcard { width:140px; height:120px; background:linear-gradient(180deg,#9ecfff,#6fc6ff); border-radius:8px; box-shadow:0 12px 26px rgba(10,60,100,0.1); opacity:0.98; }
+
+/* about */
+.about { width:100%; max-width:1200px; display:flex; gap:28px; padding:28px 16px; align-items:flex-start; }
+.about-left { flex:1; }
+.about-left h2 { font-size:22px; margin:8px 0 14px; }
+.about-left .about-small { color:#071a39; font-weight:700; }
+.about-lines .what { margin-bottom:12px; }
+.about-right { width:280px; display:flex; align-items:center; justify-content:center; }
+.car-visual {
+  width:220px; height:220px; border-radius:14px;
+  background-image: url("./assets/car.png");
+  background-size:contain; background-repeat:no-repeat; background-position:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.06);
+}
+
+/* contact and footer */
+.contact { width:100%; max-width:1100px; padding:24px 16px; }
+.contact-grid { display:flex; gap:18px; justify-content:space-between; align-items:stretch; }
+.contact-left { flex:1; }
+.contact-right { width:300px; }
+.contact-card { background:linear-gradient(180deg,#eaf6ff,#cfefff); padding:18px; border-radius:10px; }
+.contact-box { background:#d7ecff; padding:18px; border-radius:10px; }
+.site-footer { width:100%; max-width:1200px; display:flex; justify-content:space-between; padding:18px 16px; color:#666; font-size:13px; }
+
+/* -------------------------
+   Responsive
+   ------------------------- */
+@media (max-width:900px) {
+  .lc-card { width:92%; height:auto; flex-direction:column; }
+  .dash-grid { grid-template-columns:repeat(2,1fr); }
+  .about { flex-direction:column; }
+  .contact-grid { flex-direction:column; }
+  .feature-cards { margin-top:-40px; gap:12px; }
+  .fcard { width:110px; height:90px; }
+  .hero-image { height:160px; }
+}
