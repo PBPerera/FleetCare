@@ -1,40 +1,45 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// AdminDashboard.jsx
+import React from "react";
 
 export default function AdminDashboard() {
-  const nav = useNavigate();
-  function logout(){ localStorage.removeItem('user'); nav('/login'); }
-
   return (
-    <div className="dash-root">
-      <aside className="dash-side">
-        <div className="dash-brand">FleetCare</div>
-        <nav className="dash-nav">
-          <button className="dash-item active">Dashboard</button>
-          <button className="dash-item">User Management</button>
-          <button className="dash-item">Vehicle Management</button>
-          <button className="dash-item">Driver Management</button>
-          <button className="dash-item">Trip Scheduling</button>
-          <button className="dash-item">Trip Allocation</button>
-          <button className="dash-item">Maintenance</button>
-          <button className="dash-item">Reporting</button>
-          <button className="dash-item">Notifications</button>
-          <button className="dash-item">Audit Log</button>
+    <div className="page-container admin-dashboard">
+      <header className="page-header">
+        <div className="brand">FleetCare</div>
+        <div className="org">RDHS Kalutara</div>
+        <div className="avatar">👤</div>
+      </header>
+
+      <aside className="left-sidebar">
+        <nav className="sidebar-nav">
+          <ul>
+            <li className="active">Dashboard</li>
+            <li>User Management</li>
+            <li>Vehicle Management</li>
+            <li>Driver Management</li>
+            <li>Trip Scheduling</li>
+            <li>Maintenance Management</li>
+            <li>Reporting & Analytics</li>
+            <li>Notification Management</li>
+            <li>Audit Log</li>
+          </ul>
         </nav>
-        <div style={{marginTop:'auto', padding:12}}>
-          <button className="lc-btn lc-btn-secondary" onClick={logout}>Log out</button>
-        </div>
+        <div className="logout">⟲ Log out</div>
       </aside>
 
-      <main className="dash-main">
-        <header className="dash-header"><div className="dash-org">RDHS Kalutara</div></header>
+      <main className="main-content">
+        <h1 className="page-title">
+          RDHS
+          <br />
+          <span>Kalutara</span>
+        </h1>
 
-        <section className="dash-grid">
-          {[...Array(9)].map((_,i)=>(
-            <div key={i} className="dash-card">
-              <div className="dash-photo">Photo</div>
-              <div className="dash-text">Text</div>
-            </div>
+        <section className="cards-grid">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <article className="info-card" key={i}>
+              <div className="photo">Photo</div>
+              <div className="text">Text</div>
+            </article>
           ))}
         </section>
       </main>
