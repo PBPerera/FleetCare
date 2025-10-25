@@ -1,4 +1,3 @@
-// ...existing code...
 import React, { useState } from "react";
 
 export default function ForgotPassword({ onNext }) {
@@ -21,18 +20,17 @@ export default function ForgotPassword({ onNext }) {
           />
         </div>
 
-        {/* button on its own line */}
+        
         <div className="btn-row">
           <button
             className="gradient-btn"
             onClick={() => onNext(email)}
             aria-label="Send OTP"
           >
-            Send the OTP
+            Send The OTP
           </button>
         </div>
       </div>
     </div>
   );
 }
-// ...existing code...

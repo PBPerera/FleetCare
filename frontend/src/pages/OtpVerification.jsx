@@ -1,12 +1,11 @@
-// ...existing code...
 import React, { useState, useRef, useEffect } from "react";
 
-export default function OtpVerification({ email = "", onVerify, onBack }) {
+export default function OtpVerification({ email = "", onVerify }) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputsRef = useRef([]);
 
   useEffect(() => {
-    // focus first input when component mounts
+    
     inputsRef.current?.[0]?.focus();
   }, []);
 
@@ -52,6 +51,7 @@ export default function OtpVerification({ email = "", onVerify, onBack }) {
 
         <p className="forgot-instruction">
           We sent an OTP code to <b>{email || "your email"}</b>
+          <br></br><br></br>Enter 6 digit code that mentioned in the email
         </p>
 
         <div
@@ -78,24 +78,22 @@ export default function OtpVerification({ email = "", onVerify, onBack }) {
 
         <div className="btn-row">
           <button className="gradient-btn" onClick={submit} aria-label="Verify">
-            Verify Code
+            Verify OTP
           </button>
         </div>
 
         <div className="otp-meta" style={{ marginTop: 12, fontSize: 13 }}>
-          OTP expires in <b>03:00</b> &nbsp;•&nbsp;
+          OTP expires in <b>01:00</b> minutes
+          
+        </div>
+
+        <div style={{ marginTop: 14}}>
           <button
             className="link-btn"
             onClick={() => alert("Resend OTP (implement API call)")}
             aria-label="Resend OTP"
           >
-            Request New
-          </button>
-        </div>
-
-        <div style={{ marginTop: 14 }}>
-          <button className="link-btn" onClick={onBack} aria-label="Back">
-            Back
+            Resend New OTP
           </button>
         </div>
       </div>

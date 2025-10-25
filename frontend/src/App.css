@@ -108,24 +108,68 @@ body, html, .forgot-page {
 }
 
 /* ... keep the rest of your button/input CSS as before ... */
-.forgot-title { margin: 0 0 8px; font-size: 22px; }
-.forgot-instruction { margin: 0 0 12px; color: #003564; }
-.field { color: #48AAFF; width: 60%; margin-bottom: 12px; }
-.input-field { color: #48AAFF; width:100%; padding:10px; border-radius:8px; border:1px solid #1a62c7; }
-.btn-row { width: 100%;
+.forgot-title { margin: 0 0 8px; font-size: 35px; }
+/* Reset page helpers (align with Forgot/OTP design) */
+.forgot-instruction {
+  margin: 0 0 12px;
+  color: #375f82;
+  font-size: 14px;
+  text-align: center;
+}
+
+.reset-card .forgot-title {
+  margin-bottom: 70px; /* increase gap between title and inputs in ResetPassword only */
+}
+
+.reset-card {
+  gap: 8px;               
+  padding-top: 40px;      
+  min-height: unset;      
+}
+
+.reset-card .field {
+  margin-bottom: 8px;     
+}
+
+.reset-card .btn-row {
+  margin-top: 40px;   
+  margin-bottom: 15px;
+}
+
+.field {
+  width: 100%;
+  margin-bottom: 0px;
+  display: flex;;
+  justify-content: center;
+}
+
+.input-field {
+  width: 100%;
+  max-width: 360px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(75, 150, 220, 0.45);
+  background: white;
+  font-size: 14px;
+}
+
+.btn-row {
+  width: 100%;
   display: flex;
-  justify-content: center; }
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* keep gradient-btn style you already use for consistency */
 .gradient-btn {
   background: linear-gradient(90deg, #4400FF 0%, #4253FF 50%, #40A6FF 100%);
-  color: #ffffff;
-  box-shadow: 0 8px 20px rgba(66, 83, 255, 0.14);
-  min-width: 180px;
+  color: #fff;
   padding: 10px 22px;
   border-radius: 18px;
   border: none;
+  min-width: 220px;
   font-weight: 700;
   cursor: pointer;
-  transition: filter 120ms ease, transform 120ms ease;
 }
 
 .forgot-card-otp {
@@ -163,7 +207,7 @@ body, html, .forgot-page {
 /* placeholder color */
 .forgot-card .input-field::placeholder,
 .forgot-card input[type="email"]::placeholder {
-  color: rgba(72,170,255);
+  color: rgb(126, 145, 163);
   opacity: 1; /* ensure Firefox applies it */
 }
 
