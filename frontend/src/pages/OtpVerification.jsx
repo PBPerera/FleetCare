@@ -40,7 +40,7 @@ export default function OtpVerification({ email = "", onVerify }) {
 
   const submit = () => {
     const code = otp.join("");
-    if (code.length < 6) return; // you can show error if needed
+    if (code.length < 6) return; 
     onVerify && onVerify(code);
   };
 
@@ -100,4 +100,3 @@ export default function OtpVerification({ email = "", onVerify }) {
     </div>
   );
 }
-// ...existing code...

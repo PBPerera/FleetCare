@@ -1,4 +1,3 @@
-// ...existing code...
 import React, { useState } from "react";
 
 export default function ResetPassword({ onReset }) {
@@ -45,4 +44,3 @@ export default function ResetPassword({ onReset }) {
     </div>
   );
 }
-// ...existing code...
