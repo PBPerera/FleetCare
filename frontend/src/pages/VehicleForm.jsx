@@ -1,4 +1,3 @@
-// src/pages/VehicleForm.jsx
 import React, { useState } from "react";
 
 export default function VehicleForm({ onSubmit }) {
