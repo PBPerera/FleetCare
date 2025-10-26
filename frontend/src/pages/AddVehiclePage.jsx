@@ -1,11 +1,10 @@
-// src/pages/AddVehiclePage.jsx
 import React from "react";
 import VehicleForm from "./VehicleForm";
 
 export default function AddVehiclePage() {
   const handleVehicleSubmit = (data) => {
     console.log("Vehicle submitted:", data);
-    alert("✅ Vehicle added successfully!");
+    alert("Vehicle added successfully!");
   };
 
   return (

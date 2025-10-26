@@ -171,6 +171,7 @@ body, html, .forgot-page {
   border: none;
   min-width: 220px;
   font-weight: 700;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -374,6 +375,95 @@ label {
   }
 
   .form-title {
+    font-size: 24px;
+  }
+}
+
+.driver-form-container {
+  background: #D9D9D9;
+  padding: 50px 50px;
+  border-radius: 14px;
+  width: 900px;
+  margin: 100px auto 100px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dform-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 35px;
+  color: #000;
+}
+
+.driver-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 30px;
+}
+
+.input-field-d{
+  width: 92.6%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(75, 150, 220, 0.45);
+  background: white;
+  font-size: 14px;
+}
+
+.dform-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dform-row {
+  display: flex;
+  gap: 20px;
+}
+
+.dfull-width {
+  width: 100%;
+}
+
+label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0b1b2b;
+}
+
+.input-field-date {
+  width: 85%;
+  padding: 10px 14px;
+  border: 1px solid rgba(75, 150, 220, 0.45);
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  color: #958a8a;
+}
+
+.input-field-d:focus {
+  outline: none;
+  border-color: #2b8df6;
+  box-shadow: 0 0 4px rgba(43, 141, 246, 0.3);
+}
+
+
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .dform-row {
+    flex-direction: column;
+  }
+
+  .driver-form-container {
+    padding: 30px 25px;
+  }
+
+  .dform-title {
     font-size: 24px;
   }
 }
