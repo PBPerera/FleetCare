@@ -1,0 +1,95 @@
+.sidebar {
+  height: 100vh;
+  background: linear-gradient(to bottom, #a8d4ff, #e6f0ff);
+  width: 230px;
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #bcdcff;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.logo-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #003366;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.menu li {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #000;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 10px;
+  margin: 5px 10px;
+}
+
+.menu li:hover,
+.menu li.active {
+  background-color: #4c95ff;
+  color: #fff;
+}
+
+.menu li .icon {
+  font-size: 18px;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  cursor: pointer;
+  background-color: #cce3ff;
+  border-top: 1px solid #bcdcff;
+}
+
+.logout:hover {
+  background-color: #4c95ff;
+  color: white;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed span {
+  display: none;
+}
+
+.sidebar.collapsed .menu li,
+.sidebar.collapsed .logout {
+  justify-content: center;
+}
+
+.sidebar.collapsed .menu li .icon,
+.sidebar.collapsed .logout .icon {
+  margin: 0;
+}
