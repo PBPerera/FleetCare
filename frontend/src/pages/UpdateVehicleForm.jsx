@@ -35,7 +35,7 @@ export default function UpdateVehicleForm({ onSubmit }) {
             type="text"
             name="vehicleId"
             className="input-field-vehicleID"
-            value="Kamal Perera"
+            value="VH-12345"
             onChange={handleChange}
             required
           />
