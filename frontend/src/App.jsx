@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ForgotPasswordFlow from "./pages/ForgotPasswordFlow";
 import AddVehiclePage from "./pages/AddVehiclePage";
 import AddDriverPage from "./pages/AddDriverPage";
+import UpdateDriverPage from "./pages/UpdateDriverPage";
 import "./App.css";
 
 function App() {
@@ -15,6 +16,10 @@ function App() {
         <Route path="/add-vehicle" element={<AddVehiclePage />} />
 
         <Route path="/add-driver" element={<AddDriverPage />} />
+
+        <Route path="/update-driver" element={<UpdateDriverPage />} />
+
+
         
       </Routes>
     </Router>
