@@ -162,7 +162,7 @@ export default function Notification1() {
             <FaUserCircle className="logo-icon" />
           </div>
           <ul className="menu">
-            <li className="active"><MdDashboard /></li>
+            <li><MdDashboard /></li>
             <li><MdPeople /></li>
             <li><MdDirectionsCar /></li>
             <li><FaUserTie /></li>
@@ -170,7 +170,7 @@ export default function Notification1() {
             <li><FaClipboardList /></li>
             <li><FaTools /></li>
             <li><HiOutlineDocumentReport /></li>
-            <li><FaBell /></li>
+            <li className="active"><FaBell /></li>
             <li><RiUserSettingsLine /></li>
           </ul>
           <div className="logout"><FaSignOutAlt /></div>
