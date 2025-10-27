@@ -3,8 +3,6 @@
 body, html, .forgot-page {
   font-family: 'Roboto', Arial, Helvetica, sans-serif;
 }
-
-
 .topbar {
   height: 70px;
   width: 100%;
@@ -67,7 +65,6 @@ body, html, .forgot-page {
 .topbar-right {
   min-width: 40px;
 }
-
 
 .forgot-page {
   min-height: 100vh;
