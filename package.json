@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/PBPerera/FleetCare/issues"
   },
-  "homepage": "https://github.com/PBPerera/FleetCare#readme"
+  "homepage": "https://github.com/PBPerera/FleetCare#readme",
+  "dependencies": {
+    "react-icons": "^5.5.0"
+  }
 }
