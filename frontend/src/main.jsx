@@ -2,7 +2,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import App from './pages/NotificationCenter.jsx'
+import App from './pages/NotificationStaff.jsx'
 import "./App.css";
 
 createRoot(document.getElementById('root')).render(
