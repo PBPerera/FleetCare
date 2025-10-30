@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './Table.css'
+
 
 const TableRow = ({ row, columns, isSelected, onSelect, onAction, showCheckbox, editable = false, onEdit }) => {
   // Check if this is a new empty row (no maintenanceId or vehicleId means it's new)
