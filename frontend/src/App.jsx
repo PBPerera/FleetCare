@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import ForgotPasswordFlow from "./pages/ForgotPasswordFlow";
 import MaintenanceManagement from './pages/MaintenanceManagement';
 import RepairApprove from './pages/RepairApprove';
+import AuditLog from './pages/AuditLog';
 import { MaintenanceProvider } from './context/MaintenanceContext';
 import "./App.css";
 
@@ -17,6 +18,7 @@ function App() {
       <Route path="/" element={<MaintenanceManagement />} />
       <Route path="/maintenance" element={<MaintenanceManagement />} />
       <Route path="/repairs/approve" element={<RepairApprove />} />
+      <Route path="/audit-log" element={<AuditLog />} />
      
     </Routes>
   </MaintenanceProvider>
