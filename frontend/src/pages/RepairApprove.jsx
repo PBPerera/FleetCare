@@ -5,7 +5,7 @@ import Table from '../components/DataTable/Table.jsx'
 import Button from '../components/Buttons/Button.jsx'
 import ExportPdfBtn from '../components/ExportPdfBtn.jsx'
 import { MaintenanceContext } from '../context/MaintenanceContext.jsx'
-import './Pages.css'
+
 
 function RepairApprove() {
   const { state, setFilters, updateRepair, addRepair } = useContext(MaintenanceContext)

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import TableRow from './TableRow.jsx'
-import './Table.css'
+
 
 const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false, onEdit }) => {
   const [selectedRows, setSelectedRows] = useState([])
