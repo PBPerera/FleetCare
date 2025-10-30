@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./AdminDashboard.css";
+//import "./pages/AdminDashboard.css";
 
 import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
 import { MdDashboard, MdPeople, MdDirectionsCar, MdSchedule, MdInfoOutline } from "react-icons/md";
@@ -7,7 +7,7 @@ import { FaUserTie, FaBell, FaTools, FaClipboardList } from "react-icons/fa";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { RiUserSettingsLine } from "react-icons/ri";
 
-export default function FleetCareDashboard() {
+export default function FleetCareDashboard1() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleUserClick = () => {
@@ -20,12 +20,12 @@ export default function FleetCareDashboard() {
       <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
         
         {/* Sidebar */}
-        <aside className="sidebar">
-          <div className="logo-section">
-            <FaUserCircle className="logo-icon" />
+        <aside className="sidebar1">
+          <div className="logo-section1">
+            <FaUserCircle className="logo-icon1" />
             <h3>FleetCare</h3>
           </div>
-          <ul className="menu">
+          <ul className="menu1">
             <li className="active"><MdDashboard /> Dashboard</li>
             <li><MdPeople /> User Management</li>
             <li><MdDirectionsCar /> Vehicle Management</li>
@@ -34,7 +34,10 @@ export default function FleetCareDashboard() {
             <li><FaClipboardList /> Trip Allocation</li>
             <li><FaTools /> Maintainance Management</li>
             <li><HiOutlineDocumentReport /> Reporting And Analytics</li>
-            <li><FaBell /> Notification Management</li>
+            <li onClick={() => navigate("/notifications")} style={{ cursor: "pointer" }}>
+              <FaBell /> Notification Management
+            </li>
+
             <li><RiUserSettingsLine /> Audit log</li>
           </ul>
           <div className="logout">
@@ -68,7 +71,7 @@ export default function FleetCareDashboard() {
         </main>
       </div>
 
-      {/* User Menu (visible even when blurred) */}
+      
       {isMenuOpen && (
         <div className="user-menu">
           <div className="menu-item"><FaUserCircle /> View Profile</div>

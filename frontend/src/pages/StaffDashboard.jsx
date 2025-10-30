@@ -19,16 +19,16 @@ export default function StaffDashboard() {
     <div className="app-wrapper">
       <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
         {/* Sidebar */}
-        <aside className="sidebar">
-          <div className="logo-section">
+        <aside className="sidebar1">
+          <div className="logo-section1">
            <img
           src={Logo}
           alt="logo"
-          className="logo-icon"
+          className="logo-icon1"
         />
             <h3>FleetCare</h3>
           </div>
-          <ul className="menu">
+          <ul className="menu1">
             <li className="active"><MdDashboard /> Dashboard</li>
             <li><MdDirectionsCar /> Vehicle Request</li>
             <li><MdAssignment /> My Requests</li>

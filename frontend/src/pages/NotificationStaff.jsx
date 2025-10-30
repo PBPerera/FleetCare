@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./NotificationStaff.css";
+//import "./NotificationStaff.css";
 import {
   FaUserCircle,
   FaSignOutAlt,
@@ -20,7 +20,7 @@ import {
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { RiUserSettingsLine } from "react-icons/ri";
 
-export default function FleetCareDashboard() {
+export default function NotificationStaff() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState([
     {

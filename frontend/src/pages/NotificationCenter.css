@@ -183,7 +183,7 @@ input[type="text"] {
   width: 90%;
 }
 
-/* Popup */
+
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -221,7 +221,7 @@ input[type="text"] {
   cursor: pointer;
 }
 
-/* User menu */
+
 .user-menu {
   position: absolute;
   top: 60px;

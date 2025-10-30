@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import "./NotificationM.css";
+//import "./NotificationM.css";
 import {
   FaUserCircle,
   FaSignOutAlt,
@@ -20,13 +20,13 @@ import {
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { RiUserSettingsLine } from "react-icons/ri";
 
-export default function Notification1() {
+export default function NotificationManagement() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleUserClick = () => setIsMenuOpen(!isMenuOpen);
 
-  // Data for all tables
+ 
   const tableData = [
-    // 1️⃣ Trip Schedule
+    
     {
       title: "Trip Schedule",
       searchPlaceholder: "Search Vehicle ID",
@@ -66,7 +66,7 @@ export default function Notification1() {
       ],
     },
 
-    // 2️⃣ Maintenance Alert for Services
+    
     {
       title: "Maintenance Alert for Services",
       searchPlaceholder: "Search Vehicle ID",
@@ -102,7 +102,7 @@ export default function Notification1() {
       ],
     },
 
-    // 3️⃣ Expired Vehicles Insurance
+    
     {
       title: "Expired Vehicles Insurance",
       searchPlaceholder: "Search Vehicle ID",
@@ -124,7 +124,7 @@ export default function Notification1() {
       ],
     },
 
-    // 4️⃣ Expired Driver License
+    
     {
       title: "Expired Driver License",
       searchPlaceholder: "Search Driver Name",

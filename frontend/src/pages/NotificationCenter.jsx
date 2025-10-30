@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./NotificationCenter.css";
+//import "./NotificationCenter.css";
 import {
   FaUserCircle, FaSignOutAlt, FaPhoneAlt, FaUserTie, FaBell, FaTools, FaClipboardList
 } from "react-icons/fa";
@@ -9,7 +9,7 @@ import {
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { RiUserSettingsLine } from "react-icons/ri";
 
-export default function NotificationC() {
+export default function NotificationCenter() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
