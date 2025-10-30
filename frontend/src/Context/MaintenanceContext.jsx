@@ -45,18 +45,41 @@ const reducer = (state, action) => {
       }
 
     case 'UPDATE_SERVICE':
+      // Auto-complete service when completeDate is added
+      const updatedServiceData = action.payload.data
+      const hasCompleteDate = updatedServiceData.completeDate && updatedServiceData.completeDate.trim() !== ''
+      
       return {
         ...state,
         services: state.services.map(s =>
-          s.id === action.payload.id ? { ...s, ...action.payload.data } : s
+          s.id === action.payload.id 
+            ? { 
+                ...s, 
+                ...updatedServiceData,
+                status: hasCompleteDate ? 'Completed' : (s.status || 'Pending')
+              } 
+            : s
         ),
       }
 
     case 'UPDATE_REPAIR':
+      // Auto-complete repair when completeDate is added (and status is Approved)
+      const updatedRepairData = action.payload.data
+      const hasRepairCompleteDate = updatedRepairData.completeDate && updatedRepairData.completeDate.trim() !== ''
+      
       return {
         ...state,
         repairs: state.repairs.map(r =>
-          r.id === action.payload.id ? { ...r, ...action.payload.data } : r
+          r.id === action.payload.id 
+            ? { 
+                ...r, 
+                ...updatedRepairData,
+                // Only mark as Completed if it has completeDate AND is Approved
+                status: hasRepairCompleteDate && (r.status === 'Approved' || updatedRepairData.status === 'Approved')
+                  ? 'Completed' 
+                  : (updatedRepairData.status || r.status || 'Pending')
+              } 
+            : r
         ),
       }
 
