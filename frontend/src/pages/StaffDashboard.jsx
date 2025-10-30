@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
-import "./AdminDashboard.css";
+//import "./AdminDashboard.css";
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
 import { MdDashboard, MdPeople, MdDirectionsCar, MdSchedule, MdInfoOutline, MdReport, MdNotifications,MdAssignment } from "react-icons/md";
 import { FaUserTie, FaBell, FaTools, FaClipboardList } from "react-icons/fa";
@@ -14,6 +15,9 @@ export default function StaffDashboard() {
   const handleUserClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const navigate = useNavigate();
+    const location = useLocation();
 
   return (
     <div className="app-wrapper">
@@ -29,13 +33,20 @@ export default function StaffDashboard() {
             <h3>FleetCare</h3>
           </div>
           <ul className="menu1">
-            <li className="active"><MdDashboard /> Dashboard</li>
+            <li className={location.pathname === "/StaffDashboard" ? "active" : ""} 
+                          onClick={() => navigate("/StaffDashboard")}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <MdDashboard /> Dashboard
+                        </li>
             <li><MdDirectionsCar /> Vehicle Request</li>
             <li><MdAssignment /> My Requests</li>
             <li><MdDirectionsCar /> Vehicle Details</li>
             <li><FaUserTie /> Driver Details</li>
             <li><RiUserSettingsLine /> Search and Reports</li>
-            <li><MdNotifications /> Notifications</li>
+            <li onClick={() => navigate("/NotificationStaff")} style={{ cursor: "pointer" }}>
+                          <MdNotifications /> Notifications
+                        </li>
             
           </ul>
           <div className="logout">

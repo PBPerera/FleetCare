@@ -1,27 +1,16 @@
 import React, { useState } from "react";
 //import "./NotificationStaff.css";
-import {
-  FaUserCircle,
-  FaSignOutAlt,
-  FaPhoneAlt,
-  FaBell,
-  FaTools,
-  FaClipboardList,
-  FaUserTie,
-} from "react-icons/fa";
-import {
-  MdDashboard,
-  MdPeople,
-  MdDirectionsCar,
-  MdSchedule,
-  MdInfoOutline,
-  MdNotifications
-} from "react-icons/md";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
+import { MdDashboard, MdPeople, MdDirectionsCar, MdSchedule, MdInfoOutline, MdReport, MdNotifications,MdAssignment } from "react-icons/md";
+import { FaUserTie, FaBell, FaTools, FaClipboardList } from "react-icons/fa";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { RiUserSettingsLine } from "react-icons/ri";
 
 export default function NotificationStaff() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+      const location = useLocation();
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -58,16 +47,24 @@ export default function NotificationStaff() {
             <FaUserCircle className="logo-icon" />
           </div>
           <ul className="menu">
-            <li className="active"><MdDashboard /></li>
-            <li><MdPeople /></li>
+            <li onClick={() => navigate("/StaffDashboard")} style={{ cursor: "pointer" }}>
+                                      <MdDashboard /> 
+                                    </li>
+            
+            <li><MdDirectionsCar /></li>
+            <li><MdAssignment /></li>
             <li><MdDirectionsCar /></li>
             <li><FaUserTie /></li>
-            <li><MdSchedule /></li>
-            <li><FaClipboardList /></li>
-            <li><FaTools /></li>
-            <li><HiOutlineDocumentReport /></li>
-            <li><FaBell /></li>
             <li><RiUserSettingsLine /></li>
+            <li 
+              className={location.pathname === "/NotificationStaff" ? "active" : ""} 
+              onClick={() => navigate("/NotificationStaff")}
+              style={{ cursor: "pointer" }}
+            >
+              <MdNotifications /> 
+            </li>
+            
+            
           </ul>
           <div className="logout">
             <FaSignOutAlt />
