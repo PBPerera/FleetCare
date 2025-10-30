@@ -250,3 +250,271 @@ body, html, .forgot-page {
 
 
 .otp-meta { color: #375f82; }
+
+
+
+
+
+
+
+
+
+
+
+
+/* Global */
+:root{
+  --card-bg:#e3e3e3;
+  --panel-stroke:#744b4b;
+  --radius:16px;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{margin:0;font-family:Inter, system-ui, Arial, sans-serif;background:#ffffff;color:#111}
+
+/* Top bar */
+.fc-topbar{
+  height:64px;
+  background:linear-gradient(180deg,#51aaff,#4bacff);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+}
+.fc-brand{display:flex;align-items:center;gap:10px;font-weight:600}
+.fc-logo{font-size:22px}
+.fc-title{font-size:20px}
+.fc-avatar{width:36px;height:36px;border-radius:999px;border:1px solid #0d2742;display:flex;align-items:center;justify-content:center;opacity:.8}
+
+/* Shell */
+.fc-shell{min-height:100vh;display:flex;flex-direction:column}
+.fc-main{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
+
+/* Card */
+.fc-card{
+  width:min(1100px,94vw);
+  min-height:520px;
+  background:var(--card-bg);
+  border:2px solid var(--panel-stroke);
+  border-radius:20px;
+  box-shadow:0 10px 18px rgba(0,0,0,.18);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  overflow:hidden;
+}
+.fc-pane{padding:38px}
+.fc-pane-left{
+  background:linear-gradient(135deg,#bfe0ff 0%, #f7fbff 55%, #ffffff 100%);
+  display:flex;flex-direction:column;justify-content:center;
+  border-right:1px solid rgba(0,0,0,.06);
+}
+.fc-welcome{font-size:56px;margin:0 0 12px 0;letter-spacing:2px}
+.fc-lead{max-width:540px;font-size:18px;line-height:1.5}
+
+/* Right pane form */
+.fc-pane-right{
+  background:#d7d7d7;
+  display:flex;align-items:center;justify-content:center;
+}
+.fc-form-wrap{width:min(520px,90%);}
+.fc-form-title{margin:0 0 18px 0;font-size:28px;font-weight:700}
+.fc-label{display:block;margin-top:12px;margin-bottom:6px;font-size:14px;color:#333}
+.fc-input{
+  width:100%;padding:12px 14px;border-radius:10px;
+  border:1px solid #cfcfcf; background:#efefef; outline:none;
+}
+.fc-input:focus{border-color:#8aa9ff;box-shadow:0 0 0 3px rgba(80,120,255,.15)}
+
+.fc-passwrap{position:relative}
+.fc-eye{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:transparent;border:none;cursor:pointer;opacity:.7;font-size:14px;
+}
+
+/* Gradient button */
+.fc-btn-grad{
+  margin-top:22px;
+  width:100%;
+  padding:12px 16px;
+  border:none;border-radius:12px;cursor:pointer;
+  background:linear-gradient(90deg,#3b22ff 0%, #5ac9ff 100%);
+  color:#fff;font-weight:700;font-size:16px;
+  box-shadow:0 6px 12px rgba(59,34,255,.2);
+}
+.fc-btn-grad:active{transform:translateY(1px)}
+
+/* Footer links */
+.fc-links{
+  margin-top:14px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:14px;
+}
+.fc-link{color:#446bff;text-decoration:none}
+.fc-link:hover{text-decoration:underline}
+
+/* Responsive */
+@media (max-width: 900px){
+  .fc-card{grid-template-columns:1fr}
+  .fc-pane-left{display:none}
+}
+
+
+/* ----- FleetCare Login Screen Styles ----- */
+:root { --fc-blue:#4aa6ff; --fc-gradient1:#4a68ff; --fc-gradient2:#56c0ff; --fc-border:#6f3d3d33; }
+
+.fc-wrap { min-height:100vh; background:#f5f7fb; }
+.fc-appbar { background: var(--fc-blue); height:64px; display:flex; align-items:center; }
+.fc-appbar-inner { max-width:1200px; margin:0 auto; padding:0 20px; width:100%; display:flex; justify-content:space-between; align-items:center; }
+.fc-brand { display:flex; align-items:center; gap:8px; font-weight:700; color:#0b1c2b; }
+.fc-logo { width:28px; height:28px; display:grid; place-items:center; background:white; border-radius:8px; }
+.fc-avatar { width:34px; height:34px; border-radius:999px; border:2px solid #0b1c2b; background:transparent; }
+
+.fc-center { display:grid; place-items:center; padding:40px 16px; }
+.fc-card {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  max-width:1000px;
+  width:100%;
+  min-height:520px;
+  border:1px solid #5b222224;
+  border-radius:16px;
+  background:#ddd; /* right side seen as gray in screenshot */
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+  overflow:hidden;
+}
+
+/* Left panel gradient */
+.fc-card-left{
+  background: linear-gradient(180deg, #bfe0ff, #ffffff);
+  padding:48px 36px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:16px;
+}
+.fc-welcome-title{ font-size:54px; letter-spacing:2px; margin:0; font-weight:800; }
+.fc-welcome-text{ max-width:440px; line-height:1.5; font-size:18px; }
+
+/* Right panel form */
+.fc-card-right{ background:#d8d8d8; padding:48px 40px; position:relative; border-left:1px solid rgba(120,61,61,.35); }
+.fc-login-title{ margin:0 0 24px; font-size:28px; font-weight:800; color:#222; }
+.fc-form{ display:flex; flex-direction:column; gap:10px; max-width:460px; }
+.fc-label{ font-size:14px; color:#333; }
+.fc-input{ width:100%; padding:12px 14px; border-radius:10px; border:1px solid #d1d1d1; outline:none; background:#efefef; }
+.fc-input:focus{ border-color:#b0b0b0; }
+
+.fc-input-pwd{ position:relative; }
+.fc-input-pwd .fc-input{ padding-right:40px; }
+.fc-eye{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  border:none; background:transparent; cursor:pointer; font-size:18px;
+}
+
+.fc-btn-primary{
+  margin-top:16px;
+  padding:12px 16px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:700;
+  color:white;
+  background: linear-gradient(90deg, var(--fc-gradient1), var(--fc-gradient2));
+}
+
+.fc-links{
+  margin-top:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  font-size:14px;
+}
+.fc-link{ color:#6177ff; text-decoration:none; }
+.fc-link:hover{ text-decoration:underline; }
+
+/* Responsive */
+@media (max-width: 900px){
+  .fc-card{ grid-template-columns: 1fr; }
+  .fc-card-left{ min-height:220px; }
+}
+
+
+
+/* Signup card styling to match screenshot */
+.signup-card{
+  max-width:1000px;
+  width:100%;
+  background:#ddd;
+  border-radius:16px;
+  padding:28px;
+  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+  border:1px solid rgba(110,40,40,.25);
+}
+.signup-inner{ padding:10px 30px; background:transparent; border-radius:12px; }
+.signup-title{ text-align:center; font-size:28px; margin:8px 0 18px; font-weight:800; }
+.signup-form{ display:flex; flex-direction:column; gap:12px; max-width:880px; margin:0 auto; }
+.signup-form label{ font-size:14px; color:#222; }
+.fc-input{ padding:12px 14px; border-radius:12px; border:1px solid #e6e6e6; background:#fff; }
+.signup-card { min-height:360px; max-height:420px; overflow:auto; padding-right:20px; }
+/* scrollbar styling */
+.signup-card::-webkit-scrollbar{ width:12px; }
+.signup-card::-webkit-scrollbar-thumb{ background:#bfbfbf; border-radius:10px; border:3px solid rgba(0,0,0,0); background-clip:padding-box; }
+
+/* center layout tweaks */
+.fc-center{ padding:40px 16px; display:flex; justify-content:center; align-items:flex-start; }
+/* ensure primary button style present */
+.fc-btn-primary{ padding:12px 24px; border-radius:12px; background: linear-gradient(90deg, var(--fc-gradient1), var(--fc-gradient2)); color:white; border:none; font-weight:700; cursor:pointer; }
+
+@media (max-width:900px){
+  .signup-card{ width:92%; padding:20px; min-height:300px; }
+}
+
+
+
+/* Signup page exact styling */
+.signup-large-card{
+  width:100%;
+  height: 200%;
+  background:transparent;
+  border-radius:14px;
+  padding:10px;
+  box-sizing:border-box;
+  border:2px solid rgba(107,36,36,0.5);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.06);
+}
+
+.signup-card-inner {
+  background:#dcdcdc;
+  border-radius:10px;
+  padding:40px 40px;       /* adds more inside spacing */
+  box-sizing:border-box;
+  max-height:500px;        /* increased from 360px */
+  min-height:420px;        /* added to ensure taller card */
+  overflow:auto;
+}
+
+
+/* Scrollbar track and thumb styling */
+.signup-card-inner::-webkit-scrollbar{ width:14px; }
+.signup-card-inner::-webkit-scrollbar-track{ background: transparent; padding:2px; }
+.signup-card-inner::-webkit-scrollbar-thumb{ background: #bfbfbf; border-radius:10px; border:3px solid rgba(0,0,0,0); background-clip:padding-box; }
+
+.signup-title{ text-align:center; font-size:26px; margin:4px 0 18px; font-weight:800; }
+
+.signup-form-scroll{ display:flex; flex-direction:column; gap:18px; padding-bottom:8px; }
+
+.form-row label{ display:block; margin-bottom:8px; font-size:14px; color:#222; }
+.fc-input{ width:100%; padding:10px 14px; border-radius:12px; border:none; background:white; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03); }
+
+.fc-btn-primary{ padding:12px 28px; border-radius:12px; background: linear-gradient(90deg, #5a19ff, #4fb8ff); color:white; border:none; font-weight:700; cursor:pointer; font-size:16px; }
+
+/* center button container */
+@media (min-width: 900px){
+  .signup-large-card{ max-width:1000px; }
+  .signup-card-inner{ min-height:320px; }
+}
+
+/* small screens */
+@media (max-width:900px){
+  .signup-card-inner{ max-height:420px; }
+  .signup-large-card{ border-radius:10px; }
+}
