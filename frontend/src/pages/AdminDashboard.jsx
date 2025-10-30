@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 //import "./pages/AdminDashboard.css";
 
+import { useNavigate, useLocation } from "react-router-dom";
 import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
 import { MdDashboard, MdPeople, MdDirectionsCar, MdSchedule, MdInfoOutline } from "react-icons/md";
 import { FaUserTie, FaBell, FaTools, FaClipboardList } from "react-icons/fa";
@@ -13,6 +14,8 @@ export default function FleetCareDashboard1() {
   const handleUserClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="app-wrapper">
@@ -26,7 +29,13 @@ export default function FleetCareDashboard1() {
             <h3>FleetCare</h3>
           </div>
           <ul className="menu1">
-            <li className="active"><MdDashboard /> Dashboard</li>
+            <li 
+              className={location.pathname === "/FleetCareDashboard1" ? "active" : ""} 
+              onClick={() => navigate("/FleetCareDashboard1")}
+              style={{ cursor: "pointer" }}
+            >
+              <MdDashboard /> Dashboard
+            </li>
             <li><MdPeople /> User Management</li>
             <li><MdDirectionsCar /> Vehicle Management</li>
             <li><FaUserTie /> Driver Management</li>
@@ -34,7 +43,7 @@ export default function FleetCareDashboard1() {
             <li><FaClipboardList /> Trip Allocation</li>
             <li><FaTools /> Maintainance Management</li>
             <li><HiOutlineDocumentReport /> Reporting And Analytics</li>
-            <li onClick={() => navigate("/notifications")} style={{ cursor: "pointer" }}>
+            <li onClick={() => navigate("/notificationManagement")} style={{ cursor: "pointer" }}>
               <FaBell /> Notification Management
             </li>
 
@@ -44,6 +53,7 @@ export default function FleetCareDashboard1() {
             <FaSignOutAlt /> Log out
           </div>
         </aside>
+        
 
         {/* Main Area */}
         <main className="main-content">

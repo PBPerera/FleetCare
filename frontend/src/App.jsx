@@ -11,7 +11,7 @@ import NotificationStaff from "./pages/NotificationStaff";
 import Home from "./pages/Home";
 
 function App() {
-  return (
+  return (   
     <Routes>
       <Route path="/" element={<Home />} />
       
@@ -21,10 +21,10 @@ function App() {
       <Route path="/NotificationManagement" element={<NotificationM />} />
       <Route path="/NotificationCenter" element={<NotificationCenter />} />
       <Route path="/NotificationStaff" element={<NotificationStaff />} />
-
+      
       {/* optional 404 fallback */}
       <Route path="*" element={<div>Page not found</div>} />
-    </Routes>
+    </Routes> 
   );
 }
 

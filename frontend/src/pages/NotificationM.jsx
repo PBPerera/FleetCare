@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 //import "./NotificationM.css";
 import {
   FaUserCircle,
@@ -23,7 +24,9 @@ import { RiUserSettingsLine } from "react-icons/ri";
 export default function NotificationManagement() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleUserClick = () => setIsMenuOpen(!isMenuOpen);
-
+  
+  const navigate = useNavigate();
+    const location = useLocation();
  
   const tableData = [
     
@@ -162,7 +165,9 @@ export default function NotificationManagement() {
             <FaUserCircle className="logo-icon" />
           </div>
           <ul className="menu">
-            <li><MdDashboard /></li>
+            <li onClick={() => navigate("/FleetCareDashboard1")} style={{ cursor: "pointer" }}>
+                          <MdDashboard /> 
+                        </li>
             <li><MdPeople /></li>
             <li><MdDirectionsCar /></li>
             <li><FaUserTie /></li>
@@ -170,7 +175,16 @@ export default function NotificationManagement() {
             <li><FaClipboardList /></li>
             <li><FaTools /></li>
             <li><HiOutlineDocumentReport /></li>
-            <li className="active"><FaBell /></li>
+  <li 
+  className={location.pathname === "/NotificationManagement" ? "active" : ""} 
+  onClick={() => navigate("/NotificationManagement")}
+  style={{ cursor: "pointer" }}
+>
+  <FaBell /> 
+</li>
+
+
+
             <li><RiUserSettingsLine /></li>
           </ul>
           <div className="logout"><FaSignOutAlt /></div>
