@@ -1,0 +1,92 @@
+/* src/pages/UserManagement.css */
+:root{
+  --ink:#111827;
+  --muted:#6b7280;
+  --card:#ffffff;
+  --stroke:#e6eaf4;
+  --ring:#93c5fd;
+  --shadow:0 10px 24px rgba(15,23,42,.10);
+  --radius:14px;
+}
+
+.ad-content{
+  padding: 20px;
+}
+
+/* Toolbar */
+.um-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:10px 12px;
+  margin-bottom:16px;
+  background:#fff;
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+}
+
+.um-search{
+  flex:1;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid #d6dbe7;
+  background:#f7f9fc;
+  border-radius:999px;
+  padding:8px 12px;
+  max-width:560px;
+}
+.um-search-ico{opacity:.7}
+.um-search input{
+  flex:1; border:0; outline:0; background:transparent; font-size:14px;
+}
+
+.um-actions{ display:flex; align-items:end; gap:12px; }
+
+.um-select{ display:flex; flex-direction:column; gap:6px; }
+.um-select label{ font-size:12px; color:var(--muted); }
+.um-select select{
+  min-width:170px; padding:8px 10px; border-radius:10px;
+  border:1px solid #d6dbe7; background:#fff; outline:0;
+}
+.um-select select:focus{ border-color: var(--ring); }
+
+/* Table card */
+.um-table-container{
+  background:var(--card);
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:18px;
+}
+.um-title{ margin:0 0 12px; font-size:16px; font-weight:800; }
+
+.um-table{ width:100%; border-collapse:collapse; }
+.um-table th, .um-table td{
+  text-align:left; padding:12px 10px; border-bottom:1px solid #eef1f7; font-size:14px;
+}
+.um-table thead th{
+  background:#f6f8fe; color:#374151; font-weight:700;
+}
+.um-empty{ text-align:center; color:var(--muted); padding:22px 10px; }
+
+/* Role badges */
+.um-badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:4px 10px; border-radius:999px; font-size:12px; font-weight:700;
+}
+.um-badge.admin{ color:#1e3a8a; background:#e0ecff; border:1px solid #c8dcff; }
+.um-badge.staff{ color:#065f46; background:#dcfce7; border:1px solid #b7f3cd; }
+
+/* Small pill button in header (optional) */
+.ad-pill{
+  border:1px solid var(--stroke);
+  background:#fff;
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:700;
+  cursor:pointer;
+}
+.ad-pill:hover{ border-color:#cfd6ea; }
