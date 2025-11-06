@@ -34,8 +34,12 @@ export default function Vehicles() {
         engineNo: "E111458",
         batteryNo: "B00245",
         chassisNo: "1HGCM82633A123456",
-        status: "Available",
+        registerdate: "2022-05-10",
+        insurancerenewaldate: "2024-12-10",
         insuranceExpiry: "2025-12-10",
+        status: "Available",
+        action: "Edit",
+        
       },
       {
         id: "WP-NA-4565",
@@ -45,8 +49,12 @@ export default function Vehicles() {
         engineNo: "E118848",
         batteryNo: "B00245",
         chassisNo: "JHMFA16586S012345",
-        status: "Assigned",
+        registerdate: "2021-08-15",
+        insurancerenewaldate: "2024-11-05",
         insuranceExpiry: "2025-11-05",
+        status: "Assigned",
+        action: "Edit",
+        
       },
       {
         id: "WP-LB-5425",
@@ -56,8 +64,11 @@ export default function Vehicles() {
         engineNo: "E258848",
         batteryNo: "B00245",
         chassisNo: "2T1BU4EE9AC123456",
-        status: "Available",
+        registerdate: "2020-03-20",
+        insurancerenewaldate: "2024-10-20",
         insuranceExpiry: "2026-01-20",
+        status: "Available",
+        action: "Edit",
       },
       {
         id: "253-5465",
@@ -67,8 +78,12 @@ export default function Vehicles() {
         engineNo: "E119148",
         batteryNo: "B00245",
         chassisNo: "WDBUF56X98B123456",
-        status: "Maintenance",
+        registerdate: "2019-11-30",
+        insurancerenewaldate: "2024-09-15",
         insuranceExpiry: "2025-10-15",
+        status: "Maintenance",
+        action: "Edit",
+        
       },
     ],
     []
@@ -227,8 +242,13 @@ export default function Vehicles() {
                     <th>Engine No</th>
                     <th>Battery No</th>
                     <th>Chassis No</th>
-                    <th>Status</th>
+                    <th>Register Date</th>
+                    <th>Insurance Renewal Date</th>
                     <th>Insurance Expiry</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                    
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -241,12 +261,20 @@ export default function Vehicles() {
                       <td>{v.engineNo}</td>
                       <td>{v.batteryNo}</td>
                       <td className="vm-chassis">{v.chassisNo}</td>
+                      <td>{fmt(v.registerdate)}</td>
+                      <td>{fmt(v.insurancerenewaldate)}</td>
+                      <td>{fmt(v.insuranceExpiry)}</td>
                       <td>
                         <span className={`vm-badge ${badgeTone(v.status)}`}>
                           {v.status}
                         </span>
                       </td>
-                      <td>{fmt(v.insuranceExpiry)}</td>
+                      <td>
+                        <span className={`vm-badge ${badgeTone(v.action)}`}>
+                          {v.action}
+                        </span>
+                      </td>
+                      
                     </tr>
                   ))}
                   {!filtered.length && (

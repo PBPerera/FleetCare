@@ -9,6 +9,10 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import StaffDashboard from "./pages/StaffDashboard.jsx";
 import NotificationCenter from "./pages/NotificationCenter.jsx";
 import NotificationStaff from "./pages/NotificationStaff.jsx";
+import VehicleRequest from "./pages/VehicleRequest/VehicleRequest";
+import TripScheduling from "./pages/TripScheduling/TripScheduling";
+import TripAllocation from "./pages/TripAllocation/TripAllocation";
+import MyRequests from "./pages/MyRequests/MyRequests";
 
 // ✅ Keep ONLY ONE of these, matching your actual filename:
 import NotificationManagement from "./pages/NotificationManagement.jsx";
@@ -44,6 +48,11 @@ export default function App() {
       <Route path="/user-management" element={<UserManagement />} />
       <Route path="/vehicles" element={<Vehicles />} />
       <Route path="/driver-management" element={<DriverManagement />} />
+      <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
+      <Route path="/vehicle-request" element={<VehicleRequest />} />
+      <Route path="/trip-scheduling" element={<TripScheduling />} />
+      <Route path="/trip-allocation" element={<TripAllocation />} />
+      <Route path="/my-requests" element={<MyRequests />} />
 
       {/* Staff area */}
   <Route path="/staff/dashboard" element={<StaffDashboard />} />
