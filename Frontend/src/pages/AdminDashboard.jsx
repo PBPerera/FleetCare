@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./admin-dashboard.css"; // load styles once here
+import "./admin-dashboard.css"; 
 import Sidebar from "../components/Sidebar";
 
 export default function AdminDashboard() {
@@ -18,19 +18,21 @@ export default function AdminDashboard() {
       />
 
       <main className="ad-main">
-        <header className="ad-header">
+        {/* Top Header */}
+        <header className="sd-header">
           <button
-            className="ad-toggle"
+            className="sd-toggle"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand" : "Collapse"}
           >
-            <span className="ad-burger" />
+            <span className="sd-burger" />
           </button>
 
-          <div className="ad-header-title">Dashboard</div>
-          <div className="ad-header-right" />
+          <div className="sd-header-title">Dashboard</div>
+          <div className="sd-header-right" />
         </header>
+        
 
         <div className="ad-content">
           <section className="ad-page-title">

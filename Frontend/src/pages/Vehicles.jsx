@@ -161,20 +161,19 @@ export default function Vehicles() {
       />
 
       <main className="ad-main">
-        {/* Header */}
-        <header className="ad-header">
+        {/* Top Header */}
+        <header className="sd-header">
           <button
-            className="ad-toggle"
+            className="sd-toggle"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand" : "Collapse"}
           >
-            <span className="ad-burger" />
+            <span className="sd-burger" />
           </button>
 
-          <div className="ad-header-title">Vehicle Management</div>
-
-          <div className="ad-header-right" />
+          <div className="sd-header-title">Vehicle Management</div>
+          <div className="sd-header-right" />
         </header>
 
         <div className="ad-content">

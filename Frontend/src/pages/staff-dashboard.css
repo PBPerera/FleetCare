@@ -66,11 +66,13 @@
 /* Header */
 .sd-header{
   position:sticky; top:0; z-index:10;
-  display:flex; align-items:center; justify-content:space-between;
-  height:60px; padding:0 14px;
-  background:#ffffffcc; backdrop-filter:saturate(1.2) blur(6px);
+  display:flex; align-items:center; justify-content:start; gap:12px;
+  height:65px; padding:0 14px;
+  background: linear-gradient(180deg, #48AAFF);
+  backdrop-filter:saturate(1.2) blur(6px);
   border-bottom:1px solid var(--sd-border);
 }
+
 .sd-toggle{ border:0; background:transparent; cursor:pointer; padding:8px; border-radius:8px; }
 .sd-burger{ display:block; width:18px; height:2px; background:#111; position:relative; }
 .sd-burger::before,.sd-burger::after{

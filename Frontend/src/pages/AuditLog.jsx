@@ -114,18 +114,19 @@ export default function AuditLog() {
 
       {/* Main */}
       <main className="ad-main">
-        <header className="ad-header">
+        {/* Top Header */}
+        <header className="sd-header">
           <button
-            className="ad-toggle"
+            className="sd-toggle"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand" : "Collapse"}
           >
-            <span className="ad-burger" />
+            <span className="sd-burger" />
           </button>
 
-          <div className="ad-header-title">Audit Log</div>
-          <div className="ad-header-right" />
+          <div className="sd-header-title">Audit Log</div>
+          <div className="sd-header-right" />
         </header>
 
         <div className="ad-content">

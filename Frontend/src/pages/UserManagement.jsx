@@ -1,18 +1,18 @@
-// src/pages/UserManagement.jsx
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import { Search } from "lucide-react";
 import "./UserManagement.css";
 
 export default function UserManagement() {
   const navigate = useNavigate();
 
-  // sidebar + header state
+  // Sidebar + header state
   const [collapsed, setCollapsed] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const routeMap = {
-    "Dashboard": "/admindashboard",
+    Dashboard: "/admindashboard",
     "User Management": "/user-management",
     "Vehicle Management": "/vehicles",
     "Driver Management": "/driver-management",
@@ -24,12 +24,12 @@ export default function UserManagement() {
     "Audit Log": "/audit-log",
   };
 
-  // ----- Sample data (swap with API later) -----
+  // ----- Sample data -----
   const users = useMemo(
     () => [
       {
         username: "Sarath",
-        fullName: "K.Srath Perera",
+        fullName: "K. Sarath Perera",
         role: "Admin",
         email: "mapsarath@fleetcare.lk",
         lastLoginDate: "2025-09-25",
@@ -37,7 +37,7 @@ export default function UserManagement() {
       },
       {
         username: "Piyal",
-        fullName: "G.Piyal  Silva",
+        fullName: "G. Piyal Silva",
         role: "Staff",
         email: "wagpiyal@fleetcare.lk",
         lastLoginDate: "2025-09-27",
@@ -45,7 +45,7 @@ export default function UserManagement() {
       },
       {
         username: "Sunil",
-        fullName: "P.Sunil Perera",
+        fullName: "P. Sunil Perera",
         role: "Staff",
         email: "gtasunil@fleetcare.lk",
         lastLoginDate: "2025-09-29",
@@ -70,9 +70,8 @@ export default function UserManagement() {
 
   const filtered = useMemo(() => {
     let list = users;
-
-    // search by username, full name, email
     const query = q.trim().toLowerCase();
+
     if (query) {
       list = list.filter((u) =>
         [u.username, u.fullName, u.email, u.role, u.lastLoginDate, u.lastLoginTime]
@@ -82,12 +81,10 @@ export default function UserManagement() {
       );
     }
 
-    // filter by role
     if (role !== "All") {
       list = list.filter((u) => u.role === role);
     }
 
-    // sort
     if (sortBy === "Last Login Date") {
       list = [...list].sort(
         (a, b) => new Date(b.lastLoginDate) - new Date(a.lastLoginDate)
@@ -96,7 +93,9 @@ export default function UserManagement() {
       list = [...list].sort((a, b) => a.username.localeCompare(b.username));
     } else if (sortBy === "Role") {
       const order = { Admin: 1, Staff: 2 };
-      list = [...list].sort((a, b) => (order[a.role] || 99) - (order[b.role] || 99));
+      list = [...list].sort(
+        (a, b) => (order[a.role] || 99) - (order[b.role] || 99)
+      );
     }
 
     return list;
@@ -104,46 +103,40 @@ export default function UserManagement() {
 
   return (
     <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
-      {/* Sidebar (shared) */}
+      {/* Sidebar */}
       <Sidebar
         collapsed={collapsed}
         active="User Management"
-        onNavigate={(label) => navigate(routeMap[label] || "/admindashboard")}
         onLogout={() => (window.location.href = "/login")}
       />
 
-      {/* Main area */}
+      {/* Main section */}
       <main className="ad-main">
-        {/* Header */}
-        <header className="ad-header">
+        {/* Top Header */}
+        <header className="sd-header">
           <button
-            className="ad-toggle"
+            className="sd-toggle"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand" : "Collapse"}
           >
-            <span className="ad-burger" />
+            <span className="sd-burger" />
           </button>
 
-          <div className="ad-header-title">User Management</div>
-
-          <div className="ad-header-right">
-            {/* put header actions if needed */}
-            <button
-              className="ad-pill"
-              onClick={() => alert("Create user • hook to form")}
-            >
-              + Add User
-            </button>
-          </div>
+          <div className="sd-header-title">User Management</div>
+          <div className="sd-header-right" />
         </header>
 
-        {/* Page content */}
+        
+
+        {/* Content area */}
         <div className="ad-content">
           {/* Toolbar */}
           <div className="um-toolbar">
             <div className="um-search">
-              <span className="um-search-ico" aria-hidden>🔍</span>
+              <span className="um-search-ico">
+                <Search size={16} />
+              </span>
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
@@ -163,7 +156,10 @@ export default function UserManagement() {
 
               <div className="um-select">
                 <label>Sort</label>
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
                   <option>Last Login Date</option>
                   <option>User Name</option>
                   <option>Role</option>
@@ -172,57 +168,57 @@ export default function UserManagement() {
             </div>
           </div>
 
-          {/* Table card */}
+          {/* Table */}
           <section className="um-table-container">
             <h3 className="um-title">Users & Roles</h3>
 
-            <table className="um-table">
-              <thead>
-                <tr>
-                  <th>User Name</th>
-                  <th>Ful Name</th>
-                  <th>Role</th>
-                  <th>Email</th>
-                  <th>Last Login Date</th>
-                  <th>Last Login Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((u) => (
-                  <tr key={u.email}>
-                    <td>{u.username}</td>
-                    <td>{u.fullName}</td>
-                    <td>
-                      <span className={`um-badge ${u.role.toLowerCase()}`}>
-                        {u.role}
-                      </span>
-                    </td>
-                    <td>{u.email}</td>
-                    <td>{formatDate(u.lastLoginDate)}</td>
-                    <td>{u.lastLoginTime}</td>
-                  </tr>
-                ))}
-                {!filtered.length && (
+            <div className="um-table-wrapper">
+              <table className="um-table">
+                <thead>
                   <tr>
-                    <td colSpan="6" className="um-empty">
-                      No users match your filters.
-                    </td>
+                    <th>User Name</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>Last Login Date</th>
+                    <th>Last Login Time</th>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filtered.map((u) => (
+                    <tr key={u.email}>
+                      <td>{u.username}</td>
+                      <td>{u.fullName}</td>
+                      <td>
+                        <span className={`um-badge ${u.role.toLowerCase()}`}>
+                          {u.role}
+                        </span>
+                      </td>
+                      <td>{u.email}</td>
+                      <td>{formatDate(u.lastLoginDate)}</td>
+                      <td>{u.lastLoginTime}</td>
+                    </tr>
+                  ))}
+                  {!filtered.length && (
+                    <tr>
+                      <td colSpan={6} className="um-empty">
+                        No users match your filters.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </section>
         </div>
       </main>
 
-      {/* (optional) user menu toggle if you need it later */}
       {isMenuOpen && <div className="user-menu">…</div>}
     </div>
   );
 }
 
 function formatDate(iso) {
-  // 2025-09-25 -> 09-25-2025
   const d = new Date(iso);
   if (isNaN(d)) return iso;
   const mm = `${d.getMonth() + 1}`.padStart(2, "0");
