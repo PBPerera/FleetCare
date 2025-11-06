@@ -1,13 +1,15 @@
 import React from "react";
+import {
+  LayoutDashboard,
+  Car,
+  FileText,
+  ClipboardList,
+  User,
+  BarChart3,
+  Bell,
+} from "lucide-react";
+import logo from "../assets/logo-small.png"; 
 
-/**
- * Staff Sidebar (matches AdminDashboard style)
- * Props:
- *  - collapsed?: boolean
- *  - active?: string (label of current page)
- *  - onNavigate?: (label: string) => void
- *  - onLogout?: () => void
- */
 export default function StaffSidebar({
   collapsed = false,
   active = "Dashboard",
@@ -15,20 +17,29 @@ export default function StaffSidebar({
   onLogout,
 }) {
   const items = [
-    { icon: "▦", label: "Dashboard" },
-    { icon: "🚗", label: "Vehicle Request" },
-    { icon: "📄", label: "My Requests" },
-    { icon: "🧾", label: "Vehicle Details" },
-    { icon: "👤", label: "Driver Details" },
-    { icon: "📊", label: "Search and Reports" },
-    { icon: "🔔", label: "Notifications" },
+    { icon: <LayoutDashboard size={18} />, label: "Dashboard" },
+    { icon: <Car size={18} />, label: "Vehicle Request" },
+    { icon: <FileText size={18} />, label: "My Requests" },
+    { icon: <ClipboardList size={18} />, label: "Vehicle Details" },
+    { icon: <User size={18} />, label: "Driver Details" },
+    { icon: <BarChart3 size={18} />, label: "Search and Reports" },
+    { icon: <Bell size={18} />, label: "Notifications" },
   ];
 
   return (
-    <aside className={`sd-sidebar ${collapsed ? "sd-collapsed" : ""}`} aria-label="Staff sidebar">
+    <aside
+      className={`sd-sidebar ${collapsed ? "sd-collapsed" : ""}`}
+      aria-label="Staff sidebar"
+    >
       {/* Brand */}
       <div className="sd-brand">
-        <div className="sd-logo" aria-hidden>🚚</div>
+        <div className="sd-logo" aria-hidden>
+          <img
+            src={logo}
+            alt="FleetCare Logo"
+            className="w-8 h-8 object-contain"
+          />
+        </div>
         {!collapsed && <span className="sd-brand-text">FleetCare</span>}
       </div>
 
@@ -44,7 +55,9 @@ export default function StaffSidebar({
               onNavigate?.(it.label);
             }}
           >
-            <span className="sd-ico" aria-hidden>{it.icon}</span>
+            <span className="sd-ico" aria-hidden>
+              {it.icon}
+            </span>
             {!collapsed && <span className="sd-text">{it.label}</span>}
           </a>
         ))}
@@ -57,7 +70,9 @@ export default function StaffSidebar({
         onClick={onLogout}
         aria-label="Log out"
       >
-        <span className="sd-ico" aria-hidden>↪</span>
+        <span className="sd-ico" aria-hidden>
+          ↩️
+        </span>
         {!collapsed && <span className="sd-text">Log out</span>}
       </button>
     </aside>

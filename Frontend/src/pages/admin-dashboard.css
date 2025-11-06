@@ -48,9 +48,8 @@
 }
 .ad-logo{
   width: 36px; height: 36px; display: grid; place-items: center;
-  background: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  
 }
 .ad-brand-text{ font-weight: 800; letter-spacing: .2px; }
 

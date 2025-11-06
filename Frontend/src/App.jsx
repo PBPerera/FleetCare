@@ -13,6 +13,10 @@ import VehicleRequest from "./pages/VehicleRequest/VehicleRequest";
 import TripScheduling from "./pages/TripScheduling/TripScheduling";
 import TripAllocation from "./pages/TripAllocation/TripAllocation";
 import MyRequests from "./pages/MyRequests/MyRequests";
+import MaintenanceManagement from "./pages/MaintenanceManagement";
+import RepairApprove from './pages/RepairApprove';
+import AuditLog from './pages/AuditLog';
+
 
 // ✅ Keep ONLY ONE of these, matching your actual filename:
 import NotificationManagement from "./pages/NotificationManagement.jsx";
@@ -53,6 +57,11 @@ export default function App() {
       <Route path="/trip-scheduling" element={<TripScheduling />} />
       <Route path="/trip-allocation" element={<TripAllocation />} />
       <Route path="/my-requests" element={<MyRequests />} />
+      
+      {/* Maintenance Management Routes */}
+      <Route path="/maintenance" element={<MaintenanceManagement />} />
+      <Route path="/repairs/approve" element={<RepairApprove />} />
+      <Route path="/audit-log" element={<AuditLog />} />
 
       {/* Staff area */}
   <Route path="/staff/dashboard" element={<StaffDashboard />} />

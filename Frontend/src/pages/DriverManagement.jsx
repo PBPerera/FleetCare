@@ -33,8 +33,13 @@ export default function DriverManagement() {
         email: "sarathkumara@gmail.com",
         phone: "0760021526",
         licenseNo: "B1234567",
-        status: "Available",
+        registerDate: "2020-05-15",
+        licenseRenewalDate: "2024-09-20",
         licenseExpiry: "2025-09-25",
+        healthAssessment: "2024-06-10",
+        status: "Available",
+        action: "edit",
+        
       },
       {
         nic: "200078945612",
@@ -43,8 +48,13 @@ export default function DriverManagement() {
         email: "ajithpushpakumara@gmail.com",
         phone: "0723816829",
         licenseNo: "B7654321",
-        status: "On Trip",
+        registerDate: "2019-11-22",
+        licenseRenewalDate: "2024-12-15",
+        healthAssessment: "2024-05-20",
         licenseExpiry: "2025-10-12",
+        status: "On Trip",
+        action: "view",
+        
       },
       {
         nic: "199854123698",
@@ -53,8 +63,12 @@ export default function DriverManagement() {
         email: "kasunthilakarathna@gmail.com",
         phone: "0714856045",
         licenseNo: "B1715942",
-        status: "Off Duty",
-        licenseExpiry: "2025-08-31",
+        registerDate: "2019-11-22",
+        licenseRenewalDate: "2024-12-15",
+        healthAssessment: "2024-05-20",
+        licenseExpiry: "2025-10-12",
+        status: "On Trip",
+        action: "view",
       },
     ],
     []
@@ -189,8 +203,13 @@ export default function DriverManagement() {
                     <th>Email</th>
                     <th>Phone No</th>
                     <th>License No</th>
+                    <th>Register Date</th>
+                    <th>License Renewal Date</th>
+                    <th>License Expiry Date</th>
+                    <th>Health Assessment</th>
                     <th>Status</th>
-                    <th>License Expiry</th>
+                    <th>Action</th>
+                    
                   </tr>
                 </thead>
                 <tbody>
@@ -202,10 +221,18 @@ export default function DriverManagement() {
                       <td>{d.email}</td>
                       <td>{d.phone}</td>
                       <td>{d.licenseNo}</td>
+                      <td>{fmt(d.registerDate)}</td>
+                      <td>{fmt(d.licenseRenewalDate)}</td>
+                      <td>{fmt(d.healthAssessment)}</td>
+                      <td>{fmt(d.licenseExpiry)}</td>
                       <td>
                         <span className={`dm-badge ${tone(d.status)}`}>{d.status}</span>
                       </td>
-                      <td>{fmt(d.licenseExpiry)}</td>
+                      <td>
+                        <span className={`dm-badge ${tone(d.action)}`}>{d.action}</span>
+                      </td>
+                      
+                      
                     </tr>
                   ))}
                   {!filtered.length && (

@@ -35,7 +35,7 @@
 }
 .sd-logo{
   height:36px; width:36px; display:grid; place-items:center;
-  background: #ffffffdd; border-radius:10px; font-size:18px;
+  border-radius:10px; font-size:18px;
 }
 .sd-brand-text{ font-size:20px; font-weight:800; color:#0b1c2b; }
 
