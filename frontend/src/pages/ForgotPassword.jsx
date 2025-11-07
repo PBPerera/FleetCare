@@ -7,7 +7,6 @@ export default function ForgotPassword({ onNext }) {
     <div className="forgot-main">
       <div className="forgot-card">
         <h2 className="forgot-title">Forgot Password?</h2>
-       
 
         <div className="field">
           <input
@@ -20,7 +19,6 @@ export default function ForgotPassword({ onNext }) {
           />
         </div>
 
-        
         <div className="btn-row">
           <button
             className="gradient-btn"
