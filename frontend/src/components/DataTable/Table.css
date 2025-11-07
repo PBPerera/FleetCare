@@ -1,124 +1,182 @@
 .table-wrapper {
-    background: white;
-    border-radius: 12px;
-    border: 1px solid var(--border-gray);
-    overflow: auto;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    max-height: 400px;
-    margin-bottom: 30px;
-    width: 100%;
-  }
-  
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    min-width: 1400px;
-  }
-  
-  .data-table thead {
-    background: #f8f9fa;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  
-  .data-table th,
-  .data-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-gray);
-    white-space: nowrap;
-  }
-  
-  .data-table th {
-    font-weight: 600;
-    color: #333;
-    font-size: 13px;
-  }
-  
-  .data-table tbody tr:hover {
-    background: #fafafa;
-  }
-  
-  .data-table tbody tr.selected {
-    background: #e3f2fd;
-  }
-  
-  .data-table input[type="text"],
-  .data-table input[type="date"] {
-    width: 100%;
-    padding: 6px 8px;
-    border: 1px solid var(--border-gray);
-    border-radius: 4px;
-    font-size: 12px;
-  }
-  
-  .data-table input[type="text"]:focus,
-  .data-table input[type="date"]:focus {
-    outline: none;
-    border-color: var(--primary-blue);
-  }
-  
-  .checkbox-col {
-    width: 50px;
-    text-align: center;
-  }
-  
-  .checkbox-col input {
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
-  }
-  
-  .no-data {
-    text-align: center;
-    color: #999;
-    padding: 30px !important;
-  }
-  
-  .action-buttons {
-    display: flex;
-    gap: 8px;
-  }
-  
-  .action-btn {
-    padding: 6px 14px;
-    border: none;
-    border-radius: 20px;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  
-  .action-btn.approve {
-    background: #1e88e5;
-    color: white;
-  }
-  
-  .action-btn.approve:hover {
-    background: #1565c0;
-  }
-  
-  .action-btn.reject {
-    background: #e53935;
-    color: white;
-  }
-  
-  .action-btn.reject:hover {
-    background: #c62828;
-  }
-  
-  .date-cell {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .editable-cell input {
-    width: 100%;
-    min-width: 100px;
-  }
-  
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border-gray);
+  overflow: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  max-height: 400px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 1400px;
+}
+
+.data-table thead {
+  background: #f8f9fa;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-gray);
+  white-space: nowrap;
+}
+
+.data-table th {
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+.data-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.data-table tbody tr.selected {
+  background: #e3f2fd;
+}
+
+.data-table input[type="text"],
+.data-table input[type="date"] {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--border-gray);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.data-table input[type="text"]:focus,
+.data-table input[type="date"]:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+}
+
+.checkbox-col {
+  width: 50px;
+  text-align: center;
+}
+
+.checkbox-col input {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.no-data {
+  text-align: center;
+  color: #999;
+  padding: 30px !important;
+}
+
+.action-col {
+  min-width: 200px;
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+.edit-btn {
+  background: #2196F3;
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #1976D2;
+}
+
+.save-btn {
+  background: #4CAF50;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #388E3C;
+}
+
+.delete-btn {
+  background: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #d32f2f;
+}
+
+.cancel-btn {
+  background: #9E9E9E;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background: #757575;
+}
+
+.action-btn.approve {
+  background: #1e88e5;
+  color: white;
+}
+
+.action-btn.approve:hover {
+  background: #1565c0;
+}
+
+.action-btn.reject {
+  background: #e53935;
+  color: white;
+}
+
+.action-btn.reject:hover {
+  background: #c62828;
+}
+
+.date-cell {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.editable-cell input {
+  width: 100%;
+  min-width: 100px;
+}
+
+.editable-input {
+  font-family: inherit;
+}

@@ -8,7 +8,7 @@ import { MaintenanceContext } from '../context/MaintenanceContext.jsx'
 
 
 function RepairApprove() {
-  const { state, setFilters, updateRepair, addRepair } = useContext(MaintenanceContext)
+  const { state, setFilters, updateRepair, addRepair, deleteRepair } = useContext(MaintenanceContext)
 
   const approvalColumns = [
     { 
@@ -72,6 +72,10 @@ function RepairApprove() {
     updateRepair(id, updatedData)
   }
 
+  const handleApprovalDelete = (id) => {
+    deleteRepair(id)
+  }
+
   const handleAction = (action, row) => {
     console.log('Approval action:', action, row)
   }
@@ -96,6 +100,7 @@ function RepairApprove() {
           onAction={handleAction}
           editable={true}
           onEdit={handleApprovalEdit}
+          onDelete={handleApprovalDelete}
         />
       </div>
     </Layout>

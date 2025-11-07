@@ -10,7 +10,7 @@ import { MaintenanceContext } from '../context/MaintenanceContext.jsx'
 
 
 function MaintenanceManagement() {
-  const { state, setFilters, addService, addRepair, updateService, updateRepair } = useContext(MaintenanceContext)
+  const { state, setFilters, addService, addRepair, updateService, updateRepair, deleteService, deleteRepair } = useContext(MaintenanceContext)
   const navigate = useNavigate()
 
   const dashboardCards = [
@@ -148,6 +148,14 @@ function MaintenanceManagement() {
     updateRepair(id, updatedData)
   }
 
+  const handleServiceDelete = (id) => {
+    deleteService(id)
+  }
+
+  const handleRepairDelete = (id) => {
+    deleteRepair(id)
+  }
+
   const handleServiceAction = (action, row) => {
     console.log('Service action:', action, row)
   }
@@ -182,6 +190,7 @@ function MaintenanceManagement() {
           onAction={handleServiceAction}
           editable={true}
           onEdit={handleServiceEdit}
+          onDelete={handleServiceDelete}
         />
 
         <h2 className="section-title">Maintenance Records for Repair</h2>
@@ -204,6 +213,7 @@ function MaintenanceManagement() {
           onAction={handleRepairAction}
           editable={true}
           onEdit={handleRepairEdit}
+          onDelete={handleRepairDelete}
         />
       </div>
     </Layout>
