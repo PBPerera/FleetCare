@@ -43,7 +43,7 @@ export default function VehicleRequest() {
 
   return (
     <div className="vehicle-request-page">
-      <div className="header-bar">
+      {/* <div className="header-bar">
         <div className="header-left">
           <div className="network-icon">
             <FaNetworkWired aria-hidden="true" />
@@ -53,10 +53,10 @@ export default function VehicleRequest() {
         <div className="user-profile-icon">
           <FaUser aria-hidden="true" />
         </div>
-      </div>
+      </div> */}
 
       <div className="main-container">
-        <aside className="sidebar">
+        {/* <aside className="sidebar">
           <div className="nav-icon dashboard-icon active"><FaTh aria-hidden="true" /></div>
           <div className="nav-icon refresh-icon"><FaSyncAlt aria-hidden="true" /></div>
           <div className="nav-icon document-icon"><FaFileAlt aria-hidden="true" /></div>
@@ -64,7 +64,7 @@ export default function VehicleRequest() {
           <div className="nav-icon user-group-icon"><FaUsers aria-hidden="true" /></div>
           <div className="nav-icon notification-icon"><FaBell aria-hidden="true" /></div>
           <div className="nav-icon undo-icon"><FaUndo aria-hidden="true" /></div>
-        </aside>
+        </aside> */}
 
         <main className="main-content">
           {/* Left: Request Form */}

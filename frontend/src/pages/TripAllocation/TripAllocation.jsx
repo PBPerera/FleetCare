@@ -56,7 +56,7 @@ const TripAllocation = () => {
   return (
     <div className="trip-page">
       {/* Sidebar */}
-      <aside className="sidebar">
+      {/* <aside className="sidebar">
         <div className="logo">
           <MdDashboard size={30} />
         </div>
@@ -68,14 +68,14 @@ const TripAllocation = () => {
             <li><MdOutlineSettings /></li>
           </ul>
         </nav>
-      </aside>
+      </aside> */}
 
       {/* Main Content */}
       <main className="main-content">
-        <header className="header">
+        {/* <header className="header">
           <h2>Trip Allocation</h2>
           <FaUserCircle className="user-icon" />
-        </header>
+        </header> */}
 
         <div>
             <h3 className="section-title">Trip Allocated or Rejected</h3>

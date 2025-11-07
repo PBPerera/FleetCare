@@ -41,7 +41,7 @@ const TripScheduling = () => {
   return (
     <div className="trip-page">
       {/* Sidebar */}
-      <aside className="sidebar">
+      {/* <aside className="sidebar">
         <div className="logo">
           <MdDashboard size={30} />
         </div>
@@ -53,14 +53,14 @@ const TripScheduling = () => {
             <li><MdOutlineSettings /></li>
           </ul>
         </nav>
-      </aside>
+      </aside> */}
 
       {/* Main Content */}
       <main className="main-content">
-        <header className="header">
+        {/* <header className="header">
           <h2>Trip Scheduling</h2>
           <FaUserCircle className="user-icon" />
-        </header>
+        </header> */}
 
         {/* Search Bar */}
         <div className="search-bar">
