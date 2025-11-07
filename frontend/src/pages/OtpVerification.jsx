@@ -89,7 +89,7 @@ export default function OtpVerification({ email = "", onVerify }) {
 
         <div style={{ marginTop: 14}}>
           <button
-            className="link-btn"
+            className="resend-otp-btn"
             onClick={() => alert("Resend OTP (implement API call)")}
             aria-label="Resend OTP"
           >
