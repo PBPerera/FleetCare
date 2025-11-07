@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-// import './VehicleRequest.css';
-// react-icons
+import './VehicleRequest.css';
+//react-icons
 import {
   FaSearch,
   FaUser,
@@ -48,7 +48,7 @@ export default function VehicleRequest() {
           <div className="network-icon">
             <FaNetworkWired aria-hidden="true" />
           </div>
-          <div className="header-title">Vehicle Request</div>
+          <div className="header-title">Vehicle Requests</div>
         </div>
         <div className="user-profile-icon">
           <FaUser aria-hidden="true" />

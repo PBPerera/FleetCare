@@ -2,7 +2,12 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import "./DriverManagement.css";
+import Cards from "../components/DashboardCards/Cards.jsx";
+import SearchBar from "../components/SearchBar/SearchBar.jsx";
+import Table from "../components/DataTable/Table.jsx";
+import Button from "../components/Buttons/Button.jsx";
+import ExportPdfBtn from "../components/ExportpdfBtn.jsx";
+import "./Pages.css";
 
 export default function DriverManagement() {
   const navigate = useNavigate();
@@ -11,7 +16,7 @@ export default function DriverManagement() {
   const [collapsed, setCollapsed] = useState(false);
 
   const routeMap = {
-    "Dashboard": "/admindashboard",
+    Dashboard: "/admindashboard",
     "User Management": "/user-management",
     "Vehicle Management": "/vehicles",
     "Driver Management": "/driver-management",
@@ -23,105 +28,181 @@ export default function DriverManagement() {
     "Audit Log": "/audit-log",
   };
 
-  // ===== demo data (swap with API) =====
-  const drivers = useMemo(
+  // ===== Demo data (swap with API/Context later) =====
+  // NOTE: To cooperate with your TableRow's "new row" detection,
+  // we assign vehicleId = nic for existing rows (non-empty),
+  // and set vehicleId = "" only for newly added rows.
+  const [drivers, setDrivers] = useState([
+    {
+      id: 1,
+      vehicleId: "199912365498", // non-empty -> not auto-edit
+      nic: "199912365498",
+      name: "Sarath Kumara",
+      address: "No. 25, Temple Road, Kandy",
+      email: "sarathkumara@gmail.com",
+      phone: "0760021526",
+      licenseNo: "B1234567",
+      registerDate: "2020-05-15",
+      licenseRenewalDate: "2024-09-20",
+      licenseExpiry: "2025-09-25",
+      healthAssessment: "2024-06-10",
+      status: "Available",
+    },
+    {
+      id: 2,
+      vehicleId: "200078945612",
+      nic: "200078945612",
+      name: "Ajith Pushpakumara",
+      address: "45/3, Galle Road, Colombo 06",
+      email: "ajithpushpakumara@gmail.com",
+      phone: "0723816829",
+      licenseNo: "B7654321",
+      registerDate: "2019-11-22",
+      licenseRenewalDate: "2024-12-15",
+      healthAssessment: "2024-05-20",
+      licenseExpiry: "2025-10-12",
+      status: "On Trip",
+    },
+    {
+      id: 3,
+      vehicleId: "199854123698",
+      nic: "199854123698",
+      name: "Kasun Thilakarathna",
+      address: "No. 12, Station Lane, Kurunegala",
+      email: "kasunthilakarathna@gmail.com",
+      phone: "0714856045",
+      licenseNo: "B1715942",
+      registerDate: "2019-11-22",
+      licenseRenewalDate: "2024-12-15",
+      healthAssessment: "2024-05-20",
+      licenseExpiry: "2025-10-12",
+      status: "Off Duty",
+    },
+  ]);
+
+  // ===== Cards / metrics (same pattern as Vehicles/Maintenance) =====
+  const dashboardCards = useMemo(() => {
+    const total = drivers.length;
+    const available = drivers.filter((d) => d.status === "Available").length;
+    const onTrip = drivers.filter((d) => d.status === "On Trip").length;
+    const offDuty = drivers.filter((d) => d.status === "Off Duty").length;
+    return [
+      { title: "Total", count: total, subtitle: "All drivers", icon: "🧑‍✈️" },
+      { title: "Available", count: available, subtitle: "Free to assign", icon: "✅" },
+      { title: "On Trip", count: onTrip, subtitle: "Active trips", icon: "📍" },
+      { title: "Off Duty", count: offDuty, subtitle: "Resting", icon: "🌙" },
+    ];
+  }, [drivers]);
+
+  // ===== Table columns (unique keys + Actions) =====
+  const columns = useMemo(
     () => [
+      { key: "nic", label: "NIC No" },
+      { key: "name", label: "Name" },
+      { key: "address", label: "Address" },
+      { key: "email", label: "Email" },
+      { key: "phone", label: "Phone No" },
+      { key: "licenseNo", label: "License No" },
+      { key: "registerDate", label: "Register Date" },
+      { key: "licenseRenewalDate", label: "License Renewal Date" },
+      { key: "licenseExpiry", label: "License Expiry Date" },
+      { key: "healthAssessment", label: "Health Assessment" },
+      { key: "status", label: "Status" },
       {
-        nic: "199912365498",
-        name: "Sarath Kumara",
-        address: "No. 25, Temple Road, Kandy",
-        email: "sarathkumara@gmail.com",
-        phone: "0760021526",
-        licenseNo: "B1234567",
-        registerDate: "2020-05-15",
-        licenseRenewalDate: "2024-09-20",
-        licenseExpiry: "2025-09-25",
-        healthAssessment: "2024-06-10",
-        status: "Available",
-        action: "edit",
-        
-      },
-      {
-        nic: "200078945612",
-        name: "Ajith Pushpakumara",
-        address: "45/3, Galle Road, Colombo 06",
-        email: "ajithpushpakumara@gmail.com",
-        phone: "0723816829",
-        licenseNo: "B7654321",
-        registerDate: "2019-11-22",
-        licenseRenewalDate: "2024-12-15",
-        healthAssessment: "2024-05-20",
-        licenseExpiry: "2025-10-12",
-        status: "On Trip",
-        action: "view",
-        
-      },
-      {
-        nic: "199854123698",
-        name: "Kasun Thilakarathna",
-        address: "No. 12, Station Lane, Kurunegala",
-        email: "kasunthilakarathna@gmail.com",
-        phone: "0714856045",
-        licenseNo: "B1715942",
-        registerDate: "2019-11-22",
-        licenseRenewalDate: "2024-12-15",
-        healthAssessment: "2024-05-20",
-        licenseExpiry: "2025-10-12",
-        status: "On Trip",
-        action: "view",
+        key: "actions",
+        label: "Actions",
+        render: (row, onAction) => (
+          <div className="action-buttons">
+            <button className="action-btn approve" onClick={() => onAction("details", row)}>
+              Details
+            </button>
+            <button className="action-btn" onClick={() => onAction("assign", row)}>
+              Assign
+            </button>
+            <button className="action-btn reject" onClick={() => onAction("delete", row)}>
+              Delete
+            </button>
+          </div>
+        ),
       },
     ],
     []
   );
 
-  // metrics
-  const total = drivers.length;
-  const available = drivers.filter((d) => d.status === "Available").length;
-  const onTrip = drivers.filter((d) => d.status === "On Trip").length;
-  const offDuty = drivers.filter((d) => d.status === "Off Duty").length;
-
-  // controls
-  const [q, setQ] = useState("");
-  const [status, setStatus] = useState("All");
+  // ===== Filters (kept similar to your prior screen) =====
+  const [keyword, setKeyword] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [licenseFilter, setLicenseFilter] = useState("Any"); // Any | Expiring Soon | Expired
 
   const filtered = useMemo(() => {
     const now = new Date();
-    const soon = 1000 * 60 * 60 * 24 * 30; // 30 days
+    const soonMs = 1000 * 60 * 60 * 24 * 30; // 30 days
 
-    let list = drivers;
-
-    // search by name / NIC / email / license
-    const query = q.trim().toLowerCase();
-    if (query) {
-      list = list.filter((d) =>
+    return drivers.filter((d) => {
+      const q = keyword.trim().toLowerCase();
+      const inQuery =
+        !q ||
         [d.nic, d.name, d.email, d.licenseNo, d.address, d.phone]
           .join(" ")
           .toLowerCase()
-          .includes(query)
-      );
+          .includes(q);
+
+      const byStatus = statusFilter === "All" ? true : d.status === statusFilter;
+
+      const byLicense =
+        licenseFilter === "Any"
+          ? true
+          : (() => {
+              const exp = new Date(d.licenseExpiry);
+              if (isNaN(exp)) return true;
+              if (licenseFilter === "Expired") return exp < now;
+              if (licenseFilter === "Expiring Soon") return exp >= now && exp - now <= soonMs;
+              return true;
+            })();
+
+      return inQuery && byStatus && byLicense;
+    });
+  }, [drivers, keyword, statusFilter, licenseFilter]);
+
+  // ===== CRUD handlers (compatible with your TableRow onEdit signature) =====
+  const handleAddDriver = () => {
+    const newRow = {
+      id: Date.now(),
+      vehicleId: "", // empty -> new row opens in edit mode (per TableRow logic)
+      nic: "",
+      name: "",
+      address: "",
+      email: "",
+      phone: "",
+      licenseNo: "",
+      registerDate: "",
+      licenseRenewalDate: "",
+      licenseExpiry: "",
+      healthAssessment: "",
+      status: "Available",
+    };
+    setDrivers((prev) => [newRow, ...prev]);
+  };
+
+  const handleEdit = (id, updated) => {
+    setDrivers((prev) => prev.map((d) => (d.id === id ? { ...d, ...updated } : d)));
+  };
+
+  const handleAction = (action, row) => {
+    if (action === "delete") {
+      setDrivers((prev) => prev.filter((d) => d.id !== row.id));
     }
-
-    // status
-    if (status !== "All") list = list.filter((d) => d.status === status);
-
-    // license expiry filter
-    if (licenseFilter !== "Any") {
-      list = list.filter((d) => {
-        const exp = new Date(d.licenseExpiry);
-        if (licenseFilter === "Expired") return exp < now;
-        if (licenseFilter === "Expiring Soon") return exp >= now && exp - now <= soon;
-        return true;
-      });
+    if (action === "details") {
+      navigate("/drivers/details", { state: { driver: row } });
     }
-
-    return list;
-  }, [drivers, q, status, licenseFilter]);
-
-  const exportPdf = () => window.print(); // stub
+    if (action === "assign") {
+      navigate("/trip-allocation", { state: { driverNic: row.nic } });
+    }
+  };
 
   return (
     <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
+      {/* Sidebar */}
       <Sidebar
         collapsed={collapsed}
         active="Driver Management"
@@ -129,8 +210,9 @@ export default function DriverManagement() {
         onLogout={() => (window.location.href = "/login")}
       />
 
+      {/* Main */}
       <main className="ad-main">
-        {/* Top Header */}
+        {/* Top Header (same pattern as Vehicles/Maintenance) */}
         <header className="sd-header">
           <button
             className="sd-toggle"
@@ -145,132 +227,36 @@ export default function DriverManagement() {
           <div className="sd-header-right" />
         </header>
 
+        {/* Page content */}
         <div className="ad-content">
-          {/* Metrics */}
-          <section className="dm-metrics">
-            <Metric title="Total Drivers" value={pad(total)} />
-            <Metric title="Available Drivers" value={pad(available)} />
-            <Metric title="On Trip" value={pad(onTrip)} />
-            <Metric title="Off Duty" value={pad(offDuty)} />
-          </section>
+          {/* Cards */}
+          <div style={{ display: "flex", gap: "20px", flexWrap: "nowrap" }}>
+               <Cards data={dashboardCards} />
+          </div>
 
-          {/* Toolbar */}
-          <section className="dm-toolbar">
-            <div className="dm-search">
-              <span className="dm-search-ico" aria-hidden>🔍</span>
-              <input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search by Driver Name / NIC / License"
-              />
-            </div>
 
-            <div className="dm-filters">
-              <select value={status} onChange={(e) => setStatus(e.target.value)}>
-                <option>All</option>
-                <option>Available</option>
-                <option>On Trip</option>
-                <option>Off Duty</option>
-              </select>
+          {/* Section title */}
+          <h2 className="section-title">Drivers</h2>
 
-              <select
-                value={licenseFilter}
-                onChange={(e) => setLicenseFilter(e.target.value)}
-              >
-                <option value="Any">License Expiry Date</option>
-                <option value="Expiring Soon">Expiring Soon (30d)</option>
-                <option value="Expired">Expired</option>
-              </select>
+          {/* (Optional) helper bar for parity with other pages */}
+          <SearchBar onFilterChange={() => {}} filterLabel="License Expiry" />
 
-              <button className="dm-export" onClick={exportPdf}>
-                Export Pdf
-              </button>
-            </div>
-          </section>
+          {/* Action bar: export + add button (same layout as Maintenance/Vehicles) */}
+          <div className="action-bar">
+            <ExportPdfBtn data={filtered} filename="drivers" />
+          </div>
 
-          {/* Table */}
-          <section className="dm-card">
-            <div className="dm-card-head">
-              <h3>Drivers</h3>
-            </div>
-
-            <div className="dm-table-wrap">
-              <table className="dm-table">
-                <thead>
-                  <tr>
-                    <th>NIC No</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Email</th>
-                    <th>Phone No</th>
-                    <th>License No</th>
-                    <th>Register Date</th>
-                    <th>License Renewal Date</th>
-                    <th>License Expiry Date</th>
-                    <th>Health Assessment</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((d) => (
-                    <tr key={d.nic}>
-                      <td>{d.nic}</td>
-                      <td>{d.name}</td>
-                      <td>{d.address}</td>
-                      <td>{d.email}</td>
-                      <td>{d.phone}</td>
-                      <td>{d.licenseNo}</td>
-                      <td>{fmt(d.registerDate)}</td>
-                      <td>{fmt(d.licenseRenewalDate)}</td>
-                      <td>{fmt(d.healthAssessment)}</td>
-                      <td>{fmt(d.licenseExpiry)}</td>
-                      <td>
-                        <span className={`dm-badge ${tone(d.status)}`}>{d.status}</span>
-                      </td>
-                      <td>
-                        <span className={`dm-badge ${tone(d.action)}`}>{d.action}</span>
-                      </td>
-                      
-                      
-                    </tr>
-                  ))}
-                  {!filtered.length && (
-                    <tr>
-                      <td colSpan="8" className="dm-empty">
-                        No drivers match your filters.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </section>
+          {/* Data table */}
+          <Table
+            columns={columns}
+            rows={filtered}
+            showCheckbox
+            editable
+            onEdit={handleEdit}
+            onAction={handleAction}
+          />
         </div>
       </main>
     </div>
   );
-}
-
-/* helpers */
-function Metric({ title, value }) {
-  return (
-    <div className="dm-metric">
-      <div className="dm-metric-title">{title}</div>
-      <div className="dm-metric-value">{value}</div>
-    </div>
-  );
-}
-const pad = (n) => String(n).padStart(2, "0");
-const tone = (s) =>
-  s === "Available" ? "green" : s === "On Trip" ? "blue" : s === "Off Duty" ? "amber" : "gray";
-
-function fmt(iso) {
-  const d = new Date(iso);
-  if (isNaN(d)) return iso;
-  const mm = `${d.getMonth() + 1}`.padStart(2, "0");
-  const dd = `${d.getDate()}`.padStart(2, "0");
-  const yyyy = d.getFullYear();
-  return `${mm}-${dd}-${yyyy}`;
 }

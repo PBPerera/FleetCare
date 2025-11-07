@@ -1,11 +1,7 @@
-/* =========================================================
-   App.css — Combined Global + Onboarding + FleetCare UI Styles
-   ========================================================= */
 
-/* ---------- Font ---------- */
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
 
-/* ---------- CSS Variables ---------- */
+
 :root {
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
@@ -50,9 +46,7 @@ img, svg, video { display: block; max-width: 100%; }
 button, input { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }
 
-/* =========================================================
-   OVERRIDE Vite template root (so dashboards can be full-width)
-   ========================================================= */
+/* OVERRIDE Vite template root (so dashboards can be full-width)*/
 #root {
   max-width: none;
   margin: 0;
@@ -60,9 +54,7 @@ button, input { font: inherit; color: inherit; }
   text-align: initial;
 }
 
-/* =========================================================
-   ONBOARDING PAGE STYLES (kept for older pages if needed)
-   ========================================================= */
+/* ONBOARDING PAGE STYLES (kept for older pages if needed)*/
 .logo { height: 6em; padding: 1.5em; will-change: filter; transition: filter 300ms; }
 .logo:hover { filter: drop-shadow(0 0 2em #646cffaa); }
 .logo.react:hover { filter: drop-shadow(0 0 2em #61dafbaa); }
