@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Onboard from "./pages/Onboard";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import ForgotPasswordFlow from "./pages/ForgotPasswordFlow";
-import Home from "./pages/Home";
-import AdminDashboard from "./pages/AdminDashboard";
-import StaffDashboard from "./pages/StaffDashboard";
-import NotificationCenter from "./pages/NotificationCenter";
-import NotificationStaff from "./pages/NotificationStaff";
+import Onboard from "./pages/Onboard.jsx";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
+import ForgotPasswordFlow from "./pages/ForgotPasswordFlow.jsx";
+import Home from "./pages/Home.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import StaffDashboard from "./pages/StaffDashboard.jsx";
+import NotificationCenter from "./pages/NotificationCenter.jsx";
+import NotificationStaff from "./pages/NotificationStaff.jsx";
 import VehicleRequest from "./pages/VehicleRequest/VehicleRequest";
 import TripScheduling from "./pages/TripScheduling/TripScheduling";
 import TripAllocation from "./pages/TripAllocation/TripAllocation";
@@ -18,11 +18,12 @@ import RepairApprove from './pages/RepairApprove';
 import AuditLog from './pages/AuditLog';
 
 
-import NotificationManagement from "./pages/NotificationManagement";
+// ✅ Keep ONLY ONE of these, matching your actual filename:
+import NotificationManagement from "./pages/NotificationManagement.jsx";
 
-import UserManagement from "./pages/UserManagement";
-import Vehicles from "./pages/Vehicles";
-import DriverManagement from "./pages/DriverManagement";
+import UserManagement from "./pages/UserManagement.jsx";
+import Vehicles from "./pages/Vehicles.jsx";
+import DriverManagement from "./pages/DriverManagement.jsx";
 
 import "./App.css";
 
@@ -35,7 +36,7 @@ export default function App() {
       <Route path="/onboard" element={<Onboard />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/forgotpassword" element={<ForgotPasswordFlow />} />
+      <Route path="/forgot-password/*" element={<ForgotPasswordFlow />} />
       <Route path="/home" element={<Home />} />
 
       {/* Dashboards */}
