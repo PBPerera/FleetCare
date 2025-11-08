@@ -18,7 +18,7 @@ import RepairApprove from './pages/RepairApprove';
 import AuditLog from './pages/AuditLog';
 
 
-// ✅ Keep ONLY ONE of these, matching your actual filename:
+
 import NotificationManagement from "./pages/NotificationManagement.jsx";
 
 import UserManagement from "./pages/UserManagement.jsx";
@@ -52,7 +52,7 @@ export default function App() {
       <Route path="/user-management" element={<UserManagement />} />
       <Route path="/vehicles" element={<Vehicles />} />
       <Route path="/driver-management" element={<DriverManagement />} />
-      <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
+      <Route path="/forgotpassword" element={<ForgotPasswordFlow />} />
       <Route path="/vehicle-request" element={<VehicleRequest />} />
       <Route path="/trip-scheduling" element={<TripScheduling />} />
       <Route path="/trip-allocation" element={<TripAllocation />} />

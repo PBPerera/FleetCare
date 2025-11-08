@@ -77,9 +77,6 @@ button, input { font: inherit; color: inherit; }
 }
 .gradient-button:hover { transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-/* =========================================================
-   FORGOT PASSWORD / OTP / RESET PAGE STYLES
-   ========================================================= */
 .topbar {
   height: 70px; width: 100%; background: #69B9FF;
   display: flex; align-items: center; justify-content: space-between;
