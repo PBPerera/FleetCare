@@ -6,6 +6,7 @@ export default function ForgotPassword({ onNext }) {
 
   return (
     
+    
     <div className="forgot-main">
  
       <div className="forgot-card">
