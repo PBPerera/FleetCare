@@ -12,7 +12,6 @@ export default function ForgotPasswordFlow() {
   return (
     <div className="forgot-page">
       <TopBarSlim />
-
       {step === 1 && (
         <ForgotPassword
           onNext={(emailInput) => {
