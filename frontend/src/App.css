@@ -77,12 +77,9 @@ button, input { font: inherit; color: inherit; }
 }
 .gradient-button:hover { transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-<<<<<<< HEAD
 /* =========================================================
    FORGOT PASSWORD / OTP / RESET PAGE STYLES
    ========================================================= */
-=======
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .topbar {
   height: 70px; width: 100%; background: #69B9FF;
   display: flex; align-items: center; justify-content: space-between;
@@ -102,57 +99,22 @@ button, input { font: inherit; color: inherit; }
 .forgot-main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 60px 20px; }
 
 .forgot-card, .forgot-card-otp {
-<<<<<<< HEAD
   width: 500px; height: 400px; background: #D9D9D9; border-radius: 14px; padding: 40px;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08); display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center;
 }
 .forgot-card { gap: 50px; }
 .forgot-card-otp { gap: 20px; }
-=======
-  width: 600px; height: 500px; background: #D9D9D9; border-radius: 14px; padding: 40px;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08); display: flex; flex-direction: column;
-  align-items: center; justify-content: center; text-align: center;
-}
-.forgot-card { gap: 60px; }
-.forgot-card-otp { gap: 10px; }
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 
 .forgot-title { font-size: 35px; margin-bottom: 8px; }
 .forgot-instruction { color: #375f82; font-size: 14px; text-align: center; }
 
-<<<<<<< HEAD
-=======
-.field {
-  width: 100%;
-  margin-bottom: 0px;
-  display: flex;;
-  justify-content: center;
-}
-
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .input-field {
   width: 100%; max-width: 360px; padding: 10px 14px;
   border-radius: 8px; border: 1px solid rgba(75, 150, 220, 0.45);
   background: white; font-size: 14px;
 }
 
-<<<<<<< HEAD
-=======
-.resend-otp-btn {
-  background: transparent;
-  border: none;
-  border-radius: 18px;
-  font-size: 12px;
-  color: #2f7bff;
-  font-weight: 6;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 12px;
-}
-
-
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .gradient-btn {
   background: linear-gradient(90deg, #4400FF 0%, #4253FF 50%, #40A6FF 100%);
   color: white; padding: 10px 22px; border-radius: 18px; border: none; min-width: 220px;
@@ -167,13 +129,9 @@ button, input { font: inherit; color: inherit; }
 }
 .otp-input:focus { border-color: rgba(43, 154, 246, 0.9); }
 
-<<<<<<< HEAD
 /* =========================================================
    FLEETCARE LOGIN / SIGNUP STYLES
    ========================================================= */
-=======
-
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .fc-wrap { min-height: 100vh; background: #f5f7fb; }
 .fc-appbar { background: var(--fc-blue); height: 64px; display: flex; align-items: center; }
 .fc-appbar-inner {
@@ -224,12 +182,9 @@ button, input { font: inherit; color: inherit; }
   .signup-card { width: 92%; padding: 20px; min-height: 300px; }
 }
 
-<<<<<<< HEAD
 /* =========================================================
    ADMIN DASHBOARD STYLES (migrated from AdminDashboard.css)
    ========================================================= */
-=======
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 
 /* Wrapper & container */
 .app-wrapper { position: relative; height: 100vh; width: 100vw; }
@@ -322,11 +277,7 @@ button, input { font: inherit; color: inherit; }
   .cards-container { grid-template-columns: 1fr; }
 }
 
-<<<<<<< HEAD
 /* =============== Slim Top Bar =============== */
-=======
-
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .tbs-root{
   position: sticky;          /* stays at top while scrolling */
   top: 0;
@@ -618,11 +569,7 @@ button, input { font: inherit; color: inherit; }
 }
 
 
-<<<<<<< HEAD
 /* ===== Base / Page sizing ===== */
-=======
-
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 html, body, #root {
   margin: 0;
   padding: 0;
@@ -655,11 +602,7 @@ html, body, #root {
   user-select: none;
 }
 
-<<<<<<< HEAD
 /* ===== Sidebar ===== */
-=======
-
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .sidebar {
   flex: 0 0 90px; /* fixed width */
   background: linear-gradient(#48aaff, #ffffff);
@@ -715,10 +658,7 @@ html, body, #root {
   cursor: pointer;
 }
 
-<<<<<<< HEAD
 /* ===== Main area ===== */
-=======
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .main-content {
   flex: 1 1 auto;
   min-width: 0;                    /* prevent overflow from long content */
@@ -769,10 +709,7 @@ html, body, #root {
   cursor: pointer;
 }
 
-<<<<<<< HEAD
 /* ===== User menu ===== */
-=======
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .user-menu {
   position: absolute;
   top: 60px;
@@ -799,11 +736,7 @@ html, body, #root {
   background-color: #f2f2f2;
 }
 
-<<<<<<< HEAD
 /* ===== Page sections & tables ===== */
-=======
-
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .trip-section {
   padding: 20px;
   display: flex;
@@ -866,10 +799,7 @@ html, body, #root {
   background-color: #fafcff;
 }
 
-<<<<<<< HEAD
 /* ===== Optional: nicer scrollbars (WebKit) ===== */
-=======
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
 .scrollable::-webkit-scrollbar,
 .trip-table-container::-webkit-scrollbar {
   height: 10px;
@@ -879,8 +809,4 @@ html, body, #root {
 .trip-table-container::-webkit-scrollbar-thumb {
   background: #c9d4e3;
   border-radius: 8px;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> f228393dd7466d879628ceb235fb697fb0130342
