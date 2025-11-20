@@ -11,7 +11,7 @@ export default function ForgotPasswordFlow() {
   return (
     <>
       {/* Top Bar */}
-      <TopBar title="Forgot Password" to="/login" />
+      <TopBarSlim title="Forgot Password" to="/login" />
 
       {/* Page Content */}
       <div className="fc-wrap">

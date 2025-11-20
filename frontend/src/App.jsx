@@ -50,7 +50,6 @@ function App() {
       <Route path="/user-management" element={<UserManagement />} />
       <Route path="/vehicles" element={<Vehicles />} />
       <Route path="/driver-management" element={<DriverManagement />} />
-      <Route path="/forgotpassword" element={<ForgotPasswordFlow />} />
       <Route path="/vehicle-request" element={<VehicleRequest />} />
       <Route path="/trip-scheduling" element={<TripScheduling />} />
       <Route path="/trip-allocation" element={<TripAllocation />} />
