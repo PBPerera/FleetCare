@@ -1,5 +1,6 @@
 import React from "react";
 import DriverForm from "./DriverForm";
+import TopBarSlim from "../components/TopBar";
 
 export default function AddDriverPage() {
   const handleDriverSubmit = (data) => {
@@ -8,10 +9,13 @@ export default function AddDriverPage() {
   };
 
   return (
+    <>
+    <TopBarSlim title="Forgot Password" to="/login" />
     <div className="forgot-page">
       <div className="forgot-main">
         <DriverForm onSubmit={handleDriverSubmit} />
       </div>
     </div>
+    </>
   );
 }

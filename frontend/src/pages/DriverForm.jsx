@@ -26,7 +26,7 @@ export default function DriverForm({ onSubmit }) {
     <div className="driver-form-container">
       <h2 className="dform-title">Add Driver Details</h2>
       <form className="driver-form" onSubmit={handleSubmit}>
-        <div className="dform-group full-width">
+        <div className="dform-group dfull-width">
           <label>Full Name</label>
           <input
             type="text"
@@ -92,7 +92,7 @@ export default function DriverForm({ onSubmit }) {
             <input
               type="date"
               name="licenseExpiryDate"
-              className="input-field-date"
+              className="input-field-d"
               value={driverData.licenseExpiryDate}
               onChange={handleChange}
               required
@@ -104,7 +104,7 @@ export default function DriverForm({ onSubmit }) {
             <input
               type="date"
               name="licenseRenewalDate"
-              className="input-field-date"
+              className="input-field-d"
               value={driverData.licenseRenewalDate}
               onChange={handleChange}
               required
