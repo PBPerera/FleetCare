@@ -1,6 +1,7 @@
 
 import React from "react";
 import VehicleForm from "./VehicleForm";
+import TopBarSlim from "../components/TopBar";
 
 export default function AddVehiclePage() {
   const handleVehicleSubmit = (data) => {
@@ -9,10 +10,13 @@ export default function AddVehiclePage() {
   };
 
   return (
+    <>
+    <TopBarSlim title="Forgot Password" to="/login" />
     <div className="forgot-page">
       <div className="forgot-main">
         <VehicleForm onSubmit={handleVehicleSubmit} />
       </div>
     </div>
+    </>
   );
 }

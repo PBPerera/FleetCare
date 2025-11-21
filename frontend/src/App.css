@@ -221,16 +221,17 @@ button, input { font: inherit; color: inherit; }
 }
 
 .input-field-vehicleID{
-  width: 92.6%;
+  width: 95%;
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid rgba(75, 150, 220, 0.45);
   background: white;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .input-field-vehicleType {
-  width: 96%;
+  width: 95%;
   padding: 10px 40px 10px 14px;
   border-radius: 8px;
   border: 1px solid rgba(75, 150, 220, 0.45);
@@ -248,11 +249,13 @@ button, input { font: inherit; color: inherit; }
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-bottom: 10px;
 }
 
 .form-row {
   display: flex;
-  gap: 20px;
+  gap: 1px;
+  margin-bottom: 3px;
 }
 
 .full-width {

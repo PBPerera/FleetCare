@@ -25,6 +25,7 @@ export default function VehicleForm({ onSubmit }) {
   };
 
   return (
+    
     <div className="vehicle-form-container">
       <h2 className="form-title">Add Vehicle Details</h2>
       <form className="vehicle-form" onSubmit={handleSubmit}>
@@ -38,6 +39,10 @@ export default function VehicleForm({ onSubmit }) {
             value={vehicleData.vehicleId}
             onChange={handleChange}
             required
+            style={{ height:"40px", width: "745px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
           />
         </div>
 
@@ -50,6 +55,10 @@ export default function VehicleForm({ onSubmit }) {
             value={vehicleData.vehicleType}
             onChange={handleChange}
             required
+            style={{ height:"40px", width: "745px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
           >
             <option value="">Select Type</option>
             <option value="Car">Car</option>
@@ -70,6 +79,10 @@ export default function VehicleForm({ onSubmit }) {
               className="input-field"
               value={vehicleData.wheelSerialNo}
               onChange={handleChange}
+              style={{ height:"40px", width: "613px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
             />
           </div>
 
@@ -81,6 +94,10 @@ export default function VehicleForm({ onSubmit }) {
               className="input-field"
               value={vehicleData.wheelSize}
               onChange={handleChange}
+              style={{ height:"40px", width: "613px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
             />
           </div>
         </div>
@@ -94,6 +111,10 @@ export default function VehicleForm({ onSubmit }) {
               className="input-field"
               value={vehicleData.batteryNo}
               onChange={handleChange}
+              style={{ height:"40px", width: "613px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
             />
           </div>
 
@@ -105,6 +126,10 @@ export default function VehicleForm({ onSubmit }) {
               className="input-field"
               value={vehicleData.chassisNo}
               onChange={handleChange}
+              style={{ height:"40px", width: "613px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
             />
           </div>
         </div>
@@ -118,6 +143,10 @@ export default function VehicleForm({ onSubmit }) {
               className="input-field"
               value={vehicleData.engineNo}
               onChange={handleChange}
+              style={{ height:"40px", width: "613px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
             />
           </div>
 
@@ -129,6 +158,10 @@ export default function VehicleForm({ onSubmit }) {
               className="input-field"
               value={vehicleData.vehicleRegisterDate}
               onChange={handleChange}
+              style={{ height:"40px", width: "613px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
             />
           </div>
         </div>
@@ -142,6 +175,10 @@ export default function VehicleForm({ onSubmit }) {
               className="input-field"
               value={vehicleData.insuranceExpiryDate}
               onChange={handleChange}
+              style={{ height:"40px", width: "613px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
             />
           </div>
 
@@ -153,6 +190,10 @@ export default function VehicleForm({ onSubmit }) {
               className="input-field"
               value={vehicleData.insuranceRenewalDate}
               onChange={handleChange}
+              style={{ height:"40px", width: "613px", padding: "10px", fontSize: "14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+             }}
             />
           </div>
         </div>
