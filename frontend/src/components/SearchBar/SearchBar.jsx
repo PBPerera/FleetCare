@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-
 const SearchBar = ({ onFilterChange, filterLabel = "Date of the Maintenance" }) => {
   const [filters, setFilters] = useState({
     vehicleId: '',

@@ -1,13 +1,13 @@
 import { useContext } from 'react'
-import Layout from '../components/Layout/Layout.jsx'
 import SearchBar from '../components/SearchBar/SearchBar.jsx'
 import Table from '../components/DataTable/Table.jsx'
 import Button from '../components/Buttons/Button.jsx'
 import ExportPdfBtn from '../components/ExportPdfBtn.jsx'
+import Layout from '../components/Layout/Layout.jsx'
 import { MaintenanceContext } from '../context/MaintenanceContext.jsx'
 
 
-function RepairApprove() {
+export default function RepairApprove() {
   const { state, setFilters, updateRepair, addRepair, deleteRepair } = useContext(MaintenanceContext)
 
   const approvalColumns = [
@@ -107,4 +107,4 @@ function RepairApprove() {
   )
 }
 
-export default RepairApprove
+

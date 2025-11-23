@@ -4,7 +4,10 @@ export default function ForgotPassword({ onNext }) {
   const [email, setEmail] = useState("");
 
   return (
+    
+    
     <div className="forgot-main">
+ 
       <div className="forgot-card">
         <h2 className="forgot-title">Forgot Password?</h2>
        
