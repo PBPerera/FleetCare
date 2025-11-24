@@ -35,6 +35,15 @@ export default function DriverForm({ onSubmit }) {
             value={driverData.fullName}
             onChange={handleChange}
             required
+            style={
+              {width: "95%",
+              max_width: "700px",  
+              padding: "10px 14px",
+              border_radius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+              background: "white",
+              font_size: "14px"}
+            }
           />
         </div>
 
@@ -47,6 +56,15 @@ export default function DriverForm({ onSubmit }) {
             value={driverData.emailAddress}
             onChange={handleChange}
             required
+            style={
+              {width: "95%",
+              max_width: "700px",  
+              padding: "10px 14px",
+              border_radius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+              background: "white",
+              font_size: "14px"}
+            }
           />
         </div>
 
@@ -59,6 +77,15 @@ export default function DriverForm({ onSubmit }) {
             value={driverData.phoneNumber}
             onChange={handleChange}
             required
+            style={
+              {width: "95%",
+              max_width: "700px",  
+              padding: "10px 14px",
+              border_radius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+              background: "white",
+              font_size: "14px"}
+            }
           />
         </div>
 
@@ -71,6 +98,15 @@ export default function DriverForm({ onSubmit }) {
             value={driverData.nicNo}
             onChange={handleChange}
             required
+            style={
+              {width: "95%",
+              max_width: "700px",  
+              padding: "10px 14px",
+              border_radius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+              background: "white",
+              font_size: "14px"}
+            }
           />
         </div>
 
@@ -83,6 +119,15 @@ export default function DriverForm({ onSubmit }) {
             value={driverData.licenseNo}
             onChange={handleChange}
             required
+            style={
+              {width: "95%",
+              max_width: "700px",  
+              padding: "10px 14px",
+              border_radius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+              background: "white",
+              font_size: "14px"}
+            }
           />
         </div>
 
@@ -120,11 +165,20 @@ export default function DriverForm({ onSubmit }) {
             className="input-field-d"
             value={driverData.healthAssessment}
             onChange={handleChange}
+            style={
+              {width: "95%",
+              max_width: "700px",  
+              padding: "10px 14px",
+              border_radius: "8px",
+              border: "1px solid rgba(75, 150, 220, 0.45)",
+              background: "white",
+              font_size: "14px"}
+            }
           />
         </div>
 
-        <div className="btn-row">
-          <button type="submit" className="gradient-btn">
+        <div className="dform-row">
+          <button type="submit" className="gradient-btndriver" >
             Add Driver Details
           </button>
         </div>
