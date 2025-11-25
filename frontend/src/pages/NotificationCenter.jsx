@@ -71,27 +71,7 @@ export default function NotificationCenter() {
   return (
     <div className="app-wrapper">
       <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
-        {/* Sidebar */}
-        <aside className="sidebar">
-          <div className="logo-section">
-            <FaUserCircle className="logo-icon" />
-          </div>
-          <ul className="menu">
-            <li><MdDashboard /></li>
-            <li><MdPeople /></li>
-            <li><MdDirectionsCar /></li>
-            <li><FaUserTie /></li>
-            <li><MdSchedule /></li>
-            <li><FaClipboardList /></li>
-            <li><FaTools /></li>
-            <li><HiOutlineDocumentReport /></li>
-            <li className="active"><FaBell /></li>
-            <li><RiUserSettingsLine /></li>
-          </ul>
-          <div className="logout">
-            <FaSignOutAlt />
-          </div>
-        </aside>
+        
 
         {/* Main Area */}
         <main className="main-content">

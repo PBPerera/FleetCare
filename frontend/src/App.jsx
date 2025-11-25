@@ -2,8 +2,8 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ForgotPasswordFlow from "./pages/ForgotPasswordFlow";
-import AdminDashboard from "./pages/AdminDashboard";
-import StaffDashboard from "./pages/StaffDashboard";
+
+
 import NotificationM from "./pages/NotificationM";
 import NotificationCenter from "./pages/NotificationCenter";
 import NotificationStaff from "./pages/NotificationStaff";
@@ -16,8 +16,8 @@ function App() {
       <Route path="/" element={<Home />} />
       
       <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
-      <Route path="/FleetcareDashboard1" element={<AdminDashboard />} />
-      <Route path="/StaffDashboard" element={<StaffDashboard />} />
+      
+      
       <Route path="/NotificationManagement" element={<NotificationM />} />
       <Route path="/NotificationCenter" element={<NotificationCenter />} />
       <Route path="/NotificationStaff" element={<NotificationStaff />} />

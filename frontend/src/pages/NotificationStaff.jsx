@@ -41,7 +41,7 @@ export default function NotificationStaff() {
   return (
     <div className="app-wrapper">
       <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
-        {/* Sidebar */}
+        {/* Sidebar
         <aside className="sidebar">
           <div className="logo-section">
             <FaUserCircle className="logo-icon" />
@@ -69,7 +69,7 @@ export default function NotificationStaff() {
           <div className="logout">
             <FaSignOutAlt />
           </div>
-        </aside>
+        </aside> */}
 
         {/* Main Area */}
         <main className="main-content">

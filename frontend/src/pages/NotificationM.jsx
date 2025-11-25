@@ -159,36 +159,7 @@ export default function NotificationManagement() {
   return (
     <div className="app-wrapper">
       <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
-        {/* Sidebar */}
-        <aside className="sidebar">
-          <div className="logo-section">
-            <FaUserCircle className="logo-icon" />
-          </div>
-          <ul className="menu">
-            <li onClick={() => navigate("/FleetCareDashboard1")} style={{ cursor: "pointer" }}>
-                          <MdDashboard /> 
-                        </li>
-            <li><MdPeople /></li>
-            <li><MdDirectionsCar /></li>
-            <li><FaUserTie /></li>
-            <li><MdSchedule /></li>
-            <li><FaClipboardList /></li>
-            <li><FaTools /></li>
-            <li><HiOutlineDocumentReport /></li>
-  <li 
-  className={location.pathname === "/NotificationManagement" ? "active" : ""} 
-  onClick={() => navigate("/NotificationManagement")}
-  style={{ cursor: "pointer" }}
->
-  <FaBell /> 
-</li>
-
-
-
-            <li><RiUserSettingsLine /></li>
-          </ul>
-          <div className="logout"><FaSignOutAlt /></div>
-        </aside>
+        
 
         {/* Main Content */}
         <main className="main-content scrollable">
