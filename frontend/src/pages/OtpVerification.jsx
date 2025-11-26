@@ -64,6 +64,21 @@ export default function OtpVerification({ email = "", onVerify }) {
             {loading ? "Verifying..." : "Verify OTP"}
           </button>
         </div>
+        
+        <div className="otp-meta" style={{ marginTop: 12, fontSize: 13 }}>
+          OTP expires in <b>01:00</b> minutes
+          
+        </div>
+
+        <div style={{ marginTop: 14}}>
+          <button
+            className="link-btn"
+            onClick={() => alert("Resend OTP (implement API call)")}
+            aria-label="Resend OTP"
+          >
+            Resend New OTP
+          </button>
+        </div>
       </div>
     </div>
   );
