@@ -6,7 +6,8 @@ const API = axios.create({
 
 export const sendOtp = (email) => API.post("/auth/forgot-password", { email });
 export const verifyOtp = (email, otp) => API.post("/auth/verify-otp", { email, otp });
+// Reset password → key must be newPassword
 export const resetPassword = (email, password) =>
-  API.post("/auth/reset-password", { email, password });
+  API.post("/auth/reset-password", { email, newPassword: password });
 
 export default API;

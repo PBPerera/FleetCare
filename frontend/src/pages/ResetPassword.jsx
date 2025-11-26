@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { resetPassword } from "../api";
+import { useNavigate } from "react-router-dom";   // ✅ ADD THIS
 
 export default function ResetPassword({ email, onReset }) {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();  // ✅ ADD THIS
 
   const handleReset = async () => {
     if (!password || !confirm) return alert("Enter password and confirm");
@@ -13,15 +16,19 @@ export default function ResetPassword({ email, onReset }) {
     try {
       setLoading(true);
       const res = await resetPassword(email, password);
-      alert(res.data.message); // backend returns { message: "Password reset successfully" }
-      onReset(); // redirect to login page
+
+      alert(res.data.msg || "Password updated successfully");
+
+      navigate("/login");  // ✅ REDIRECT TO LOGIN
+
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Error resetting password");
+      alert(err.response?.data?.msg || "Error resetting password");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="forgot-main">
