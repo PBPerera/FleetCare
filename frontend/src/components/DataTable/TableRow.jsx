@@ -1,40 +1,81 @@
-import { useState } from 'react'
+// src/components/DataTable/TableRow.jsx
+import { useState } from 'react';
 
-const TableRow = ({ row, columns, isSelected, onSelect, onAction, showCheckbox, editable = false, onEdit, onDelete }) => {
-  const isNewRow = !row.vehicleId || row.vehicleId === ''
-  const [editMode, setEditMode] = useState(editable && isNewRow)
-  const [editedData, setEditedData] = useState(row)
+const TableRow = ({ 
+  row, 
+  columns, 
+  isSelected, 
+  onSelect, 
+  onAction, 
+  showCheckbox, 
+  editable = false, 
+  onEdit, 
+  onDelete 
+}) => {
+  // Use MongoDB _id instead of id for backend compatibility
+  const rowId = row._id || row.id;
+  const isNewRow = !row.vehicleId || row.vehicleId === '';
+  const [editMode, setEditMode] = useState(editable && isNewRow);
+  const [editedData, setEditedData] = useState(row);
 
   const handleEdit = (key, value) => {
-    const updated = { ...editedData, [key]: value }
-    setEditedData(updated)
-  }
+    const updated = { ...editedData, [key]: value };
+    setEditedData(updated);
+  };
 
   const handleSave = () => {
     if (onEdit) {
-      onEdit(row.id, editedData)
+      // Pass the MongoDB _id and the updated data
+      onEdit(rowId, editedData);
     }
-    setEditMode(false)
-  }
+    setEditMode(false);
+  };
 
   const handleEditClick = () => {
-    setEditMode(true)
-  }
+    setEditMode(true);
+  };
 
   const handleDeleteClick = () => {
     if (window.confirm('Are you sure you want to delete this record?')) {
       if (onDelete) {
-        onDelete(row.id)
+        onDelete(rowId);
       }
     }
-  }
+  };
 
   const handleCancel = () => {
-    setEditedData(row)
+    setEditedData(row);
     if (!isNewRow) {
-      setEditMode(false)
+      setEditMode(false);
     }
-  }
+  };
+
+  // Format date fields for display
+  const formatDate = (dateString) => {
+    if (!dateString) return '-';
+    try {
+      const date = new Date(dateString);
+      return date.toISOString().split('T')[0];
+    } catch {
+      return dateString;
+    }
+  };
+
+  const renderCellValue = (col) => {
+    const value = editedData[col.key];
+    
+    // Format dates for display
+    if ((col.key.includes('Date') || col.key.includes('date')) && value && !editMode) {
+      return formatDate(value);
+    }
+    
+    // Format cost
+    if (col.key === 'cost' && value && !editMode) {
+      return `$${Number(value).toFixed(2)}`;
+    }
+    
+    return value || '-';
+  };
 
   return (
     <tr className={isSelected ? 'selected' : ''}>
@@ -47,16 +88,28 @@ const TableRow = ({ row, columns, isSelected, onSelect, onAction, showCheckbox, 
         <td key={col.key} className={col.className || ''}>
           {col.render ? (
             col.render(editedData, onAction)
-          ) : editMode && col.key !== 'id' && col.key !== 'maintenanceId' ? (
+          ) : editMode && col.key !== '_id' && col.key !== 'id' && col.key !== 'maintenanceId' ? (
             <input
-              type={col.key.includes('Date') || col.key.includes('date') ? 'date' : 'text'}
-              value={editedData[col.key] || ''}
+              type={
+                col.key.includes('Date') || col.key.includes('date') 
+                  ? 'date' 
+                  : col.key === 'cost' 
+                  ? 'number' 
+                  : 'text'
+              }
+              value={
+                col.key.includes('Date') || col.key.includes('date')
+                  ? (editedData[col.key] ? new Date(editedData[col.key]).toISOString().split('T')[0] : '')
+                  : (editedData[col.key] || '')
+              }
               onChange={(e) => handleEdit(col.key, e.target.value)}
               placeholder={`Enter ${col.label}`}
               className="editable-input"
+              step={col.key === 'cost' ? '0.01' : undefined}
+              min={col.key === 'cost' ? '0' : undefined}
             />
           ) : (
-            <span className="cell-content">{editedData[col.key] || '-'}</span>
+            <span className="cell-content">{renderCellValue(col)}</span>
           )}
         </td>
       ))}
@@ -102,7 +155,7 @@ const TableRow = ({ row, columns, isSelected, onSelect, onAction, showCheckbox, 
         </div>
       </td>
     </tr>
-  )
-}
+  );
+};
 
-export default TableRow
+export default TableRow;

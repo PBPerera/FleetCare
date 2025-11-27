@@ -6,22 +6,27 @@ import Cards from "../components/DashboardCards/Cards.jsx";
 import SearchBar from "../components/SearchBar/SearchBar.jsx";
 import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
-import ExportPdfBtn from "../components/ExportpdfBtn.jsx";
-import { MaintenanceContext } from "../Context/MaintenanceContext.jsx";
+import ExportPdfBtn from "../components/ExportPdfBtn.jsx";
+import { MaintenanceContext } from "../context/MaintenanceContext.jsx";
 import "./Pages.css";
 
-
-
-
-export default function MaintenanceManagement() {
+function MaintenanceManagement() {
   const navigate = useNavigate();
-  const { state, setFilters, addService, addRepair, updateService, updateRepair, deleteService, deleteRepair } =
-    useContext(MaintenanceContext);
+  const { 
+    state, 
+    setFilters, 
+    addService, 
+    addRepair, 
+    updateService, 
+    updateRepair, 
+    deleteService, 
+    deleteRepair,
+    approveRepair,
+    rejectRepair 
+  } = useContext(MaintenanceContext);
 
-  // sidebar/header UI
   const [collapsed, setCollapsed] = useState(false);
 
-  // map sidebar item → route
   const routeMap = {
     "Dashboard": "/admindashboard",
     "User Management": "/user-management",
@@ -35,112 +40,192 @@ export default function MaintenanceManagement() {
     "Audit Log": "/audit-log",
   };
 
-  const dashboardCards = [
-    { title: "Total",       count: 4,  subtitle: "All records", icon: "📊" },
-    { title: "Scheduled",   count: 1,  subtitle: "Upcoming",    icon: "📅" },
-    { title: "In Progress", count: 2,  subtitle: "Active Work", icon: "⚙️" },
-    { title: "Completed",   count: 10, subtitle: "This month",  icon: "✅" },
+  const dashboardCards = state.dashboardStats ? [
+    { 
+      title: "Total", 
+      count: state.dashboardStats.overview?.total || 0, 
+      subtitle: "All records", 
+      icon: "📊" 
+    },
+    { 
+      title: "Scheduled", 
+      count: state.dashboardStats.overview?.scheduled || 0, 
+      subtitle: "Upcoming", 
+      icon: "📅" 
+    },
+    { 
+      title: "In Progress", 
+      count: state.dashboardStats.overview?.inProgress || 0, 
+      subtitle: "Active Work", 
+      icon: "⚙️" 
+    },
+    { 
+      title: "Completed", 
+      count: state.dashboardStats.overview?.completedThisMonth || 0, 
+      subtitle: "This month", 
+      icon: "✅" 
+    },
+  ] : [
+    { title: "Total", count: 0, subtitle: "All records", icon: "📊" },
+    { title: "Scheduled", count: 0, subtitle: "Upcoming", icon: "📅" },
+    { title: "In Progress", count: 0, subtitle: "Active Work", icon: "⚙️" },
+    { title: "Completed", count: 0, subtitle: "This month", icon: "✅" },
   ];
 
-  // NOTE: column keys must be unique. If your Table supports duplicate keys, you can revert,
-  // but most tables need unique keys—so Date/Shift/Complete are separate below.
   const serviceColumns = [
     { key: "maintenanceId", label: "Maintain ID" },
-    { key: "vehicleId",     label: "Vehicle ID" },
-    { key: "driverName",    label: "Driver Name" },
-    { key: "description",   label: "Description" },
-    { key: "companyName",   label: "Company Name" },
-    { key: "date",          label: "Date the Maintenance" },       // was shiftDate
-    { key: "shiftDate",     label: "Shift Date of the Maintenance"},
-    { key: "completeDate",  label: "Complete Date of the Maintenance" },
-    { key: "cost",          label: "Cost" },
+    { key: "vehicleId", label: "Vehicle ID" },
+    { key: "driverName", label: "Driver Name" },
+    { key: "description", label: "Description" },
+    { key: "companyName", label: "Company Name" },
+    { key: "date", label: "Date the Maintenance" },
+    { key: "shiftDate", label: "Shift Date of the Maintenance" },
+    { key: "completeDate", label: "Complete Date of the Maintenance" },
+    { key: "cost", label: "Cost" },
+    { key: "status", label: "Status" },
   ];
 
   const repairColumns = [
     { key: "maintenanceId", label: "Maintain ID" },
-    { key: "vehicleId",     label: "Vehicle ID" },
-    { key: "driverName",    label: "Driver Name" },
-    { key: "description",   label: "Description" },
-    { key: "requestDate",   label: "Request Date for the Maintenance" }, // was shiftDate
+    { key: "vehicleId", label: "Vehicle ID" },
+    { key: "driverName", label: "Driver Name" },
+    { key: "description", label: "Description" },
+    { key: "requestDate", label: "Request Date for the Maintenance" },
     {
       key: "approveReject",
       label: "Approve / Reject",
       render: (row, onAction) => (
         <div className="action-buttons">
-          <button className="action-btn approve" onClick={() => onAction("approve", row)}>
-            Approve
+          <button 
+            className="action-btn approve" 
+            onClick={() => onAction("approve", row)}
+            disabled={row.status === 'Approved' || row.status === 'Rejected'}
+          >
+            {row.status === 'Approved' ? '✓ Approved' : 'Approve'}
           </button>
-          <button className="action-btn reject" onClick={() => onAction("reject", row)}>
-            Reject
+          <button 
+            className="action-btn reject" 
+            onClick={() => onAction("reject", row)}
+            disabled={row.status === 'Approved' || row.status === 'Rejected'}
+          >
+            {row.status === 'Rejected' ? '✗ Rejected' : 'Reject'}
           </button>
         </div>
       ),
     },
-    { key: "companyName",  label: "Company Name" },
-    { key: "shiftDate",    label: "Shift Date of the Maintenance" },
+    { key: "companyName", label: "Company Name" },
+    { key: "shiftDate", label: "Shift Date of the Maintenance" },
     { key: "completeDate", label: "Complete Date of the Maintenance" },
-    { key: "cost",         label: "Cost" },
+    { key: "cost", label: "Cost" },
+    { key: "status", label: "Status" },
   ];
 
-  const handleAddService = () => {
+  const handleAddService = async () => {
     const newService = {
-      id: `S${Date.now()}`,
-      maintenanceId: `M${String(state.services.length + 1).padStart(4, "0")}`,
       vehicleId: "",
       driverName: "",
       description: "",
       companyName: "",
-      date: "",          // for serviceColumns.date
+      date: new Date().toISOString().split('T')[0],
       shiftDate: "",
       completeDate: "",
-      cost: "",
+      cost: 0,
+      status: "Scheduled"
     };
-    addService(newService);
+    
+    try {
+      await addService(newService);
+    } catch (error) {
+      alert('Error adding service: ' + error.message);
+    }
   };
 
-  const handleAddRepair = () => {
+  const handleAddRepair = async () => {
     const newRepair = {
-      id: `R${Date.now()}`,
-      maintenanceId: `M${String(state.repairs.length + 1).padStart(4, "0")}`,
       vehicleId: "",
       driverName: "",
       description: "",
       companyName: "",
-      requestDate: "",   // for repairColumns.requestDate
+      requestDate: new Date().toISOString().split('T')[0],
       shiftDate: "",
       completeDate: "",
-      cost: "",
+      cost: 0,
       status: "Pending",
+      priority: "Medium",
       developmentOfficer: "",
       engineer: "",
       procurementStage1: "",
       tenderCall: "",
       procurementStage2: "",
     };
-    addRepair(newRepair);
+    
+    try {
+      await addRepair(newRepair);
+    } catch (error) {
+      alert('Error adding repair: ' + error.message);
+    }
   };
 
-  const handleServiceEdit = (id, updated) => updateService(id, updated);
-  const handleRepairEdit  = (id, updated) => updateRepair(id, updated);
+  const handleServiceEdit = async (id, updated) => {
+    try {
+      await updateService(id, updated);
+    } catch (error) {
+      alert('Error updating service: ' + error.message);
+    }
+  };
 
-  const handleServiceDelete = (id) => {deleteService(id)}
-  const handleRepairDelete = (id) => {deleteRepair(id)}
+  const handleRepairEdit = async (id, updated) => {
+    try {
+      await updateRepair(id, updated);
+    } catch (error) {
+      alert('Error updating repair: ' + error.message);
+    }
+  };
+
+  const handleServiceDelete = async (id) => {
+    try {
+      await deleteService(id);
+    } catch (error) {
+      alert('Error deleting service: ' + error.message);
+    }
+  };
+
+  const handleRepairDelete = async (id) => {
+    try {
+      await deleteRepair(id);
+    } catch (error) {
+      alert('Error deleting repair: ' + error.message);
+    }
+  };
 
   const handleServiceAction = (action, row) => {
     console.log("Service action:", action, row);
   };
 
-  const handleRepairAction = (action, row) => {
+  const handleRepairAction = async (action, row) => {
     if (action === "approve") {
-      navigate("/repairs/approve");
+      try {
+        const comments = prompt("Enter approval comments (optional):");
+        await approveRepair(row._id, comments || '');
+        alert('Repair approved successfully!');
+      } catch (error) {
+        alert('Error approving repair: ' + error.message);
+      }
     } else if (action === "reject") {
-      alert(`Rejected: ${row.maintenanceId}`);
+      try {
+        const reason = prompt("Enter rejection reason:");
+        if (reason) {
+          await rejectRepair(row._id, reason);
+          alert('Repair rejected successfully!');
+        }
+      } catch (error) {
+        alert('Error rejecting repair: ' + error.message);
+      }
     }
   };
 
   return (
     <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
-      {/* Sidebar */}
       <Sidebar
         collapsed={collapsed}
         active="Maintenance Management"
@@ -148,9 +233,7 @@ export default function MaintenanceManagement() {
         onLogout={() => (window.location.href = "/login")}
       />
 
-      {/* Main */}
       <main className="ad-main">
-        {/* Top Header */}
         <header className="sd-header">
           <button
             className="sd-toggle"
@@ -165,8 +248,10 @@ export default function MaintenanceManagement() {
           <div className="sd-header-right" />
         </header>
 
-        {/* Page content */}
         <div className="ad-content">
+          {state.loading && <div className="loading">Loading...</div>}
+          {state.error && <div className="error">Error: {state.error}</div>}
+
           <Cards data={dashboardCards} />
 
           <h2 className="section-title">Maintenance Records for Service</h2>
@@ -210,3 +295,5 @@ export default function MaintenanceManagement() {
     </div>
   );
 }
+
+export default MaintenanceManagement;  // ✅ THIS MUST BE HERE!
