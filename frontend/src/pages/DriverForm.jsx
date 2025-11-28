@@ -12,14 +12,46 @@ export default function DriverForm({ onSubmit }) {
     healthAssessment: "",
   });
 
-  const handleChange = (e) => {
+ const API_URL = import.meta.env.VITE_API_URL;
+
+ const handleChange = (e) => {
     setDriverData({ ...driverData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(driverData);
-    console.log("Driver Data:", driverData);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/drivers/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(driverData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Driver details added successfully!");
+        console.log("Saved Driver:", result);
+
+        // clear form
+        setDriverData({
+          fullName: "",
+          emailAddress: "",
+          phoneNumber: "",
+          nicNo: "",
+          licenseNo: "",
+          licenseExpiryDate: "",
+          licenseRenewalDate: "",
+          healthAssessment: "",
+        });
+      } else {
+        alert(result.message || "Failed to add driver");
+      }
+    } catch (error) {
+      console.error("Request Error:", error);
+      alert("Error connecting to backend. Check console.");
+    }
   };
 
   return (
