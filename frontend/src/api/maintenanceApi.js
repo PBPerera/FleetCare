@@ -1,7 +1,6 @@
 // src/api/maintenanceApi.js
 const API_BASE_URL = 'http://localhost:4000/api';
 
-// Helper function for API calls
 const fetchAPI = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
   
@@ -19,7 +18,8 @@ const fetchAPI = async (endpoint, options = {}) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || 'API request failed');
+      console.error('API Error Response:', data);
+      throw new Error(data.error || data.message || 'API request failed');
     }
 
     return data;
@@ -29,7 +29,17 @@ const fetchAPI = async (endpoint, options = {}) => {
   }
 };
 
-// Services API
+// Helper function to remove undefined and empty string values
+const cleanData = (obj) => {
+  const cleaned = {};
+  Object.keys(obj).forEach(key => {
+    if (obj[key] !== undefined && obj[key] !== '') {
+      cleaned[key] = obj[key];
+    }
+  });
+  return cleaned;
+};
+
 export const servicesApi = {
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
@@ -37,21 +47,42 @@ export const servicesApi = {
     return fetchAPI(endpoint);
   },
 
-  getById: async (id) => {
-    return fetchAPI(`/services/${id}`);
-  },
-
   create: async (data) => {
+    const formattedData = {
+      vehicleId: data.vehicleId || undefined,
+      driverName: data.driverName || undefined,
+      description: data.description || undefined,
+      companyName: data.companyName || undefined,
+      date: data.date ? new Date(data.date).toISOString() : new Date().toISOString(),
+      shiftDate: data.shiftDate ? new Date(data.shiftDate).toISOString() : undefined,
+      completeDate: data.completeDate ? new Date(data.completeDate).toISOString() : undefined,
+      cost: data.cost || 0,
+      status: data.status || 'Scheduled',
+    };
+    
+    // Remove undefined values
+    const cleanedData = cleanData(formattedData);
+    
+    console.log('Creating service with cleaned data:', cleanedData);
     return fetchAPI('/services', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(cleanedData),
     });
   },
 
   update: async (id, data) => {
+    const formattedData = {
+      ...data,
+      date: data.date ? new Date(data.date).toISOString() : undefined,
+      shiftDate: data.shiftDate ? new Date(data.shiftDate).toISOString() : undefined,
+      completeDate: data.completeDate ? new Date(data.completeDate).toISOString() : undefined,
+    };
+    
+    const cleanedData = cleanData(formattedData);
+    
     return fetchAPI(`/services/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: JSON.stringify(cleanedData),
     });
   },
 
@@ -61,12 +92,15 @@ export const servicesApi = {
     });
   },
 
+  getById: async (id) => {
+    return fetchAPI(`/services/${id}`);
+  },
+
   getStats: async () => {
     return fetchAPI('/services/stats');
   },
 };
 
-// Repairs API
 export const repairsApi = {
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
@@ -78,21 +112,49 @@ export const repairsApi = {
     return fetchAPI('/repairs/pending');
   },
 
-  getById: async (id) => {
-    return fetchAPI(`/repairs/${id}`);
-  },
-
   create: async (data) => {
+    const formattedData = {
+      vehicleId: data.vehicleId || undefined,
+      driverName: data.driverName || undefined,
+      description: data.description || undefined,
+      companyName: data.companyName || undefined,
+      requestDate: data.requestDate ? new Date(data.requestDate).toISOString() : new Date().toISOString(),
+      shiftDate: data.shiftDate ? new Date(data.shiftDate).toISOString() : undefined,
+      completeDate: data.completeDate ? new Date(data.completeDate).toISOString() : undefined,
+      engineerDate: data.engineerDate ? new Date(data.engineerDate).toISOString() : undefined,
+      cost: data.cost || 0,
+      status: data.status || 'Pending',
+      priority: data.priority || 'Medium',
+      developmentOfficer: data.developmentOfficer || undefined,
+      engineer: data.engineer || undefined,
+      procurementStage1: data.procurementStage1 || '',
+      tenderCall: data.tenderCall || '',
+      procurementStage2: data.procurementStage2 || '',
+    };
+    
+    const cleanedData = cleanData(formattedData);
+    
+    console.log('Creating repair with cleaned data:', cleanedData);
     return fetchAPI('/repairs', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(cleanedData),
     });
   },
 
   update: async (id, data) => {
+    const formattedData = {
+      ...data,
+      requestDate: data.requestDate ? new Date(data.requestDate).toISOString() : undefined,
+      shiftDate: data.shiftDate ? new Date(data.shiftDate).toISOString() : undefined,
+      completeDate: data.completeDate ? new Date(data.completeDate).toISOString() : undefined,
+      engineerDate: data.engineerDate ? new Date(data.engineerDate).toISOString() : undefined,
+    };
+    
+    const cleanedData = cleanData(formattedData);
+    
     return fetchAPI(`/repairs/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: JSON.stringify(cleanedData),
     });
   },
 
@@ -123,12 +185,15 @@ export const repairsApi = {
     });
   },
 
+  getById: async (id) => {
+    return fetchAPI(`/repairs/${id}`);
+  },
+
   getStats: async () => {
     return fetchAPI('/repairs/stats');
   },
 };
 
-// Maintenance API
 export const maintenanceApi = {
   getDashboardStats: async () => {
     return fetchAPI('/maintenance/dashboard/stats');

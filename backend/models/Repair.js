@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const repairSchema = new mongoose.Schema({
   maintenanceId: {
     type: String,
-    required: true,
     unique: true,
     default: function() {
       return `R${String(Date.now()).slice(-6)}`;
@@ -12,27 +11,30 @@ const repairSchema = new mongoose.Schema({
   },
   vehicleId: {
     type: String,
-    required: [true, 'Vehicle ID is required'],
-    trim: true
+    required: false,  // ✅ Changed to false
+    trim: true,
+    default: 'N/A'
   },
   driverName: {
     type: String,
-    required: [true, 'Driver name is required'],
-    trim: true
+    required: false,  // ✅ Changed to false
+    trim: true,
+    default: 'N/A'
   },
   description: {
     type: String,
-    required: [true, 'Description is required'],
-    trim: true
+    required: false,  // ✅ Changed to false
+    trim: true,
+    default: 'N/A'
   },
   companyName: {
     type: String,
-    required: [true, 'Company name is required'],
-    trim: true
+    required: false,  // ✅ Changed to false
+    trim: true,
+    default: 'N/A'
   },
   requestDate: {
     type: Date,
-    required: [true, 'Request date is required'],
     default: Date.now
   },
   shiftDate: {
@@ -51,8 +53,6 @@ const repairSchema = new mongoose.Schema({
     enum: ['Pending', 'Approved', 'Rejected', 'In Progress', 'Completed'],
     default: 'Pending'
   },
-  
-  // Approval workflow fields
   developmentOfficer: {
     type: String,
     trim: true
@@ -79,71 +79,31 @@ const repairSchema = new mongoose.Schema({
     enum: ['', 'Pending', 'Approved', 'Rejected'],
     default: ''
   },
-  
-  // Approval history
   approvalHistory: [{
     stage: String,
-    approvedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
+    approvedBy: mongoose.Schema.Types.ObjectId,
     approvedAt: Date,
     comments: String,
-    action: {
-      type: String,
-      enum: ['Approved', 'Rejected']
-    }
+    action: String
   }],
-  
-  rejectionReason: {
-    type: String,
-    trim: true
-  },
-  
+  rejectionReason: String,
   priority: {
     type: String,
     enum: ['Low', 'Medium', 'High', 'Critical'],
     default: 'Medium'
   },
-  
-  attachments: [{
-    filename: String,
-    url: String,
-    uploadedAt: Date
-  }],
-  
-  notes: {
-    type: String,
-    trim: true
-  },
-  
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  updatedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }
+  notes: String,
+  createdBy: mongoose.Schema.Types.ObjectId,
+  updatedBy: mongoose.Schema.Types.ObjectId
 }, {
   timestamps: true
 });
 
-// Indexes
 repairSchema.index({ maintenanceId: 1 });
 repairSchema.index({ vehicleId: 1 });
 repairSchema.index({ status: 1 });
 repairSchema.index({ requestDate: -1 });
-repairSchema.index({ priority: 1 });
 
-// Virtual for approval status
-repairSchema.virtual('isFullyApproved').get(function() {
-  return this.procurementStage1 === 'Approved' && 
-         this.procurementStage2 === 'Approved' &&
-         this.status === 'Approved';
-});
-
-// Method to approve repair
 repairSchema.methods.approve = function(userId, comments) {
   this.status = 'Approved';
   this.approvalHistory.push({
@@ -156,7 +116,6 @@ repairSchema.methods.approve = function(userId, comments) {
   return this.save();
 };
 
-// Method to reject repair
 repairSchema.methods.reject = function(userId, reason) {
   this.status = 'Rejected';
   this.rejectionReason = reason;
