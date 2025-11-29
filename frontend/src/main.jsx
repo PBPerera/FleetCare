@@ -12,11 +12,15 @@ import "./components/Modals/Modal.css"
 import "./components/Pagination.css"
 import "./components/SearchBar/SearchBar.css"
 import "./pages/Pages.css"
+import "./pages/Maintenance.css"
+import { MaintenanceProvider } from "./context/MaintenanceContext.jsx";
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
+    
       <App />
     </BrowserRouter>
+    
   </React.StrictMode>
-)
+);

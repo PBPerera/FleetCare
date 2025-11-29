@@ -1,16 +1,28 @@
-import { useContext } from 'react'
-import Layout from '../components/Layout/Layout.jsx'
-import SearchBar from '../components/SearchBar/SearchBar.jsx'
-import Table from '../components/DataTable/Table.jsx'
-import Button from '../components/Buttons/Button.jsx'
-import ExportPdfBtn from '../components/ExportPdfBtn.jsx'
-import { MaintenanceContext } from '../context/MaintenanceContext.jsx'
+// src/pages/RepairApprove.jsx
+import { useContext, useEffect } from 'react';
+import SearchBar from '../components/SearchBar/SearchBar.jsx';
+import Table from '../components/DataTable/Table.jsx';
+import Button from '../components/Buttons/Button.jsx';
+import ExportPdfBtn from '../components/ExportPdfBtn.jsx';
+import Layout from '../components/Layout/Layout.jsx';
+import { MaintenanceContext } from '../Context/MaintenanceContext.jsx';
 
-
-function RepairApprove() {
-  const { state, setFilters, updateRepair, addRepair } = useContext(MaintenanceContext)
+export default function RepairApprove() {
+  const { 
+    state, 
+    setFilters, 
+    updateRepair, 
+    addRepair, 
+    deleteRepair, 
+    fetchRepairs 
+  } = useContext(MaintenanceContext);
 
   const approvalColumns = [
+    { key: 'maintenanceId', label: 'Maintain ID' },
+    { key: 'vehicleId', label: 'Vehicle ID' },
+    { key: 'driverName', label: 'Driver Name' },
+    { key: 'description', label: 'Description' },
+    { key: 'companyName', label: 'Company Name' },
     { 
       key: 'procurementStage1', 
       label: 'Procurement Stage 1',
@@ -24,63 +36,80 @@ function RepairApprove() {
       label: 'Engineer',
     },
     { 
+      key: 'engineerDate', 
+      label: 'Engineer Date',
+    },
+    { 
       key: 'procurementStage2', 
       label: 'Procurement Stage 2',
     },
-    { 
-      key: 'shiftDate', 
-      label: 'Shift Date Of Maintenance',
-    },
-    { key: 'companyName', label: 'Company Name' },
-    { key: 'maintenanceId', label: 'Maintain ID' },
-    { key: 'vehicleId', label: 'Vehicle ID' },
-    { key: 'driverName', label: 'Driver Name' },
-    { key: 'description', label: 'Description' },
     { 
       key: 'developmentOfficer', 
       label: 'Development Officer',
     },
     { 
-      key: 'engineerDate', 
-      label: 'Engineer Date',
+      key: 'shiftDate', 
+      label: 'Shift Date Of Maintenance',
     },
-  ]
+    { key: 'status', label: 'Status' },
+  ];
 
-  const handleAddApproval = () => {
+  const handleAddApproval = async () => {
     const newApproval = {
-      id: `R${Date.now()}`,
-      maintenanceId: `M${String(state.repairs.length + 1).padStart(4, '0')}`,
       vehicleId: '',
       driverName: '',
       description: '',
       companyName: '',
+      requestDate: new Date().toISOString().split('T')[0],
       shiftDate: '',
       completeDate: '',
-      cost: '',
+      cost: 0,
       status: 'Pending',
+      priority: 'Medium',
       procurementStage1: '',
       tenderCall: '',
       engineer: '',
+      engineerDate: '',
       procurementStage2: '',
       developmentOfficer: '',
-      engineerDate: '',
+    };
+    
+    try {
+      await addRepair(newApproval);
+    } catch (error) {
+      alert('Error adding approval record: ' + error.message);
     }
-    addRepair(newApproval)
-  }
+  };
 
-  const handleApprovalEdit = (id, updatedData) => {
-    updateRepair(id, updatedData)
-  }
+  const handleApprovalEdit = async (id, updatedData) => {
+    try {
+      await updateRepair(id, updatedData);
+    } catch (error) {
+      alert('Error updating approval: ' + error.message);
+    }
+  };
+
+  const handleApprovalDelete = async (id) => {
+    try {
+      await deleteRepair(id);
+    } catch (error) {
+      alert('Error deleting approval: ' + error.message);
+    }
+  };
 
   const handleAction = (action, row) => {
-    console.log('Approval action:', action, row)
-  }
+    console.log('Approval action:', action, row);
+  };
 
-  const pendingRepairs = state.repairs.filter(r => r.status === 'Pending')
+  // Filter for pending repairs
+  const pendingRepairs = state.repairs.filter(r => r.status === 'Pending');
 
   return (
     <Layout title="Maintenance Management > Maintenance Repair Approve">
       <div className="page-container">
+        {state.loading && <div className="loading">Loading...</div>}
+        {state.error && <div className="error">Error: {state.error}</div>}
+
         <SearchBar onFilterChange={setFilters} filterLabel="Company Name" />
 
         <div className="action-bar">
@@ -96,10 +125,9 @@ function RepairApprove() {
           onAction={handleAction}
           editable={true}
           onEdit={handleApprovalEdit}
+          onDelete={handleApprovalDelete}
         />
       </div>
     </Layout>
-  )
+  );
 }
-
-export default RepairApprove
