@@ -46,10 +46,6 @@ const reducer = (state, action) => {
       };
 
     case 'UPDATE_SERVICE':
-      // Auto-complete service when completeDate is added
-      const updatedServiceData = action.payload.data
-      const hasCompleteDate = updatedServiceData.completeDate && updatedServiceData.completeDate.trim() !== ''
-      
       return {
         ...state,
         services: state.services.map((s) =>
@@ -58,10 +54,6 @@ const reducer = (state, action) => {
       };
 
     case 'UPDATE_REPAIR':
-      // Auto-complete repair when completeDate is added (and status is Approved)
-      const updatedRepairData = action.payload.data
-      const hasRepairCompleteDate = updatedRepairData.completeDate && updatedRepairData.completeDate.trim() !== ''
-      
       return {
         ...state,
         repairs: state.repairs.map((r) =>

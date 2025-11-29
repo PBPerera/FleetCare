@@ -1,27 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Table from "../components/DataTable/Table.jsx";
 import { MaintenanceContext } from "../context/MaintenanceContext.jsx";
+import { auditApi } from "../api/maintenanceApi";
 import "./Pages.css";
 
 export default function AuditLog() {
   const navigate = useNavigate();
   const ctx = useContext(MaintenanceContext);
 
-  // Fallback if context not mounted
-  if (!ctx) {
-    return (
-      <div style={{ padding: 24 }}>
-        <h2>Audit Log</h2>
-        <p>MaintenanceContext provider is not mounted.</p>
-      </div>
-    );
-  }
-
-  const { state } = ctx;
-
   const [collapsed, setCollapsed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [completedServices, setCompletedServices] = useState([]);
+  const [completedRepairs, setCompletedRepairs] = useState([]);
+  const [auditStats, setAuditStats] = useState(null);
 
   const [serviceFilters, setServiceFilters] = useState({
     vehicleId: "",
@@ -49,62 +42,86 @@ export default function AuditLog() {
 
   // Table columns
   const auditColumns = [
+    { key: "maintenanceId", label: "Maintenance ID" },
     { key: "vehicleId", label: "Vehicle ID" },
     { key: "driverName", label: "Driver Name" },
     { key: "description", label: "Description" },
     { key: "cost", label: "Cost" },
     { key: "companyName", label: "Company" },
+    { key: "completeDate", label: "Completed Date" },
   ];
 
-  // Filter completed services
-  const filterServices = (services) => {
-    return services
-      .filter((s) => s.status === "Completed" && s.completeDate)
-      .filter((s) => {
-        const matchVehicle = !serviceFilters.vehicleId ||
-          s.vehicleId.toLowerCase().includes(serviceFilters.vehicleId.toLowerCase());
-        const matchCompany = !serviceFilters.company ||
-          s.companyName.toLowerCase().includes(serviceFilters.company.toLowerCase());
-        return matchVehicle && matchCompany;
-      });
+  // Fetch completed services
+  const fetchCompletedServices = async () => {
+    try {
+      setLoading(true);
+      const params = {};
+      if (serviceFilters.vehicleId) params.vehicleId = serviceFilters.vehicleId;
+      if (serviceFilters.company) params.company = serviceFilters.company;
+
+      const response = await auditApi.getCompletedServices(params);
+      setCompletedServices(response.data || []);
+    } catch (error) {
+      console.error('Error fetching completed services:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Filter completed repairs
-  const filterRepairs = (repairs) => {
-    return repairs
-      .filter((r) => r.status === "Completed" && r.completeDate)
-      .filter((r) => {
-        const matchVehicle = !repairFilters.vehicleId ||
-          r.vehicleId.toLowerCase().includes(repairFilters.vehicleId.toLowerCase());
-        const matchCompany = !repairFilters.company ||
-          r.companyName.toLowerCase().includes(repairFilters.company.toLowerCase());
-        return matchVehicle && matchCompany;
-      });
+  // Fetch completed repairs
+  const fetchCompletedRepairs = async () => {
+    try {
+      setLoading(true);
+      const params = {};
+      if (repairFilters.vehicleId) params.vehicleId = repairFilters.vehicleId;
+      if (repairFilters.company) params.company = repairFilters.company;
+
+      const response = await auditApi.getCompletedRepairs(params);
+      setCompletedRepairs(response.data || []);
+    } catch (error) {
+      console.error('Error fetching completed repairs:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredServices = filterServices(state.services);
-  const filteredRepairs = filterRepairs(state.repairs);
+  // Fetch audit statistics
+  const fetchAuditStats = async () => {
+    try {
+      const response = await auditApi.getStats();
+      setAuditStats(response.data);
+    } catch (error) {
+      console.error('Error fetching audit stats:', error);
+    }
+  };
 
-  // Dropdown values
-  const serviceCompanies = [...new Set(
-    state.services
-      .filter((s) => s.status === "Completed")
-      .map((s) => s.companyName)
-  )];
+  // Load data on mount
+  useEffect(() => {
+    fetchCompletedServices();
+    fetchCompletedRepairs();
+    fetchAuditStats();
+  }, []);
 
-  const repairCompanies = [...new Set(
-    state.repairs
-      .filter((r) => r.status === "Completed")
-      .map((r) => r.companyName)
-  )];
+  // Reload services when filters change
+  useEffect(() => {
+    fetchCompletedServices();
+  }, [serviceFilters]);
+
+  // Reload repairs when filters change
+  useEffect(() => {
+    fetchCompletedRepairs();
+  }, [repairFilters]);
 
   const handleServiceSearch = (filters) => setServiceFilters(filters);
   const handleRepairSearch = (filters) => setRepairFilters(filters);
   const handleAction = (action, row) => console.log("Audit log action:", action, row);
 
+  // Get unique companies for dropdowns
+  const serviceCompanies = [...new Set(completedServices.map(s => s.companyName))].filter(Boolean);
+  const repairCompanies = [...new Set(completedRepairs.map(r => r.companyName))].filter(Boolean);
+
   return (
     <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
-      {/* Sidebar */}
       <Sidebar
         collapsed={collapsed}
         active="Audit Log"
@@ -112,9 +129,7 @@ export default function AuditLog() {
         onLogout={() => (window.location.href = "/login")}
       />
 
-      {/* Main */}
       <main className="ad-main">
-        {/* Top Header */}
         <header className="sd-header">
           <button
             className="sd-toggle"
@@ -130,8 +145,34 @@ export default function AuditLog() {
         </header>
 
         <div className="ad-content">
+          {loading && <div className="loading">Loading...</div>}
+
+          {/* Audit Statistics */}
+          {auditStats && (
+            <div className="audit-stats" style={{ marginBottom: '20px', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
+              <h3>Audit Statistics</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
+                <div>
+                  <strong>Total Completed:</strong> {auditStats.totals.combined}
+                  <br />
+                  <small>Services: {auditStats.totals.services} | Repairs: {auditStats.totals.repairs}</small>
+                </div>
+                <div>
+                  <strong>This Month:</strong> {auditStats.thisMonth.combined}
+                  <br />
+                  <small>Services: {auditStats.thisMonth.services} | Repairs: {auditStats.thisMonth.repairs}</small>
+                </div>
+                <div>
+                  <strong>Total Cost:</strong> ${auditStats.costs.total.toFixed(2)}
+                  <br />
+                  <small>Services: ${auditStats.costs.services.toFixed(2)} | Repairs: ${auditStats.costs.repairs.toFixed(2)}</small>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* SERVICES AUDIT */}
-          <h2 className="section-title">Audit Logs for Service</h2>
+          <h2 className="section-title">Audit Logs for Service ({completedServices.length})</h2>
           <div className="searchbar-container">
             <div className="searchbar-input-wrapper">
               <input
@@ -158,7 +199,7 @@ export default function AuditLog() {
               }
               className="searchbar-select"
             >
-              <option value="">Company</option>
+              <option value="">All Companies</option>
               {serviceCompanies.map((company) => (
                 <option key={company} value={company}>
                   {company}
@@ -169,13 +210,13 @@ export default function AuditLog() {
 
           <Table
             columns={auditColumns}
-            rows={filteredServices}
+            rows={completedServices}
             onAction={handleAction}
             editable={false}
           />
 
           {/* REPAIRS AUDIT */}
-          <h2 className="section-title">Audit Logs for Repair</h2>
+          <h2 className="section-title">Audit Logs for Repair ({completedRepairs.length})</h2>
           <div className="searchbar-container">
             <div className="searchbar-input-wrapper">
               <input
@@ -202,7 +243,7 @@ export default function AuditLog() {
               }
               className="searchbar-select"
             >
-              <option value="">Company</option>
+              <option value="">All Companies</option>
               {repairCompanies.map((company) => (
                 <option key={company} value={company}>
                   {company}
@@ -213,7 +254,7 @@ export default function AuditLog() {
 
           <Table
             columns={auditColumns}
-            rows={filteredRepairs}
+            rows={completedRepairs}
             onAction={handleAction}
             editable={false}
           />

@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const maintenanceRoutes = require('./routes/maintenance');
 const serviceRoutes = require('./routes/service');
 const repairRoutes = require('./routes/repair');
+const auditRoutes = require('./routes/audit');
 
 dotenv.config();
 const app = express();
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/repairs', repairRoutes);
+app.use('/api/audit', auditRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

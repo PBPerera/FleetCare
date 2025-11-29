@@ -40,6 +40,7 @@ const cleanData = (obj) => {
   return cleaned;
 };
 
+// Services API
 export const servicesApi = {
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
@@ -60,7 +61,6 @@ export const servicesApi = {
       status: data.status || 'Scheduled',
     };
     
-    // Remove undefined values
     const cleanedData = cleanData(formattedData);
     
     console.log('Creating service with cleaned data:', cleanedData);
@@ -101,6 +101,7 @@ export const servicesApi = {
   },
 };
 
+// Repairs API
 export const repairsApi = {
   getAll: async (params = {}) => {
     const queryString = new URLSearchParams(params).toString();
@@ -194,6 +195,7 @@ export const repairsApi = {
   },
 };
 
+// Maintenance API
 export const maintenanceApi = {
   getDashboardStats: async () => {
     return fetchAPI('/maintenance/dashboard/stats');
@@ -205,5 +207,30 @@ export const maintenanceApi = {
 
   getHistory: async (vehicleId) => {
     return fetchAPI(`/maintenance/history/${vehicleId}`);
+  },
+};
+
+// Audit API
+export const auditApi = {
+  getAll: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/audit/logs?${queryString}` : '/audit/logs';
+    return fetchAPI(endpoint);
+  },
+
+  getCompletedServices: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/audit/services?${queryString}` : '/audit/services';
+    return fetchAPI(endpoint);
+  },
+
+  getCompletedRepairs: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/audit/repairs?${queryString}` : '/audit/repairs';
+    return fetchAPI(endpoint);
+  },
+
+  getStats: async () => {
+    return fetchAPI('/audit/stats');
   },
 };
