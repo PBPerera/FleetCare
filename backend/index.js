@@ -35,41 +35,100 @@
 //     app.listen(PORT, ()=> console.log('Server started on port', PORT, '(no DB)'));
 //   });
 
-require('dotenv').config();
+// require('dotenv').config();
+// const express = require('express');
+// const cors = require('cors');
+// const connectDB = require('./config/db');
+
+// const authRoutes = require('./routes/auth');
+// const vehicleRoutes = require('./routes/vehicles');
+
+// const tripRoutes = require('./routes/trips');
+// const maintenanceRoutes = require('./routes/maintenance');
+// const notificationRoutes = require('./routes/notifications');
+// const userRoutes = require('./routes/users');
+
+// const app = express();
+
+// const notifyRoutes = require("./routes/notify");
+// app.use("/api/notifications", notifyRoutes);
+
+// const notificationRoutes = require('./routes/notifications');
+// app.use('/api/notifications', notificationRoutes);
+
+// app.use(cors());
+// app.use(express.json());
+
+// // connect db
+// const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/fleetcare';
+// connectDB(MONGO_URI);
+
+// // base route
+// app.get('/', (req, res) => res.send({ message: 'FleetCare API running' }));
+
+// // api routes prefix /api
+// app.use('/api/auth', authRoutes);
+// app.use('/api/users', userRoutes);
+// app.use('/api/vehicles', vehicleRoutes);
+
+// app.use('/api/trips', tripRoutes);
+// app.use('/api/maintenance', maintenanceRoutes);
+// app.use('/api/notifications', notificationRoutes);
+
+// const PORT = process.env.PORT || 4000;
+// app.listen(PORT, () => {
+//   console.log(`Server listening on port ${PORT}`);
+// });
+
+
 const express = require('express');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
+// Load environment variables
+dotenv.config();
+
+// Import routes
 const authRoutes = require('./routes/auth');
 const vehicleRoutes = require('./routes/vehicles');
-
+const userRoutes = require('./routes/users');
+const driverRoutes = require('./routes/drivers');
 const tripRoutes = require('./routes/trips');
 const maintenanceRoutes = require('./routes/maintenance');
-const notificationRoutes = require('./routes/notifications');
-const userRoutes = require('./routes/users');
+const notificationRoutes = require('./routes/notifications');  // ✅ Added once only
 
+// Initialize app
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-// connect db
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/fleetcare';
-connectDB(MONGO_URI);
-
-// base route
-app.get('/', (req, res) => res.send({ message: 'FleetCare API running' }));
-
-// api routes prefix /api
+// Route middleware
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
 app.use('/api/vehicles', vehicleRoutes);
-
+app.use('/api/users', userRoutes);
+app.use('/api/drivers', driverRoutes);
 app.use('/api/trips', tripRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
-app.use('/api/notifications', notificationRoutes);
+app.use('/api/notifications', notificationRoutes); // ✅ Use only once
 
+// Server port & DB URI
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+const MONGO = process.env.MONGO_URI || 'mongodb://localhost:27017/fleetcare';
+
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
 });
+
+// MongoDB connection
+mongoose
+  .connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(PORT, () => console.log('Server started on port', PORT));
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err.message);
+    // Still start server
+    app.listen(PORT, () => console.log('Server started on port', PORT, '(no DB)'));
+  });

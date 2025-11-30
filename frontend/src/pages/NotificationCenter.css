@@ -1,4 +1,4 @@
-html, body, #root {
+/* html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -121,7 +121,7 @@ html, body, #root {
   margin-bottom: 10px;
 }
 
-/* Scrollable area for each table */
+
 .table-scroll {
   max-height: 220px;
   overflow-y: auto;
@@ -231,6 +231,226 @@ input[type="text"] {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   justify-content: space-between;
+  width: 200px;
+  z-index: 999;
+}
+
+.user-menu .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  cursor: pointer;
+  color: #000;
+  font-weight: 500;
+}
+
+.user-menu .menu-item:hover {
+  background-color: #f2f2f2;
+} */
+
+
+/* GLOBAL RESET */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+}
+
+.app-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
+.app-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transition: 0.3s ease;
+}
+
+.blurred {
+  filter: blur(5px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* MAIN CONTENT AREA */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f8ff;
+  overflow: hidden;
+  position: relative;
+}
+
+/* HEADER */
+.header {
+  background: #4c95ff;
+  color: white;
+  padding: 15px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* TITLE TEXT */
+.text {
+  margin-left: 20px;
+}
+
+/* SCROLLABLE MAIN BODY */
+.dashboard-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* TABLE CONTAINER */
+.notification-table {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 25px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.notification-table h4 {
+  color: #003366;
+  margin-bottom: 12px;
+}
+
+/* INNER TABLE SCROLL */
+.table-scroll {
+  max-height: 230px;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.table-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 10px;
+}
+
+/* ACTUAL TABLE */
+.notification-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.notification-table th,
+.notification-table td {
+  border: 1px solid #dcdcdc;
+  padding: 8px 10px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* INPUTS */
+input[type="text"] {
+  padding: 7px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 90%;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* BUTTONS */
+.view-btn {
+  background-color: #4c95ff;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+.view-btn:hover {
+  background-color: #2f78e0;
+}
+
+.send-btn {
+  background-color: #0044ff;
+  border: none;
+  color: white;
+  padding: 7px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.send-btn:hover {
+  background-color: #002fb3;
+}
+
+/* POPUP */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.popup-content {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 350px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.popup-content h4 {
+  margin-bottom: 10px;
+  color: #003366;
+}
+
+.popup-content button {
+  background-color: #4c95ff;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  margin-top: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* USER MENU */
+.user-menu {
+  position: absolute;
+  top: 60px;
+  right: 30px;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   width: 200px;
   z-index: 999;
 }

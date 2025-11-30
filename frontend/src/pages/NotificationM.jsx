@@ -150,6 +150,22 @@ export default function NotificationManagement() {
 
   const [searches, setSearches] = useState(Array(tableData.length).fill(""));
 
+  useEffect(() => {
+  fetch("http://localhost:4000/api/notifications", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Notifications:", data);
+
+      // TODO: Replace tableData with API data later
+    })
+    .catch(err => console.error("Notification fetch error:", err));
+}, []);
+
+
   const handleSearchChange = (index, value) => {
     const newSearches = [...searches];
     newSearches[index] = value;
