@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ForgotPasswordFlow from "./pages/ForgotPasswordFlow";
 
 
-import NotificationM from "./pages/NotificationM";
+import NotificationManagement from "./pages/NotificationManagement";
 import NotificationCenter from "./pages/NotificationCenter";
 import NotificationStaff from "./pages/NotificationStaff";
 
@@ -18,7 +18,7 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
       
       
-      <Route path="/NotificationManagement" element={<NotificationM />} />
+      <Route path="/NotificationManagement" element={<NotificationManagement />} />
       <Route path="/NotificationCenter" element={<NotificationCenter />} />
       <Route path="/NotificationStaff" element={<NotificationStaff />} />
       

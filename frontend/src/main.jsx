@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./App.css";
 
-import "./pages/NotificationM.css";
+import "./pages/NotificationManagement.css";
 import "./pages/NotificationCenter.css";
 import "./pages/NotificationStaff.css";
 

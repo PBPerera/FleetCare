@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; 
 import { useNavigate, useLocation } from "react-router-dom";
 //import "./NotificationM.css";
 import {
@@ -24,12 +23,11 @@ import { RiUserSettingsLine } from "react-icons/ri";
 export default function NotificationManagement() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const handleUserClick = () => setIsMenuOpen(!isMenuOpen);
-  
+
   const navigate = useNavigate();
-    const location = useLocation();
- 
+  const location = useLocation();
+
   const tableData = [
-    
     {
       title: "Trip Schedule",
       searchPlaceholder: "Search Vehicle ID",
@@ -68,8 +66,6 @@ export default function NotificationManagement() {
         },
       ],
     },
-
-    
     {
       title: "Maintenance Alert for Services",
       searchPlaceholder: "Search Vehicle ID",
@@ -104,8 +100,6 @@ export default function NotificationManagement() {
         },
       ],
     },
-
-    
     {
       title: "Expired Vehicles Insurance",
       searchPlaceholder: "Search Vehicle ID",
@@ -126,17 +120,10 @@ export default function NotificationManagement() {
         },
       ],
     },
-
-    
     {
       title: "Expired Driver License",
       searchPlaceholder: "Search Driver Name",
-      columns: [
-        "Driver ID",
-        "Driver Name",
-        "License Expiry Date",
-        "Contact Number",
-      ],
+      columns: ["Driver ID", "Driver Name", "License Expiry Date", "Contact Number"],
       data: [
         {
           driverId: "2002453365",
@@ -150,21 +137,20 @@ export default function NotificationManagement() {
 
   const [searches, setSearches] = useState(Array(tableData.length).fill(""));
 
+  // ✅ fixed: added useEffect import
   useEffect(() => {
-  fetch("http://localhost:4000/api/notifications", {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    }
-  })
-    .then(res => res.json())
-    .then(data => {
-      console.log("Notifications:", data);
-
-      // TODO: Replace tableData with API data later
+    fetch("http://localhost:4000/api/notifications", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
-    .catch(err => console.error("Notification fetch error:", err));
-}, []);
-
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Notifications:", data);
+        // TODO: replace tableData with API data when ready
+      })
+      .catch((err) => console.error("Notification fetch error:", err));
+  }, []);
 
   const handleSearchChange = (index, value) => {
     const newSearches = [...searches];
@@ -175,8 +161,6 @@ export default function NotificationManagement() {
   return (
     <div className="app-wrapper">
       <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
-        
-
         {/* Main Content */}
         <main className="main-content scrollable">
           <header className="header">
@@ -189,18 +173,17 @@ export default function NotificationManagement() {
             </div>
           </header>
           <div className="text">
-          <h1>Notification Management Center</h1>
-          <p>Latest updated trips, Maintenance of vehicles, Expired Insurance</p>
+            <h1>Notification Management Center</h1>
+            <p>Latest updated trips, Maintenance of vehicles, Expired Insurance</p>
           </div>
+
           {/* Tables Section */}
           <div className="trip-section">
             {tableData.map((table, index) => {
               const filtered = table.data.filter((item) => {
                 const searchValue = searches[index].toLowerCase();
-                return (
-                  Object.values(item).some((val) =>
-                    String(val).toLowerCase().includes(searchValue)
-                  )
+                return Object.values(item).some((val) =>
+                  String(val).toLowerCase().includes(searchValue)
                 );
               });
 
@@ -213,9 +196,7 @@ export default function NotificationManagement() {
                         type="text"
                         placeholder={table.searchPlaceholder}
                         value={searches[index]}
-                        onChange={(e) =>
-                          handleSearchChange(index, e.target.value)
-                        }
+                        onChange={(e) => handleSearchChange(index, e.target.value)}
                       />
                     </div>
                   </div>
@@ -248,9 +229,15 @@ export default function NotificationManagement() {
       {/* User Menu */}
       {isMenuOpen && (
         <div className="user-menu">
-          <div className="menu-item"><FaUserCircle /> View Profile</div>
-          <div className="menu-item"><MdInfoOutline /> About Us</div>
-          <div className="menu-item"><FaPhoneAlt /> Contact Us</div>
+          <div className="menu-item">
+            <FaUserCircle /> View Profile
+          </div>
+          <div className="menu-item">
+            <MdInfoOutline /> About Us
+          </div>
+          <div className="menu-item">
+            <FaPhoneAlt /> Contact Us
+          </div>
         </div>
       )}
     </div>
