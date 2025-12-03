@@ -20,6 +20,6 @@ const vehicleFormSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const VehicleForm = mongoose.model("Vehicle", vehicleFormSchema);
+const VehicleForm = mongoose.model("VehicleForm", vehicleFormSchema);
 
 export default VehicleForm;
