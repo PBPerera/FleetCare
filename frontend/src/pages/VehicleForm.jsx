@@ -18,10 +18,50 @@ export default function VehicleForm({ onSubmit }) {
     setVehicleData({ ...vehicleData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(vehicleData);
-    console.log("Vehicle Data:", vehicleData);
+
+    try {
+      // Convert date strings to Date objects
+      const payload = {
+        ...vehicleData,
+        vehicleRegisterDate: new Date(vehicleData.vehicleRegisterDate),
+        insuranceExpiryDate: new Date(vehicleData.insuranceExpiryDate),
+        insuranceRenewalDate: new Date(vehicleData.insuranceRenewalDate),
+      };
+
+      const res = await fetch("http://localhost:5000/api/vehicles/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Vehicle added successfully!");
+        // Reset form
+        setVehicleData({
+          vehicleId: "",
+          vehicleType: "",
+          wheelSerialNo: "",
+          wheelSize: "",
+          batteryNo: "",
+          chassisNo: "",
+          engineNo: "",
+          vehicleRegisterDate: "",
+          insuranceExpiryDate: "",
+          insuranceRenewalDate: "",
+        });
+      } else {
+        alert("Failed to add vehicle: " + data.msg);
+      }
+
+      console.log("Response from backend:", data);
+    } catch (error) {
+      console.error("Error connecting to backend:", error);
+      alert("Error connecting to backend. Check console.");
+    }
   };
 
   return (
