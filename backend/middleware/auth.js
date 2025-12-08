@@ -16,26 +16,31 @@
 // }
 
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const secret = process.env.JWT_SECRET || 'dev_secret';
 
-const auth = async (req, res, next) => {
-  const header = req.header('Authorization') || req.header('authorization');
-  if (!header || !header.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Authorization token missing' });
-  }
 
-  const token = header.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
-    // attach user id to request
-    req.user = { id: decoded.id, role: decoded.role };
-    // option: load user record if needed
-    // req.currentUser = await User.findById(decoded.id).select('-password');
-    next();
-  } catch (err) {
-    console.error('JWT error', err);
-    return res.status(401).json({ message: 'Invalid token' });
-  }
+exports.required = (req, res, next) => {
+const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+if (!token) return res.status(401).json({ message: 'No token' });
+try {
+const payload = jwt.verify(token, secret);
+req.user = payload;
+next();
+} catch (err) {
+console.error('JWT error', err);
+return res.status(401).json({ message: 'Invalid token' });
+}
 };
 
-module.exports = auth;
+
+exports.optional = (req, res, next) => {
+const authHeader = req.headers.authorization;
+if (!authHeader) return next();
+const token = authHeader.split(' ')[1];
+try {
+req.user = jwt.verify(token, secret);
+} catch (err) {
+// ignore
+}
+next();
+};

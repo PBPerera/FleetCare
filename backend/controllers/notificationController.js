@@ -1,37 +1,87 @@
-const Trip = require("../models/Trip");
-const Maintenance = require("../models/Maintenance");
-const Vehicle = require("../models/Vehicle");
-const Driver = require("../models/Driver");
 
-exports.getNotifications = async (req, res) => {
+
+const Notification = require("../models/Notification");
+
+// ============================
+// GET ALL NOTIFICATIONS
+// ============================
+exports.getAll = async (req, res) => {
+  const filter = {};
+
+  // optional filters
+  if (req.query.type) filter.type = req.query.type;
+  if (req.query.vehicleId) filter.vehicleId = req.query.vehicleId;
+
   try {
-    const today = new Date();
+    const notifications = await Notification.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(100);
 
-    // 1. Trip Schedule (Upcoming trips only)
-    const trips = await Trip.find();
-
-    // 2. Maintenance Alerts
-    const maintenance = await Maintenance.find();
-
-    // 3. Expired Insurance
-    const expiredInsurance = await Vehicle.find({
-      insuranceExpiry: { $lt: today }
-    });
-
-    // 4. Expired Driver Licenses
-    const expiredLicenses = await Driver.find({
-      licenseExpiry: { $lt: today }
-    });
-
-    res.json({
-      trips,
-      maintenance,
-      expiredInsurance,
-      expiredLicenses
-    });
-
+    res.json(notifications);
   } catch (err) {
-    console.error("Notification error:", err);
-    res.status(500).json({ message: "Server error fetching notifications" });
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ============================
+// GET BY ID
+// ============================
+exports.getById = async (req, res) => {
+  try {
+    const n = await Notification.findById(req.params.id);
+    if (!n) return res.status(404).json({ message: "Not found" });
+
+    res.json(n);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ============================
+// CREATE NOTIFICATION
+// ============================
+exports.create = async (req, res) => {
+  try {
+    const n = new Notification(req.body);
+    await n.save();
+    res.status(201).json(n);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ============================
+// UPDATE
+// ============================
+exports.update = async (req, res) => {
+  try {
+    const updated = await Notification.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Not found" });
+
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ============================
+// DELETE
+// ============================
+exports.remove = async (req, res) => {
+  try {
+    await Notification.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };

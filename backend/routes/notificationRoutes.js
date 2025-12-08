@@ -1,26 +1,27 @@
+// const express = require('express');
+// const router = express.Router();
+// const controller = require('../controllers/notificationController');
+// const auth = require('../middleware/auth'); // optional: your jwt middleware
+
+
+// // Public read allowed for this example. Add `auth` to protect.
+// router.get('/', auth.optional, controller.getAll);
+// router.get('/:id', auth.optional, controller.getById);
+// router.post('/', auth.required, controller.create);
+// router.put('/:id', auth.required, controller.update);
+// router.delete('/:id', auth.required, controller.remove);
+
+
+// module.exports = router;
+
 const express = require("express");
 const router = express.Router();
+const controller = require("../controllers/notificationController");
 
-const Trip = require("../models/TripSchedule");
-const Maintenance = require("../models/Maintenance");
-const Insurance = require("../models/Insurance");
-const License = require("../models/License");
-
-// GET all notification tables
-router.get("/trip-schedule", async (req, res) => {
-    res.json(await Trip.find());
-});
-
-router.get("/maintenance", async (req, res) => {
-    res.json(await Maintenance.find());
-});
-
-router.get("/insurance-expired", async (req, res) => {
-    res.json(await Insurance.find());
-});
-
-router.get("/license-expired", async (req, res) => {
-    res.json(await License.find());
-});
+router.get("/", controller.getAll);
+router.get("/:id", controller.getById);
+router.post("/", controller.create);
+router.put("/:id", controller.update);
+router.delete("/:id", controller.remove);
 
 module.exports = router;
