@@ -229,8 +229,4 @@ export const auditApi = {
     const endpoint = queryString ? `/audit/repairs?${queryString}` : '/audit/repairs';
     return fetchAPI(endpoint);
   },
-
-  getStats: async () => {
-    return fetchAPI('/audit/stats');
-  },
 };

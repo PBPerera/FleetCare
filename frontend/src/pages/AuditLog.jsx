@@ -14,7 +14,6 @@ export default function AuditLog() {
   const [loading, setLoading] = useState(false);
   const [completedServices, setCompletedServices] = useState([]);
   const [completedRepairs, setCompletedRepairs] = useState([]);
-  const [auditStats, setAuditStats] = useState(null);
 
   const [serviceFilters, setServiceFilters] = useState({
     vehicleId: "",
@@ -26,7 +25,6 @@ export default function AuditLog() {
     company: "",
   });
 
-  // Sidebar route mapping
   const routeMap = {
     "Dashboard": "/admindashboard",
     "User Management": "/user-management",
@@ -40,7 +38,6 @@ export default function AuditLog() {
     "Audit Log": "/audit-log",
   };
 
-  // Table columns
   const auditColumns = [
     { key: "maintenanceId", label: "Maintenance ID" },
     { key: "vehicleId", label: "Vehicle ID" },
@@ -51,7 +48,6 @@ export default function AuditLog() {
     { key: "completeDate", label: "Completed Date" },
   ];
 
-  // Fetch completed services
   const fetchCompletedServices = async () => {
     try {
       setLoading(true);
@@ -68,7 +64,6 @@ export default function AuditLog() {
     }
   };
 
-  // Fetch completed repairs
   const fetchCompletedRepairs = async () => {
     try {
       setLoading(true);
@@ -85,29 +80,15 @@ export default function AuditLog() {
     }
   };
 
-  // Fetch audit statistics
-  const fetchAuditStats = async () => {
-    try {
-      const response = await auditApi.getStats();
-      setAuditStats(response.data);
-    } catch (error) {
-      console.error('Error fetching audit stats:', error);
-    }
-  };
-
-  // Load data on mount
   useEffect(() => {
     fetchCompletedServices();
     fetchCompletedRepairs();
-    fetchAuditStats();
   }, []);
 
-  // Reload services when filters change
   useEffect(() => {
     fetchCompletedServices();
   }, [serviceFilters]);
 
-  // Reload repairs when filters change
   useEffect(() => {
     fetchCompletedRepairs();
   }, [repairFilters]);
@@ -116,7 +97,6 @@ export default function AuditLog() {
   const handleRepairSearch = (filters) => setRepairFilters(filters);
   const handleAction = (action, row) => console.log("Audit log action:", action, row);
 
-  // Get unique companies for dropdowns
   const serviceCompanies = [...new Set(completedServices.map(s => s.companyName))].filter(Boolean);
   const repairCompanies = [...new Set(completedRepairs.map(r => r.companyName))].filter(Boolean);
 
@@ -146,30 +126,6 @@ export default function AuditLog() {
 
         <div className="ad-content">
           {loading && <div className="loading">Loading...</div>}
-
-          {/* Audit Statistics */}
-          {auditStats && (
-            <div className="audit-stats" style={{ marginBottom: '20px', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
-              <h3>Audit Statistics</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
-                <div>
-                  <strong>Total Completed:</strong> {auditStats.totals.combined}
-                  <br />
-                  <small>Services: {auditStats.totals.services} | Repairs: {auditStats.totals.repairs}</small>
-                </div>
-                <div>
-                  <strong>This Month:</strong> {auditStats.thisMonth.combined}
-                  <br />
-                  <small>Services: {auditStats.thisMonth.services} | Repairs: {auditStats.thisMonth.repairs}</small>
-                </div>
-                <div>
-                  <strong>Total Cost:</strong> ${auditStats.costs.total.toFixed(2)}
-                  <br />
-                  <small>Services: ${auditStats.costs.services.toFixed(2)} | Repairs: ${auditStats.costs.repairs.toFixed(2)}</small>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* SERVICES AUDIT */}
           <h2 className="section-title">Audit Logs for Service ({completedServices.length})</h2>

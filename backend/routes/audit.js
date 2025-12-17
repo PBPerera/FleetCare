@@ -4,8 +4,7 @@ const router = express.Router();
 const {
   getAuditLogs,
   getCompletedServices,
-  getCompletedRepairs,
-  getAuditStats
+  getCompletedRepairs
 } = require('../controllers/auditController');
 
 // Get all audit logs (completed services + repairs)
@@ -16,8 +15,5 @@ router.get('/services', getCompletedServices);
 
 // Get completed repairs only
 router.get('/repairs', getCompletedRepairs);
-
-// Get audit statistics
-router.get('/stats', getAuditStats);
 
 module.exports = router;
