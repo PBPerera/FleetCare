@@ -1,3 +1,4 @@
+// src/App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Onboard from "./pages/Onboard.jsx";
@@ -9,18 +10,16 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import StaffDashboard from "./pages/StaffDashboard.jsx";
 import NotificationCenter from "./pages/NotificationCenter.jsx";
 import NotificationStaff from "./pages/NotificationStaff.jsx";
-import VehicleRequest from "./pages/VehicleRequest/VehicleRequest";
-import TripScheduling from "./pages/TripScheduling/TripScheduling";
-import TripAllocation from "./pages/TripAllocation/TripAllocation";
-import MyRequests from "./pages/MyRequests/MyRequests";
-import MaintenanceManagement from "./pages/MaintenanceManagement";
-import RepairApprove from './pages/RepairApprove';
-import AuditLog from './pages/AuditLog';
+import VehicleRequest from "./pages/VehicleRequest/VehicleRequest.jsx";
+import TripScheduling from "./pages/TripScheduling/TripScheduling.jsx";
+import TripAllocation from "./pages/TripAllocation/TripAllocation.jsx";
+import MyRequests from "./pages/MyRequests/MyRequests.jsx";
+import MaintenanceManagement from "./pages/MaintenanceManagement.jsx";
+import RepairApprove from "./pages/RepairApprove.jsx";
+import AuditLog from "./pages/AuditLog.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
-
-// ✅ Keep ONLY ONE of these, matching your actual filename:
 import NotificationManagement from "./pages/NotificationManagement.jsx";
-
 import UserManagement from "./pages/UserManagement.jsx";
 import Vehicles from "./pages/Vehicles.jsx";
 import DriverManagement from "./pages/DriverManagement.jsx";
@@ -39,41 +38,174 @@ export default function App() {
       <Route path="/forgot-password/*" element={<ForgotPasswordFlow />} />
       <Route path="/home" element={<Home />} />
 
-      {/* Dashboards */}
-      <Route path="/admindashboard" element={<AdminDashboard />} />
-      <Route path="/staffdashboard" element={<StaffDashboard />} />
 
-      {/* Notifications */}
-      <Route path="/notification-center" element={<NotificationCenter />} />
-      <Route path="/notification-staff" element={<NotificationStaff />} />
-      <Route path="/notification-management" element={<NotificationManagement />} />
+      {/* Admin Dashboard */}
+      <Route
+        path="/admindashboard"
+        element={
+          <ProtectedRoute role="Admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* Others */}
-      <Route path="/user-management" element={<UserManagement />} />
-      <Route path="/vehicles" element={<Vehicles />} />
-      <Route path="/driver-management" element={<DriverManagement />} />
-      <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
-      <Route path="/vehicle-request" element={<VehicleRequest />} />
-      <Route path="/trip-scheduling" element={<TripScheduling />} />
-      <Route path="/trip-allocation" element={<TripAllocation />} />
-      <Route path="/my-requests" element={<MyRequests />} />
-      
-      {/* Maintenance Management Routes */}
-      <Route path="/maintenance" element={<MaintenanceManagement />} />
-      <Route path="/repairs/approve" element={<RepairApprove />} />
-      <Route path="/audit-log" element={<AuditLog />} />
+      {/* Staff Dashboard */}
+      <Route
+        path="/staffdashboard"
+        element={
+          <ProtectedRoute role={["Staff", "Admin"]}>
+            <StaffDashboard />
+          </ProtectedRoute>
+        }
+      />
 
-      {/* Staff area */}
-  <Route path="/staff/dashboard" element={<StaffDashboard />} />
-  <Route path="/staff/vehicle-request" element={<div>Vehicle Request</div>} />
-  <Route path="/staff/my-requests" element={<div>My Requests</div>} />
-  <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} />
-  <Route path="/staff/driver-details" element={<div>Driver Details</div>} />
-  <Route path="/staff/reports" element={<div>Search & Reports</div>} />
-  <Route path="/staff/notifications" element={<div>Notifications</div>} />
+
+
+
+      {/* Admin area (protected, Admin only) */}
+      <Route
+        path="/admindashboard"
+        element={
+          <ProtectedRoute role="Admin">
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/user-management"
+        element={
+          <ProtectedRoute role="Admin">
+            <UserManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notification-management"
+        element={
+          <ProtectedRoute role="Admin">
+            <NotificationManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/vehicles"
+        element={
+          <ProtectedRoute role="Admin">
+            <Vehicles />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/driver-management"
+        element={
+          <ProtectedRoute role="Admin">
+            <DriverManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/maintenance"
+        element={
+          <ProtectedRoute role="Admin">
+            <MaintenanceManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/repairs/approve"
+        element={
+          <ProtectedRoute role="Admin">
+            <RepairApprove />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/audit-log"
+        element={
+          <ProtectedRoute role="Admin">
+            <AuditLog />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/trip-scheduling"
+        element={
+          <ProtectedRoute role="Admin">
+            <TripScheduling />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/trip-allocation"
+        element={
+          <ProtectedRoute role="Admin">
+            <TripAllocation />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Staff area (protected, Staff or Admin allowed) */}
+      <Route
+        path="/staffdashboard"
+        element={
+          <ProtectedRoute role={["Staff", "Admin"]}>
+            <StaffDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/vehicle-request"
+        element={
+          <ProtectedRoute role={["Staff", "Admin"]}>
+            <VehicleRequest />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-requests"
+        element={
+          <ProtectedRoute role={["Staff", "Admin"]}>
+            <MyRequests />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notification-center"
+        element={
+          <ProtectedRoute role={["Staff", "Admin"]}>
+            <NotificationCenter />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notification-staff"
+        element={
+          <ProtectedRoute role={["Staff", "Admin"]}>
+            <NotificationStaff />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Staff-specific quick routes (example paths you had) */}
+      <Route
+        path="/staff/dashboard"
+        element={
+          <ProtectedRoute role={["Staff", "Admin"]}>
+            <StaffDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/staff/vehicle-request"
+        element={
+          <ProtectedRoute role={["Staff", "Admin"]}>
+            <VehicleRequest />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Fallback */}
-      <Route path="*" element={<h1 style={{ padding: 20 }}>404</h1>} />
+      <Route path="*" element={<h1 style={{ padding: 20 }}>404 - Page not found</h1>} />
     </Routes>
   );
 }

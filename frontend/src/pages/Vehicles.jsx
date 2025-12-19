@@ -1,5 +1,5 @@
 // src/pages/Vehicles.jsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Cards from "../components/DashboardCards/Cards.jsx";
@@ -8,6 +8,7 @@ import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
 import ExportPdfBtn from "../components/ExportpdfBtn.jsx";
 import "./Pages.css";
+import axios from "axios";
 
 export default function Vehicles() {
   const navigate = useNavigate();
@@ -29,66 +30,20 @@ export default function Vehicles() {
     "Audit Log": "/audit-log",
   };
 
-  // ===== Data (demo set; swap with API/context later) =====
-  // Keep an internal numeric/string 'id' AND the visible 'vehicleId'
-  const [vehicles, setVehicles] = useState([
-    {
-      id: 1,
-      vehicleId: "WP-CAR-1990",
-      type: "Car",
-      wheelSerial: "BK182553",
-      wheelSize: "195/65 R15",
-      engineNo: "E111458",
-      batteryNo: "B00245",
-      chassisNo: "1HGCM82633A123456",
-      registerdate: "2022-05-10",
-      insurancerenewaldate: "2024-12-10",
-      insuranceExpiry: "2025-12-10",
-      status: "Available",
-    },
-    {
-      id: 2,
-      vehicleId: "WP-NA-4565",
-      type: "Van",
-      wheelSerial: "BL182553",
-      wheelSize: "205/55 R16",
-      engineNo: "E118848",
-      batteryNo: "B00245",
-      chassisNo: "JHMFA16586S012345",
-      registerdate: "2021-08-15",
-      insurancerenewaldate: "2024-11-05",
-      insuranceExpiry: "2025-11-05",
-      status: "Assigned",
-    },
-    {
-      id: 3,
-      vehicleId: "WP-LB-5425",
-      type: "Lorry",
-      wheelSerial: "CK182553",
-      wheelSize: "225/50 R17",
-      engineNo: "E258848",
-      batteryNo: "B00245",
-      chassisNo: "2T1BU4EE9AC123456",
-      registerdate: "2020-03-20",
-      insurancerenewaldate: "2024-10-20",
-      insuranceExpiry: "2026-01-20",
-      status: "Available",
-    },
-    {
-      id: 4,
-      vehicleId: "253-5465",
-      type: "Van",
-      wheelSerial: "MG182673",
-      wheelSize: "235/45 R18",
-      engineNo: "E119148",
-      batteryNo: "B00245",
-      chassisNo: "WDBUF56X98B123456",
-      registerdate: "2019-11-30",
-      insurancerenewaldate: "2024-09-15",
-      insuranceExpiry: "2025-10-15",
-      status: "Maintenance",
-    },
-  ]);
+ const [vehicles, setVehicles] = useState([]);
+
+useEffect(() => {
+  async function loadVehicles() {
+    try {
+      const res = await axios.get("http://localhost:4000/api/vehicles");
+      setVehicles(res.data);
+    } catch (err) {
+      console.error("Vehicle load error", err);
+    }
+  }
+  loadVehicles();
+}, []);
+
 
   // ===== Cards / metrics (same style as Maintenance) =====
   const dashboardCards = useMemo(() => {
@@ -171,31 +126,61 @@ export default function Vehicles() {
   }, [vehicles, keyword, statusFilter, typeFilter]);
 
   // ===== CRUD handlers (compatible with your TableRow onEdit(row.id, updated)) =====
-  const handleAddVehicle = () => {
-    const newRow = {
-      id: Date.now(),       // internal identifier used by TableRow
-      vehicleId: "",        // empty so new row opens in edit mode automatically
-      type: "",
-      wheelSerial: "",
-      wheelSize: "",
-      engineNo: "",
-      batteryNo: "",
-      chassisNo: "",
-      registerdate: "",
-      insurancerenewaldate: "",
-      insuranceExpiry: "",
-      status: "Available",
-    };
-    setVehicles((prev) => [newRow, ...prev]);
+const handleAddVehicle = async () => {
+  const newVehicle = {
+    vehicleId: "NEW-ID",
+    type: "",
+    wheelSerial: "",
+    wheelSize: "",
+    engineNo: "",
+    batteryNo: "",
+    chassisNo: "",
+    registerdate: "",
+    insurancerenewaldate: "",
+    insuranceExpiry: "",
+    status: "Available",
   };
 
-  const handleEdit = (id, updated) => {
-    setVehicles((prev) => prev.map((v) => (v.id === id ? { ...v, ...updated } : v)));
-  };
+  try {
+    const res = await axios.post("http://localhost:4000/api/vehicles", newVehicle);
+    setVehicles(prev => [res.data.vehicle, ...prev]);
+  } catch (err) {
+    console.error("Add vehicle error:", err);
+  }
+};
 
-  const handleAction = (action, row) => {
+
+const handleEdit = async (id, updated) => {
+  try {
+    const res = await axios.put(`http://localhost:4000/api/vehicles/${id}`, updated);
+    setVehicles(prev => prev.map(v => v._id === id ? res.data : v));
+  } catch (err) {
+    console.error("Update error", err);
+  }
+};
+
+
+  /*const handleAction = (action, row) => {
     if (action === "delete") {
       setVehicles((prev) => prev.filter((v) => v.id !== row.id));
+    }
+    if (action === "details") {
+      navigate("/vehicles/details", { state: { vehicle: row } });
+    }
+    if (action === "service") {
+      navigate("/maintenance", { state: { vehicleId: row.vehicleId } });
+    }
+  };
+  */
+
+  const handleAction = async (action, row) => {
+    if (action === "delete") {
+      try {
+        await axios.delete(`http://localhost:4000/api/vehicles/${row._id}`);
+        setVehicles(prev => prev.filter(v => v._id !== row._id));
+      } catch (err) {
+        console.error("Delete error", err);
+      }
     }
     if (action === "details") {
       navigate("/vehicles/details", { state: { vehicle: row } });

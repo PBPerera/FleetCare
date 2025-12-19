@@ -1,8 +1,11 @@
 // src/pages/Signup.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import TopBar from "../components/TopBar";
 import logo from "../assets/logo-small.png";
+
+const API_BASE = "http://localhost:4000";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -22,18 +25,81 @@ export default function Signup() {
 
   const [showPwd, setShowPwd] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const update = (e) =>
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  // Update form field
+  const update = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+    setError(""); // Clear error when user starts typing
+  };
 
-  const handleSubmit = (e) => {
+  // Validate form before submission
+  const validateForm = () => {
+    // Required fields check
+    if (!form.fullName.trim()) return "Full name is required";
+    if (!form.email.trim()) return "Email is required";
+    if (!form.email.includes("@")) return "Please enter a valid email";
+    if (!form.phone.trim()) return "Phone number is required";
+    if (!form.username.trim()) return "Username is required";
+    if (!form.password) return "Password is required";
+    if (form.password.length < 6) return "Password must be at least 6 characters";
+    if (form.password !== form.confirm) return "Passwords do not match";
+    return null;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirm) {
-      alert("Passwords do not match.");
+    setError("");
+    setSuccess("");
+
+    // Validate form
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
       return;
     }
-    // TODO: replace with real signup API call
-    navigate("/login");
+
+    setSubmitting(true);
+
+    try {
+      const res = await axios.post(`${API_BASE}/api/auth/signup`, {
+        fullName: form.fullName.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        nic: form.nic.trim(),
+        department: form.department,
+        role: form.role,
+        employeeId: form.employeeId.trim(),
+        designation: form.designation.trim(),
+        username: form.username.trim(),
+        password: form.password,
+      });
+
+      // Store token if provided
+      if (res?.data?.token) {
+        localStorage.setItem("token", res.data.token);
+      }
+
+      // Show success message
+      setSuccess(res.data?.message || "Account created successfully! Redirecting...");
+      
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Signup failed. Please try again.";
+      setError(msg);
+      console.error("Signup error:", err);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -47,8 +113,19 @@ export default function Signup() {
             <p>Sign up for Admin/Staff access</p>
           </header>
 
-          {/* Scrollable form body */}
           <form className="su-body" onSubmit={handleSubmit}>
+            {error && (
+              <div className="su-message su-error">
+                {error}
+              </div>
+            )}
+            
+            {success && (
+              <div className="su-message su-success">
+                ✅ {success}
+              </div>
+            )}
+
             <div className="su-field">
               <label htmlFor="fullName">Full Name</label>
               <input
@@ -86,7 +163,6 @@ export default function Signup() {
                 value={form.phone}
                 onChange={update}
                 pattern="^[0-9+\-\s()]{7,}$"
-                required
               />
             </div>
 
@@ -99,7 +175,6 @@ export default function Signup() {
                 placeholder="Enter your NIC"
                 value={form.nic}
                 onChange={update}
-                required
               />
             </div>
 
@@ -111,11 +186,8 @@ export default function Signup() {
                 className="su-input su-select"
                 value={form.department}
                 onChange={update}
-                required
               >
-                <option value="" disabled>
-                  Select your department
-                </option>
+                <option value="">Select your department</option>
                 <option>Administration</option>
                 <option>Logistics</option>
                 <option>Maintenance</option>
@@ -138,7 +210,6 @@ export default function Signup() {
               </select>
             </div>
 
-            {/* Inserted between role and password */}
             <div className="su-field">
               <label htmlFor="employeeId">Employee ID</label>
               <input
@@ -197,14 +268,12 @@ export default function Signup() {
                   aria-label={showPwd ? "Hide password" : "Show password"}
                 >
                   {!showPwd ? (
-                    // eye-off
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                       <path d="M3 3l18 18" stroke="currentColor" strokeWidth="1.6" />
                       <path d="M10.6 10.6A3.2 3.2 0 0012 15.2a3.2 3.2 0 003.2-3.2c0-.6-.16-1.16-.44-1.64" stroke="currentColor" strokeWidth="1.6" />
                       <path d="M21.97 12S18.3 5 12 5c-1.15 0-2.22.2-3.2.56M5.2 7.4C3.5 9 2.4 11 2.4 12c0 0 3.7 7 9.6 7 1.2 0 2.3-.2 3.3-.57" stroke="currentColor" strokeWidth="1.6" />
                     </svg>
                   ) : (
-                    // eye
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                       <path d="M2 12s3.7-7 10-7 10 7 10 7-3.7 7-10 7S2 12 2 12Z" stroke="currentColor" strokeWidth="1.6" />
                       <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.6" />
@@ -235,14 +304,12 @@ export default function Signup() {
                   aria-label={showConfirm ? "Hide password" : "Show password"}
                 >
                   {!showConfirm ? (
-                    // eye-off
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                       <path d="M3 3l18 18" stroke="currentColor" strokeWidth="1.6" />
                       <path d="M10.6 10.6A3.2 3.2 0 0012 15.2a3.2 3.2 0 003.2-3.2c0-.6-.16-1.16-.44-1.64" stroke="currentColor" strokeWidth="1.6" />
                       <path d="M21.97 12S18.3 5 12 5c-1.15 0-2.22.2-3.2.56M5.2 7.4C3.5 9 2.4 11 2.4 12c0 0 3.7 7 9.6 7 1.2 0 2.3-.2 3.3-.57" stroke="currentColor" strokeWidth="1.6" />
                     </svg>
                   ) : (
-                    // eye
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                       <path d="M2 12s3.7-7 10-7 10 7 10 7-3.7 7-10 7S2 12 2 12Z" stroke="currentColor" strokeWidth="1.6" />
                       <circle cx="12" cy="12" r="3.2" stroke="currentColor" strokeWidth="1.6" />
@@ -251,22 +318,37 @@ export default function Signup() {
                 </button>
               </div>
             </div>
-          </form>
+            
+          
 
-          {/* Sticky bottom actions like the mock */}
           <footer className="su-footer">
-            <button type="submit" form="noop" className="su-hidden" />
-            <button className="su-btn" onClick={handleSubmit}>
-              Create Account
+
+            <div style={{ height: 20 }} />
+
+            <button
+              className="su-btn"
+              type="submit"
+              //</footer>onClick={(e) => {}}
+              disabled={submitting}
+              //onFocus={() => {}}
+              //onKeyDown={() => {}}
+              //onMouseUp={() => {}} 
+            >
+              {submitting ? "Creating..." : "Create Account"}
             </button>
+
             <div className="su-login">
               Already have an account? <Link to="/login">Log in</Link>
             </div>
           </footer>
+          </form>
         </section>
       </main>
+     
 
-      {/* Styles */}
+            {/* Styles */}
+           
+            
       <style>{`
         :root{
           --ink:#0f172a;
@@ -279,7 +361,7 @@ export default function Signup() {
           --brand1:#4b3cff;
           --brand2:#3cb4ff;
 
-          /* colors shared with Login top bar */
+       
           --blueBar:#66a7ff;
           --blueBar2:#5e9dfc;
         }
@@ -288,7 +370,7 @@ export default function Signup() {
         html,body,#root{height:100%}
         body{margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; color:var(--ink)}
 
-        /* Top bar (same styles as Login) */
+   
         .lp-appbar{background:linear-gradient(180deg, var(--blueBar), var(--blueBar2)); box-shadow:0 2px 6px rgba(0,0,0,.08)}
         .lp-appbar-inner{max-width:1200px; margin:0 auto; padding:12px 22px; display:flex; align-items:center}
         .lp-brand{display:flex; align-items:left; gap:10px}
@@ -326,6 +408,26 @@ export default function Signup() {
 
         .su-field{display:flex; flex-direction:column; gap:8px; margin:14px 0}
         .su-field label{font-weight:700; font-size:14px; display:flex; gap:4px; justify-content:left}
+        
+        .su-message{
+          padding:12px 14px;
+          border-radius:12px;
+          margin-bottom:12px;
+          font-size:14px;
+          font-weight:600;
+          text-align:center;
+        }
+        .su-error{
+          background:#fee2e2;
+          color:#dc2626;
+          border:1px solid #fca5a5;
+        }
+        .su-success{
+          background:#dcfce7;
+          color:#16a34a;
+          border:1px solid #86efac;
+        }
+        
         .su-input{
           width:100%;
           padding:12px 14px;

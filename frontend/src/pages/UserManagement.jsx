@@ -1,80 +1,47 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { Search } from "lucide-react";
 import "./UserManagement.css";
+ import axios from "axios";
 
 export default function UserManagement() {
   const navigate = useNavigate();
 
+
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    async function loadUsers() {
+      try {
+        const res = await axios.get("http://localhost:4000/api/users");
+        setUsers(res.data);
+      } catch (err) {
+        console.error("User loading error:", err);
+      }
+    }
+    loadUsers();
+  }, []);
+
   // Sidebar + header state
   const [collapsed, setCollapsed] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const routeMap = {
-    Dashboard: "/admindashboard",
-    "User Management": "/user-management",
-    "Vehicle Management": "/vehicles",
-    "Driver Management": "/driver-management",
-    "Trip Scheduling": "/trip-scheduling",
-    "Trip Allocation": "/trip-allocation",
-    "Maintenance Management": "/maintenance",
-    "Reporting & Analytics": "/reports",
-    "Notification Management": "/notification-management",
-    "Audit Log": "/audit-log",
-  };
-
-  // ----- Sample data -----
-  const users = useMemo(
-    () => [
-      {
-        username: "Sarath",
-        fullName: "K. Sarath Perera",
-        role: "Admin",
-        email: "mapsarath@fleetcare.lk",
-        lastLoginDate: "2025-09-25",
-        lastLoginTime: "07:54 am",
-      },
-      {
-        username: "Piyal",
-        fullName: "G. Piyal Silva",
-        role: "Staff",
-        email: "wagpiyal@fleetcare.lk",
-        lastLoginDate: "2025-09-27",
-        lastLoginTime: "08:54 am",
-      },
-      {
-        username: "Sunil",
-        fullName: "P. Sunil Perera",
-        role: "Staff",
-        email: "gtasunil@fleetcare.lk",
-        lastLoginDate: "2025-09-29",
-        lastLoginTime: "03:54 pm",
-      },
-      {
-        username: "Anura",
-        fullName: "Anura Gunarathne",
-        role: "Admin",
-        email: "jvpanura@fleetcare.lk",
-        lastLoginDate: "2025-09-30",
-        lastLoginTime: "09:54 am",
-      },
-    ],
-    []
-  );
 
   // controls
   const [q, setQ] = useState("");
   const [sortBy, setSortBy] = useState("Last Login Date");
   const [role, setRole] = useState("All");
 
+
+
   const filtered = useMemo(() => {
-    let list = users;
+    let list = users || [];
     const query = q.trim().toLowerCase();
 
     if (query) {
       list = list.filter((u) =>
-        [u.username, u.fullName, u.email, u.role, u.lastLoginDate, u.lastLoginTime]
+        [u.username, u.fullName, u.email, u.role]
           .join(" ")
           .toLowerCase()
           .includes(query)
@@ -101,7 +68,7 @@ export default function UserManagement() {
     return list;
   }, [users, q, role, sortBy]);
 
-  return (
+   return (
     <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
       {/* Sidebar */}
       <Sidebar
@@ -109,6 +76,7 @@ export default function UserManagement() {
         active="User Management"
         onLogout={() => (window.location.href = "/login")}
       />
+
 
       {/* Main section */}
       <main className="ad-main">
@@ -195,8 +163,8 @@ export default function UserManagement() {
                         </span>
                       </td>
                       <td>{u.email}</td>
-                      <td>{formatDate(u.lastLoginDate)}</td>
-                      <td>{u.lastLoginTime}</td>
+                      <td>{u.lastLoginDate || "-"}</td>
+                      <td>{u.lastLoginTime || "-"}</td>
                     </tr>
                   ))}
                   {!filtered.length && (
