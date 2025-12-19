@@ -77,6 +77,9 @@ button, input { font: inherit; color: inherit; }
 }
 .gradient-button:hover { transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
+/* =========================================================
+   FORGOT PASSWORD / OTP / RESET PAGE STYLES
+   ========================================================= */
 .topbar {
   height: 70px; width: 100%; background: #69B9FF;
   display: flex; align-items: center; justify-content: space-between;
@@ -96,22 +99,15 @@ button, input { font: inherit; color: inherit; }
 .forgot-main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 60px 20px; }
 
 .forgot-card, .forgot-card-otp {
-  width: 600px; height: 500px; background: #D9D9D9; border-radius: 14px; padding: 40px;
+  width: 500px; height: 400px; background: #D9D9D9; border-radius: 14px; padding: 40px;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08); display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center;
 }
-.forgot-card { gap: 60px; }
-.forgot-card-otp { gap: 10px; }
+.forgot-card { gap: 50px; }
+.forgot-card-otp { gap: 20px; }
 
 .forgot-title { font-size: 35px; margin-bottom: 8px; }
 .forgot-instruction { color: #375f82; font-size: 14px; text-align: center; }
-
-.field {
-  width: 100%;
-  margin-bottom: 0px;
-  display: flex;;
-  justify-content: center;
-}
 
 .input-field {
   width: 100%; max-width: 360px; padding: 10px 14px;
@@ -146,6 +142,9 @@ button, input { font: inherit; color: inherit; }
 }
 .otp-input:focus { border-color: rgba(43, 154, 246, 0.9); }
 
+/* =========================================================
+   FLEETCARE LOGIN / SIGNUP STYLES
+   ========================================================= */
 .fc-wrap { min-height: 100vh; background: #f5f7fb; }
 .fc-appbar { background: var(--fc-blue); height: 64px; display: flex; align-items: center; }
 .fc-appbar-inner {
@@ -196,6 +195,9 @@ button, input { font: inherit; color: inherit; }
   .signup-card { width: 92%; padding: 20px; min-height: 300px; }
 }
 
+/* =========================================================
+   ADMIN DASHBOARD STYLES (migrated from AdminDashboard.css)
+   ========================================================= */
 
 /* Wrapper & container */
 .app-wrapper { position: relative; height: 100vh; width: 100vw; }
@@ -289,6 +291,7 @@ button, input { font: inherit; color: inherit; }
   .cards-container { grid-template-columns: 1fr; }
 }
 
+/* =============== Slim Top Bar =============== */
 .tbs-root{
   position: sticky;          /* stays at top while scrolling */
   top: 0;
@@ -580,6 +583,7 @@ button, input { font: inherit; color: inherit; }
 }
 
 
+/* ===== Base / Page sizing ===== */
 html, body, #root {
   margin: 0;
   padding: 0;
@@ -612,6 +616,7 @@ html, body, #root {
   user-select: none;
 }
 
+/* ===== Sidebar ===== */
 .sidebar {
   flex: 0 0 90px; /* fixed width */
   background: linear-gradient(#48aaff, #ffffff);
@@ -667,6 +672,7 @@ html, body, #root {
   cursor: pointer;
 }
 
+/* ===== Main area ===== */
 .main-content {
   flex: 1 1 auto;
   min-width: 0;                    /* prevent overflow from long content */
@@ -717,6 +723,7 @@ html, body, #root {
   cursor: pointer;
 }
 
+/* ===== User menu ===== */
 .user-menu {
   position: absolute;
   top: 60px;
@@ -743,6 +750,7 @@ html, body, #root {
   background-color: #f2f2f2;
 }
 
+/* ===== Page sections & tables ===== */
 .trip-section {
   padding: 20px;
   display: flex;
@@ -805,6 +813,7 @@ html, body, #root {
   background-color: #fafcff;
 }
 
+/* ===== Optional: nicer scrollbars (WebKit) ===== */
 .scrollable::-webkit-scrollbar,
 .trip-table-container::-webkit-scrollbar {
   height: 10px;
