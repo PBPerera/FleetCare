@@ -17,8 +17,6 @@ import MaintenanceManagement from "./pages/MaintenanceManagement";
 import RepairApprove from './pages/RepairApprove';
 import AuditLog from './pages/AuditLog';
 
-
-// ✅ Keep ONLY ONE of these, matching your actual filename:
 import NotificationManagement from "./pages/NotificationManagement.jsx";
 
 import UserManagement from "./pages/UserManagement.jsx";
@@ -27,7 +25,7 @@ import DriverManagement from "./pages/DriverManagement.jsx";
 
 import "./App.css";
 
-export default function App() {
+function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" replace />} />
@@ -36,7 +34,7 @@ export default function App() {
       <Route path="/onboard" element={<Onboard />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/forgot-password/*" element={<ForgotPasswordFlow />} />
+      <Route path="/forgotpassword" element={<ForgotPasswordFlow />} />
       <Route path="/home" element={<Home />} />
 
       {/* Dashboards */}
@@ -52,7 +50,6 @@ export default function App() {
       <Route path="/user-management" element={<UserManagement />} />
       <Route path="/vehicles" element={<Vehicles />} />
       <Route path="/driver-management" element={<DriverManagement />} />
-      <Route path="/forgot-password" element={<ForgotPasswordFlow />} />
       <Route path="/vehicle-request" element={<VehicleRequest />} />
       <Route path="/trip-scheduling" element={<TripScheduling />} />
       <Route path="/trip-allocation" element={<TripAllocation />} />
@@ -77,3 +74,5 @@ export default function App() {
     </Routes>
   );
 }
+
+export default App;
