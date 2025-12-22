@@ -5,6 +5,8 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import ForgotPasswordFlow from "./pages/ForgotPasswordFlow.jsx";
 import Home from "./pages/Home.jsx";
+import AddVehiclePage from "./pages/AddVehiclePage";
+import UpdateVehiclePage from "./pages/UpdateVehiclePage";
 import AddDriverPage from "./pages/AddDriverPage";
 import UpdateDriverPage from "./pages/UpdateDriverPage";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
@@ -49,6 +51,8 @@ function App() {
       <Route path="/notification-management" element={<NotificationManagement />} />
 
       {/* Others */}
+      <Route path="/add-vehicle" element={<AddVehiclePage />} />
+      <Route path="/update-vehicle" element={<UpdateVehiclePage />} />
       <Route path="/add-driver" element={<AddDriverPage />} />
       <Route path="/update-driver" element={<UpdateDriverPage />} />
       <Route path="/user-management" element={<UserManagement />} />
@@ -68,7 +72,9 @@ function App() {
   <Route path="/staff/dashboard" element={<StaffDashboard />} />
   <Route path="/staff/vehicle-request" element={<div>Vehicle Request</div>} />
   <Route path="/staff/my-requests" element={<div>My Requests</div>} />
-  <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} />
+  {/* 
+  <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} /> */}
+   <Route path="/add-vehicle" element={<div>Vehicle Details</div>} />
   <Route path="/staff/driver-details" element={<div>Driver Details</div>} />
   <Route path="/staff/reports" element={<div>Search & Reports</div>} />
   <Route path="/staff/notifications" element={<div>Notifications</div>} />

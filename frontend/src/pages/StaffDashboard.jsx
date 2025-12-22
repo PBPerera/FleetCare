@@ -14,7 +14,7 @@ export default function StaffDashboard() {
     "Dashboard": "/staff/dashboard",
     "Vehicle Request": "/staff/vehicle-request",
     "My Requests": "/staff/my-requests",
-    "Vehicle Details": "/staff/add-vehicle",
+    "Vehicle Details": "/add-vehicle",
     "Driver Details": "/add-driver",
     "Search and Reports": "/staff/reports",
     "Notifications": "/staff/notifications",
