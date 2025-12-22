@@ -29,7 +29,10 @@ export default function ForgotPasswordFlow() {
         )}
 
         {step === 3 && (
-          <ResetPassword onReset={() => alert("Password reset successfully!")} />
+          <ResetPassword 
+          email={email}
+          onReset={() => alert("Password reset successfully!")} 
+          />
         )}
       </div>
     </>
