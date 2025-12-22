@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import './SearchBar.css'
 
 const SearchBar = ({ onFilterChange, filterLabel = "Date of the Maintenance" }) => {
   const [filters, setFilters] = useState({

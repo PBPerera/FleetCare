@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Table from "../components/DataTable/Table.jsx";
-import { MaintenanceContext } from "../Context/MaintenanceContext.jsx";
+import { MaintenanceContext } from "../context/MaintenanceContext.jsx";
 import "./Pages.css";
 
 export default function AuditLog() {
