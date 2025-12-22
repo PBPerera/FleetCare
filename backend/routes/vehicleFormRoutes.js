@@ -3,7 +3,7 @@ import { addVehicleForm, getVehicleForm } from "../controllers/vehicleFormContro
 
 const router = express.Router();
 
-router.post("/add", addVehicleForm);
+router.post("/staff/add", addVehicleForm);
 router.get("/all", getVehicleForm);
 
 export default router;
