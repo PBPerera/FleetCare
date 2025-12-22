@@ -13,4 +13,8 @@ const driverFormSchema = new mongoose.Schema({
 
 const DriverForm = mongoose.model("Driver", driverFormSchema);
 
+<<<<<<< HEAD
 export default DriverForm;
+=======
+export default DriverForm;
+>>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3

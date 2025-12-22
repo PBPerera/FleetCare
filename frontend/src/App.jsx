@@ -5,8 +5,13 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import ForgotPasswordFlow from "./pages/ForgotPasswordFlow.jsx";
 import Home from "./pages/Home.jsx";
+<<<<<<< HEAD
 import AddVehiclePage from "./pages/AddVehiclePage";
 import UpdateVehiclePage from "./pages/UpdateVehiclePage";
+=======
+import AddDriverPage from "./pages/AddDriverPage";
+import UpdateDriverPage from "./pages/UpdateDriverPage";
+>>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import StaffDashboard from "./pages/StaffDashboard.jsx";
 import NotificationCenter from "./pages/NotificationCenter.jsx";
@@ -49,8 +54,13 @@ function App() {
       <Route path="/notification-management" element={<NotificationManagement />} />
 
       {/* Others */}
+<<<<<<< HEAD
       <Route path="/add-vehicle" element={<AddVehiclePage />} />
       <Route path="/update-vehicle" element={<UpdateVehiclePage />} />
+=======
+      <Route path="/add-driver" element={<AddDriverPage />} />
+      <Route path="/update-driver" element={<UpdateDriverPage />} />
+>>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3
       <Route path="/user-management" element={<UserManagement />} />
       <Route path="/vehicles" element={<Vehicles />} />
       <Route path="/driver-management" element={<DriverManagement />} />

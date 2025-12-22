@@ -46,7 +46,11 @@ export const verifyOtp = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 // Reset Password
+=======
+// 📌 Reset Password
+>>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3
 export const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;
@@ -67,4 +71,8 @@ export const resetPassword = async (req, res) => {
   } catch (error) {
     res.status(500).json({ msg: "Server error", error });
   }
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3

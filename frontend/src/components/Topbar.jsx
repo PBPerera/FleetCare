@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo-small.png"; // change path if yours differs
+import logo from "../assets/logo-smallss.png"; // change path if yours differs
 
 /**
  * Minimal FleetCare top bar (slim).

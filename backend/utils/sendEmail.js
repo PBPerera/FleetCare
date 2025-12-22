@@ -16,4 +16,8 @@ const sendEmail = async (to, subject, text) => {
   console.log("Email sent successfully");
 };
 
+<<<<<<< HEAD
 export default sendEmail;
+=======
+export default sendEmail;
+>>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3

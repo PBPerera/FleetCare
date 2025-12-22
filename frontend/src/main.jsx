@@ -16,4 +16,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       </MaintenanceProvider>
     </BrowserRouter>
   </React.StrictMode>
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3
