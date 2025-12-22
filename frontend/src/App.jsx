@@ -5,6 +5,8 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import ForgotPasswordFlow from "./pages/ForgotPasswordFlow.jsx";
 import Home from "./pages/Home.jsx";
+import AddDriverPage from "./pages/AddDriverPage";
+import UpdateDriverPage from "./pages/UpdateDriverPage";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import StaffDashboard from "./pages/StaffDashboard.jsx";
 import NotificationCenter from "./pages/NotificationCenter.jsx";
@@ -47,6 +49,8 @@ function App() {
       <Route path="/notification-management" element={<NotificationManagement />} />
 
       {/* Others */}
+      <Route path="/add-driver" element={<AddDriverPage />} />
+      <Route path="/update-driver" element={<UpdateDriverPage />} />
       <Route path="/user-management" element={<UserManagement />} />
       <Route path="/vehicles" element={<Vehicles />} />
       <Route path="/driver-management" element={<DriverManagement />} />
