@@ -28,8 +28,8 @@ export default function VehicleForm({ onSubmit }) {
     "Dashboard": "/staff/dashboard",
     "Vehicle Request": "/staff/vehicle-request",
     "My Requests": "/staff/my-requests",
-    "Vehicle Details": "/add-vehicle",
-    "Driver Details": "/add-driver",
+    "Vehicle Details": "/staff/add-vehicle",
+    "Driver Details": "/staff/add-driver",
     "Search and Reports": "/staff/reports",
     "Notifications": "/staff/notifications",
   };
