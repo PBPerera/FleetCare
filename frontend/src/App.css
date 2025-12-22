@@ -23,7 +23,7 @@
   --fc-gradient2: #56c0ff;
 }
 
-/* ---------- Reset & Base ---------- */
+/* Reset & Base  */
 *,
 *::before,
 *::after { box-sizing: border-box; }
@@ -39,7 +39,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- Common Utility ---------- */
+/*  Common Utility  */
 a { color: inherit; text-decoration: none; }
 a:hover { text-decoration: underline; }
 img, svg, video { display: block; max-width: 100%; }
@@ -77,9 +77,7 @@ button, input { font: inherit; color: inherit; }
 }
 .gradient-button:hover { transform: scale(1.02); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
 
-/* =========================================================
-   FORGOT PASSWORD / OTP / RESET PAGE STYLES
-   ========================================================= */
+/*FORGOT PASSWORD / OTP / RESET PAGE STYLES */
 .topbar {
   height: 70px; width: 100%; background: #69B9FF;
   display: flex; align-items: center; justify-content: space-between;
@@ -99,18 +97,29 @@ button, input { font: inherit; color: inherit; }
 .forgot-main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 60px 20px; }
 
 .forgot-card, .forgot-card-otp {
-  width: 500px; height: 400px; background: #D9D9D9; border-radius: 14px; padding: 40px;
+  width: 700px; height: 600px; background: #D9D9D9; border-radius: 14px; padding: 40px;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08); display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center;
 }
 .forgot-card { gap: 50px; }
 .forgot-card-otp { gap: 20px; }
+.link-btn{
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  color:#4a68ff ;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 .forgot-title { font-size: 35px; margin-bottom: 8px; }
 .forgot-instruction { color: #375f82; font-size: 14px; text-align: center; }
 
 .input-field {
-  width: 100%; max-width: 360px; padding: 10px 14px;
+  width: 100%; max-width: 700px; padding: 10px 14px;
   border-radius: 8px; border: 1px solid rgba(75, 150, 220, 0.45);
   background: white; font-size: 14px;
 }
@@ -142,9 +151,7 @@ button, input { font: inherit; color: inherit; }
 }
 .otp-input:focus { border-color: rgba(43, 154, 246, 0.9); }
 
-/* =========================================================
-   FLEETCARE LOGIN / SIGNUP STYLES
-   ========================================================= */
+/* FLEETCARE LOGIN / SIGNUP STYLES*/
 .fc-wrap { min-height: 100vh; background: #f5f7fb; }
 .fc-appbar { background: var(--fc-blue); height: 64px; display: flex; align-items: center; }
 .fc-appbar-inner {
@@ -194,10 +201,108 @@ button, input { font: inherit; color: inherit; }
   .fc-card-left { min-height: 220px; }
   .signup-card { width: 92%; padding: 20px; min-height: 300px; }
 }
+/*Driver Form*/
+.driver-form-container {
+  background: #D9D9D9;
+  padding: 50px 40px;
+  border-radius: 14px;
+  max-width: 800px;
+  width: 95%;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
 
-/* =========================================================
-   ADMIN DASHBOARD STYLES (migrated from AdminDashboard.css)
-   ========================================================= */
+.dform-title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 35px;
+  color: #000;
+}
+
+.driver-form {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 30px;
+}
+
+.input-field-d{
+  width: 90%;
+  max-width: 700px;  
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(75, 150, 220, 0.45);
+  background: white;
+  font-size: 14px;
+}
+
+.dform-group{
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  
+}
+.dfull-width {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+.dform-row {
+  display: flex;
+  gap: 20px;
+  justify-content: center;   /* Centers the button horizontally */
+}
+
+.gradient-btndriver {
+  background: linear-gradient(90deg, #4400FF 0%, #4253FF 50%, #40A6FF 100%);
+  color: white; padding: 10px 22px; border-radius: 18px; border: none; min-width: 220px;
+  font-weight: 700; cursor: pointer; 
+}
+.gradient-btndriver:hover { filter: brightness(0.95); transform: translateY(-1px); }
+
+label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #0b1b2b;
+}
+
+
+.input-field-d:focus {
+  outline: none;
+  border-color: #2b8df6;
+  box-shadow: 0 0 4px rgba(43, 141, 246, 0.3);
+}
+
+
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .dform-row {
+    flex-direction: column;
+  }
+
+  .driver-form-container {
+    padding: 30px 25px;
+  }
+
+  .dform-title {
+    font-size: 24px;
+  }
+}
+
+/* ADMIN DASHBOARD STYLES (migrated from AdminDashboard.css */
 
 /* Wrapper & container */
 .app-wrapper { position: relative; height: 100vh; width: 100vw; }
@@ -237,6 +342,7 @@ button, input { font: inherit; color: inherit; }
   flex: 1; display: flex; flex-direction: column; background-color: #f5f8ff;
   overflow: hidden; position: relative;
 }
+
 
 /* Header */
 .header {
@@ -291,7 +397,7 @@ button, input { font: inherit; color: inherit; }
   .cards-container { grid-template-columns: 1fr; }
 }
 
-/* =============== Slim Top Bar =============== */
+/* Slim Top Bar*/
 .tbs-root{
   position: sticky;          /* stays at top while scrolling */
   top: 0;
@@ -319,8 +425,8 @@ button, input { font: inherit; color: inherit; }
 }
 
 .tbs-logo{
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
   filter: drop-shadow(0 0 0 rgba(0,0,0,0)); /* keep crisp */
 }
@@ -583,7 +689,7 @@ button, input { font: inherit; color: inherit; }
 }
 
 
-/* ===== Base / Page sizing ===== */
+/* Base / Page sizing */
 html, body, #root {
   margin: 0;
   padding: 0;
@@ -616,7 +722,7 @@ html, body, #root {
   user-select: none;
 }
 
-/* ===== Sidebar ===== */
+/* Sidebar*/
 .sidebar {
   flex: 0 0 90px; /* fixed width */
   background: linear-gradient(#48aaff, #ffffff);
@@ -672,7 +778,7 @@ html, body, #root {
   cursor: pointer;
 }
 
-/* ===== Main area ===== */
+/* Main area*/
 .main-content {
   flex: 1 1 auto;
   min-width: 0;                    /* prevent overflow from long content */
@@ -694,7 +800,7 @@ html, body, #root {
   margin-left: 20px;
 }
 
-/* ===== Sticky header ===== */
+/* Sticky header */
 .header {
   background: #4c95ff;
   color: white;
@@ -723,7 +829,7 @@ html, body, #root {
   cursor: pointer;
 }
 
-/* ===== User menu ===== */
+/* User menu  */
 .user-menu {
   position: absolute;
   top: 60px;
@@ -750,7 +856,7 @@ html, body, #root {
   background-color: #f2f2f2;
 }
 
-/* ===== Page sections & tables ===== */
+/*  Page sections & tables */
 .trip-section {
   padding: 20px;
   display: flex;
@@ -813,7 +919,7 @@ html, body, #root {
   background-color: #fafcff;
 }
 
-/* ===== Optional: nicer scrollbars (WebKit) ===== */
+/*  Optional: nicer scrollbars (WebKit)  */
 .scrollable::-webkit-scrollbar,
 .trip-table-container::-webkit-scrollbar {
   height: 10px;

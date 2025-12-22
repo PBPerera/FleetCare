@@ -95,7 +95,7 @@ export default function Login() {
                 Don’t have an account?{" "}
                 <Link to="/signup" className="lp-link">Sign Up</Link>
               </span>
-              <Link to="/forgot-password" className="lp-link">Forgot Password</Link>
+              <Link to="/forgotpassword" className="lp-link">Forgot Password</Link>
             </div>
           </div>
         </section>
