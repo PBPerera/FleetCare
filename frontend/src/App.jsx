@@ -28,6 +28,7 @@ import Vehicles from "./pages/Vehicles.jsx";
 import DriverManagement from "./pages/DriverManagement.jsx";
 
 import "./App.css";
+import DriverForm from "./pages/DriverForm.jsx";
 
 function App() {
   return (
@@ -53,7 +54,7 @@ function App() {
       {/* Others */}
       {/* <Route path="/add-vehicle" element={<VehicleForm />} /> */}
       <Route path="/update-vehicle" element={<UpdateVehiclePage />} />
-      <Route path="/add-driver" element={<AddDriverPage />} />
+      {/* <Route path="/add-driver" element={<AddDriverPage />} /> */}
       <Route path="/update-driver" element={<UpdateDriverPage />} />
       <Route path="/user-management" element={<UserManagement />} />
       <Route path="/vehicles" element={<Vehicles />} />
@@ -75,7 +76,7 @@ function App() {
   {/* 
   <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} /> */}
    <Route path="/staff/add-vehicle" element={<VehicleForm />} />
-  <Route path="/staff/driver-details" element={<div>Driver Details</div>} />
+  <Route path="/staff/add-driver" element={<DriverForm/>} />
   <Route path="/staff/reports" element={<div>Search & Reports</div>} />
   <Route path="/staff/notifications" element={<div>Notifications</div>} />
 
