@@ -14,8 +14,4 @@ const connectDB = async () => {
   }
 };
 
-<<<<<<< HEAD
 export default connectDB;
-=======
-export default connectDB;
->>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3

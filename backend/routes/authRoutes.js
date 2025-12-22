@@ -9,8 +9,4 @@ router.post("/forgot-password", forgotPassword);
 router.post("/verify-otp", verifyOtp);
 router.post("/reset-password", resetPassword);
 
-<<<<<<< HEAD
 export default router;
-=======
-export default router;
->>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3

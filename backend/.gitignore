@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 .env
-=======
-<<<<<<< HEAD
-.env
-=======
-.env
->>>>>>> 2ab79fee4e5b70a6a3887ca0e33ce18c57290786
->>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3
+
+node_modules/
+dist/   

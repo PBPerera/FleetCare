@@ -7,8 +7,4 @@ const userSchema = new mongoose.Schema({
   otpExpires: { type: Date }
 });
 
-<<<<<<< HEAD
 export default mongoose.model("User", userSchema);
-=======
-export default mongoose.model("User", userSchema);
->>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3

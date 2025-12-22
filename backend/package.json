@@ -11,23 +11,12 @@
     "bcrypt": "^5.1.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
-<<<<<<< HEAD
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.5.0",
-    "nodemailer": "^7.0.11"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  }
-=======
     "crypto": "^1.0.1",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.8.7",
-    "nodemailer": "^7.0.10"
+    "nodemailer": "^7.0.11"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
@@ -36,5 +25,4 @@
   "keywords": [],
   "author": "",
   "license": "ISC"
->>>>>>> 879ada679e825132febcdadc2d4ea122dd7293e3
 }
