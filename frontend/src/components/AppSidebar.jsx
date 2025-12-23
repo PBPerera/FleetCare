@@ -32,7 +32,6 @@ const menuItems = [
   { title: "Trip Scheduling", url: "/trip-scheduling", icon: CalendarClock },
   { title: "Trip Allocation", url: "/trip-allocation", icon: MapPin },
   { title: "Maintenance Management", url: "/maintenance", icon: Wrench },
-  { title: "Reporting & Analytics", url: "/reports", icon: BarChart3 },
   { title: "Notification Management", url: "/notifications", icon: Bell },
   { title: "Audit Log", url: "/audit-log", icon: FileText },
 ];

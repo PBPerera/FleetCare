@@ -22,7 +22,6 @@ export default function StaffSidebar({
     { icon: <FileText size={18} />, label: "My Requests" },
     { icon: <ClipboardList size={18} />, label: "Vehicle Details" },
     { icon: <User size={18} />, label: "Driver Details" },
-    { icon: <BarChart3 size={18} />, label: "Search and Reports" },
     { icon: <Bell size={18} />, label: "Notifications" },
   ];
 
