@@ -336,11 +336,12 @@ label {
   background: #D9D9D9;
   padding: 50px 40px;
   border-radius: 14px;
-  max-width: 800px;
+  max-width: 900px ;
   width: 95%;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
+   margin: 100px auto;
 }
 
 .dform-title {
@@ -362,8 +363,8 @@ label {
 }
 
 .input-field-d{
-  width: 90%;
-  max-width: 700px;  
+  width: 100%;
+  max-width: 900px;  
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid rgba(75, 150, 220, 0.45);
