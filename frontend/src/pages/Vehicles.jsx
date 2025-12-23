@@ -6,7 +6,7 @@ import Cards from "../components/DashboardCards/Cards.jsx";
 import SearchBar from "../components/SearchBar/SearchBar.jsx";
 import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
-import ExportPdfBtn from "../components/ExportpdfBtn.jsx";
+import ExportPdfBtn from "../components/ExportPdfBtn.jsx";
 import "./Pages.css";
 
 export default function Vehicles() {

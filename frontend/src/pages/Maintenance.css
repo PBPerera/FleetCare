@@ -1,0 +1,77 @@
+/* Wrapper */
+.maintenance-wrapper {
+  display: flex !important;
+  min-height: 100vh !important;
+  background: #f5f7fa !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+/* Force correct sidebar width - override App.css */
+.maintenance-wrapper .ad-sidebar {
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  height: 100vh !important;
+  width: 240px !important;
+  flex: 0 0 240px !important;
+  z-index: 1000 !important;
+  transition: width 0.3s ease !important;
+  background: linear-gradient(#48aaff, #ffffff) !important;
+  padding: 20px 16px !important;
+  border-right: 1px solid #cddfff !important;
+}
+
+.maintenance-wrapper .ad-sidebar.collapsed {
+  width: 80px !important;
+  flex: 0 0 80px !important;
+}
+
+/* Main content area */
+.maintenance-wrapper .main-content {
+  flex: 1 !important;
+  margin-left: 240px !important;
+  margin-top: 0 !important;
+  padding: 0 !important;
+  width: calc(100% - 240px) !important;
+  min-height: 100vh !important;
+  background: #f5f7fa !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: margin-left 0.3s ease, width 0.3s ease !important;
+}
+
+.maintenance-wrapper .main-content.sidebar-collapsed {
+  margin-left: 80px !important;
+  width: calc(100% - 80px) !important;
+}
+
+/* TopBar - Make it sticky/fixed */
+.maintenance-wrapper .topbar,
+.maintenance-wrapper .header,
+.maintenance-wrapper .tbs-root {
+  position: sticky !important;
+  top: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  z-index: 50 !important;
+}
+
+/* Content containers */
+.maintenance-wrapper .dashboard-container,
+.maintenance-wrapper .page-container,
+.maintenance-wrapper .audit-log-container {
+  padding: 20px 30px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Remove Layout wrapper padding */
+.maintenance-wrapper .layout,
+.maintenance-wrapper .page-content,
+.maintenance-wrapper .page-content-wrapper {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+}

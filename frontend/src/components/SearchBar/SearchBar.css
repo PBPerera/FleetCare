@@ -10,16 +10,18 @@
   gap: 20px;
   align-items: center;
   width: 100%;
-  max-width: 1277px;
+  max-width: 100%;
   min-height: 74px;
   height: auto;
+  justify-content: space-between;
 }
 
 .searchbar-input-wrapper {
   position: relative;
-  flex: 1;
+  flex: 2;
   max-width: 623px;
   min-width: 200px;
+  margin-right: auto;
 }
 
 .searchbar-main-input {
@@ -69,7 +71,8 @@
 }
 
 .searchbar-select {
-  flex: 1;
+  flex: 0 0 auto;
+  margin-left: auto;
   max-width: 300px;
   min-width: 150px;
   height: 47px;
