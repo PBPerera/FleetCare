@@ -8,7 +8,7 @@ import {
   BarChart3,
   Bell,
 } from "lucide-react";
-import logo from "../assets/logo-small.png"; 
+import logo from "../assets/logo-smallss.png"; 
 
 export default function StaffSidebar({
   collapsed = false,

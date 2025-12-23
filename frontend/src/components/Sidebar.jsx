@@ -12,7 +12,7 @@ import {
   Bell,
   FileText,
 } from "lucide-react";
-import logo from "../assets/logo-small.png"; 
+import logo from "../assets/logo-smallss.png"; 
 
 export default function Sidebar({
   collapsed = false,
