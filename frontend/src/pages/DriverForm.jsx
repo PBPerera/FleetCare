@@ -232,7 +232,7 @@ export default function DriverForm({ onSubmit }) {
                     required
                     style={{
                       height: "40px",
-                      width: "613px",
+                      width: "350px",
                       padding: "10px",
                       fontSize: "14px",
                       borderRadius: "8px",
@@ -252,7 +252,7 @@ export default function DriverForm({ onSubmit }) {
                     required
                     style={{
                       height: "40px",
-                      width: "613px",
+                      width: "350px",
                       padding: "10px",
                       fontSize: "14px",
                       borderRadius: "8px",
