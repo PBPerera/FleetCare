@@ -14,7 +14,7 @@ export const forgotPassword = async (req, res) => {
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes (changed from 1)
+    const otpExpires = Date.now() + 1 * 60 * 1000; // 1 minute (changed from 10)
 
     user.otp = otp;
     user.otpExpires = otpExpires;
@@ -27,6 +27,36 @@ export const forgotPassword = async (req, res) => {
     res.json({ msg: "OTP sent to your email" });
   } catch (error) {
     console.error("forgotPassword error:", error);
+    res.status(500).json({ msg: "Server error", error: error.message });
+  }
+};
+
+// 📌 Resend OTP (NEW FUNCTION)
+export const resendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    // Generate new OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save();
+
+    console.log(`OTP resent to ${email}: ${otp}`); // For debugging
+
+    await sendEmail(email, "Your New OTP Code", `Your new OTP is: ${otp}`);
+
+    res.json({ msg: "New OTP sent to your email" });
+  } catch (error) {
+    console.error("resendOtp error:", error);
     res.status(500).json({ msg: "Server error", error: error.message });
   }
 };
