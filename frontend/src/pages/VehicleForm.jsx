@@ -50,7 +50,7 @@ export default function VehicleForm({ onSubmit }) {
         insuranceRenewalDate: new Date(vehicleData.insuranceRenewalDate),
       };
 
-      const res = await fetch("http://localhost:5000/api/vehicles/add", {
+      const res = await fetch("http://localhost:5000/api/vehicleforms/staff/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

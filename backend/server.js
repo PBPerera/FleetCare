@@ -16,8 +16,8 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/auth", authRoutes);
-app.use("/api/drivers", driverFormRoutes);
-app.use("/api/vehicles", vehicleFormRoutes);
+app.use("/api/driverforms", driverFormRoutes);
+app.use("/api/vehicleforms", vehicleFormRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
