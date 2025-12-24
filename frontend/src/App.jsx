@@ -44,7 +44,6 @@ export default function App() {
         <Route path="/onboard" element={<Onboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/forgot-password/*" element={<ForgotPasswordFlow />} />
         <Route path="/forgotpassword" element={<ForgotPasswordFlow />} />
         <Route path="/home" element={<Home />} />
 
