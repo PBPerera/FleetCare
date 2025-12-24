@@ -20,6 +20,24 @@ export default function OtpVerification({ email = "", onVerify }) {
     }
   };
 
+  const handleKeyDown = (e, idx) => {
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      const next = [...otp];
+      
+      if (otp[idx]) {
+        // Clear current box if it has a value
+        next[idx] = "";
+        setOtp(next);
+      } else if (idx > 0) {
+        // Move to previous box and clear it
+        next[idx - 1] = "";
+        setOtp(next);
+        inputsRef.current[idx - 1].focus();
+      }
+    }
+  };
+
   const submit = async () => {
     const code = otp.join("");
     if (code.length < 6) return alert("Enter full OTP");
@@ -55,6 +73,7 @@ export default function OtpVerification({ email = "", onVerify }) {
               maxLength={1}
               value={digit}
               onChange={(e) => handleChange(e.target.value, idx)}
+              onKeyDown={(e) => handleKeyDown(e, idx)}  // ADD THIS LINE
               className="otp-input"
             />
           ))}
