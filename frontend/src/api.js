@@ -10,5 +10,6 @@ export const sendOtp = (email) => API.post("/auth/forgot-password", { email });
 export const verifyOtp = (email, otp) => API.post("/auth/verify-otp", { email, otp });
 export const resetPassword = (email, password) =>
   API.post("/auth/reset-password", { email, newPassword: password });
+export const resendOtp = (email) => API.post("/auth/resend-otp", { email }); 
 
 export default API;
