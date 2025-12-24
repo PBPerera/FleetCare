@@ -297,6 +297,8 @@ export default function NotificationManagement() {
     fetchNotifications();
   }, []);
 
+  
+
   // ============================================================
   // OTHER 3 TABLES – KEEP SAMPLE DATA AS IS
   // ============================================================

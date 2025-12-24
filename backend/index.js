@@ -16,6 +16,11 @@ app.use(express.json());
 app.use('/api/notifications', notificationRoutes);
 
 
+
+const notificationTripRoutes = require("./routes/notificationTripRoutes");
+app.use("/api/notification/trips", notificationTripRoutes);
+
+
 const MONGO = process.env.MONGO_URI || 'mongodb://localhost:27017/fleetcare';
 mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => console.log('Mongo connected'))
