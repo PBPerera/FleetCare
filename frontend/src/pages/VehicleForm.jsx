@@ -175,7 +175,7 @@ export default function VehicleForm({ onSubmit }) {
               {/* Two-column fields */}
               <div className="form-row">
                 <div className="form-group">
-                  <label>Wheel Serial No</label>
+                  <label>Tire No</label>
                   <input
                     type="text"
                     name="wheelSerialNo"
@@ -194,7 +194,7 @@ export default function VehicleForm({ onSubmit }) {
                 </div>
 
                 <div className="form-group">
-                  <label>Wheel Size</label>
+                  <label>Tire Size</label>
                   <input
                     type="text"
                     name="wheelSize"

@@ -9,8 +9,8 @@ const driverFormSchema = new mongoose.Schema({
   licenseExpiryDate: { type: Date, required: true },
   licenseRenewalDate: { type: Date, required: true },
   healthAssessment: { type: String },
-}, { timestamps: true });
+}, { timestamps: true, collection: "driverform"  });
 
-const DriverForm = mongoose.model("Driver", driverFormSchema);
+const DriverForm = mongoose.model("DriverForm", driverFormSchema);
 
 export default DriverForm;
