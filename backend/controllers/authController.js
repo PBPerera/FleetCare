@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import sendEmail from "../utils/sendEmail.js";
+import ResetToken from "../models/ResetToken.js";
 
 //  Forgot Password - Send OTP
 export const forgotPassword = async (req, res) => {
@@ -19,6 +20,17 @@ export const forgotPassword = async (req, res) => {
     user.otp = otp;
     user.otpExpires = otpExpires;
     await user.save();
+
+    // Save ResetToken document to user_reset_password collection
+    const resetDoc = new ResetToken({
+      userId: user._id,
+      email: user.email,
+      otpHash: otp, // ideally store a hashed value
+      otpExpiresAt: new Date(otpExpires),
+      used: false,
+    });
+    await resetDoc.save(); // <-- ensures token stored in user_reset_password
+    console.log("ResetToken saved:", resetDoc._id);
 
     console.log(`OTP sent to ${email}: ${otp}`); // For debugging
 
@@ -44,11 +56,22 @@ export const resendOtp = async (req, res) => {
 
     // Generate new OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+    const otpExpires = Date.now() + 1 * 60 * 1000; // 1 minutes
 
     user.otp = otp;
     user.otpExpires = otpExpires;
     await user.save();
+
+     // Save new ResetToken doc
+    const resetDoc = new ResetToken({
+      userId: user._id,
+      email: user.email,
+      otpHash: otp,
+      otpExpiresAt: new Date(otpExpires),
+      used: false,
+    });
+    await resetDoc.save();
+    console.log("ResetToken (resend) saved:", resetDoc._id);
 
     console.log(`OTP resent to ${email}: ${otp}`); // For debugging
 
@@ -99,6 +122,12 @@ export const resetPassword = async (req, res) => {
     user.otpExpires = null;
 
     await user.save();
+
+    // Mark ResetToken(s) for this email as used so they appear updated in user_reset_password
+    await ResetToken.updateMany(
+      { email: user.email, used: false },
+      { $set: { used: true, resetTokenExpiresAt: new Date() } }
+    );
 
     res.json({ msg: "Password updated successfully" });
   } catch (error) {

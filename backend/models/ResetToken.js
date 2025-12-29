@@ -10,7 +10,7 @@ const resetTokenSchema = new mongoose.Schema(
     resetTokenHash: { type: String },
     resetTokenExpiresAt: { type: Date },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "user_reset_password" }
 );
 
 export default mongoose.model("ResetToken", resetTokenSchema);
