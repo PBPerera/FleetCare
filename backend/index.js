@@ -15,6 +15,9 @@ app.use(express.json());
 // add other routes (users, maintenance, etc.) before or after
 app.use('/api/notifications', notificationRoutes);
 
+const notificationStaffRoutes = require("./routes/notificationStaffRoutes");
+
+app.use("/api/notifications", notificationStaffRoutes);
 
 
 const notificationTripRoutes = require("./routes/notificationTripRoutes");
@@ -28,4 +31,5 @@ mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log('Server running on', PORT));
+app.listen(4000, () => console.log('Server running on', 4000));
+

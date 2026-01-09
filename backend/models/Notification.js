@@ -20,5 +20,46 @@ read: { type: Boolean, default: false },
 meta: { type: Object, default: {} },
 }, { timestamps: true });
 
+const mongoose = require("mongoose");
+
+const notificationSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User", // or Staff model
+      required: true,
+    },
+
+    role: {
+      type: String,
+      enum: ["staff", "admin", "driver"],
+      default: "staff",
+    },
+
+    type: {
+      type: String,
+      enum: ["approved", "rejected", "info"],
+      required: true,
+    },
+
+    title: {
+      type: String,
+      required: true,
+    },
+
+    message: String,
+    from: String,
+    reason: String,
+    schedule: String,
+
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Notification", notificationSchema);
 
 module.exports = mongoose.model('Notification', NotificationSchema);
