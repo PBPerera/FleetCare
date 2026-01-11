@@ -1,5 +1,5 @@
-// src/api/maintenanceApi.js
-const API_BASE_URL = 'http://localhost:4000/api';
+// Update this to match your friend's backend port
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const fetchAPI = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
@@ -29,7 +29,6 @@ const fetchAPI = async (endpoint, options = {}) => {
   }
 };
 
-// Helper function to remove undefined and empty string values
 const cleanData = (obj) => {
   const cleaned = {};
   Object.keys(obj).forEach(key => {
@@ -49,10 +48,10 @@ export const servicesApi = {
 
   create: async (data) => {
     const formattedData = {
-      vehicleId: data.vehicleId || undefined,
-      driverName: data.driverName || undefined,
-      description: data.description || undefined,
-      companyName: data.companyName || undefined,
+      vehicleId: data.vehicleId || '',
+      driverName: data.driverName || '',
+      description: data.description || '',
+      companyName: data.companyName || '',
       date: data.date ? new Date(data.date).toISOString() : new Date().toISOString(),
       shiftDate: data.shiftDate ? new Date(data.shiftDate).toISOString() : undefined,
       completeDate: data.completeDate ? new Date(data.completeDate).toISOString() : undefined,
@@ -60,7 +59,6 @@ export const servicesApi = {
       status: data.status || 'Scheduled',
     };
     
-    // Remove undefined values
     const cleanedData = cleanData(formattedData);
     
     console.log('Creating service with cleaned data:', cleanedData);
@@ -114,10 +112,10 @@ export const repairsApi = {
 
   create: async (data) => {
     const formattedData = {
-      vehicleId: data.vehicleId || undefined,
-      driverName: data.driverName || undefined,
-      description: data.description || undefined,
-      companyName: data.companyName || undefined,
+      vehicleId: data.vehicleId || '',
+      driverName: data.driverName || '',
+      description: data.description || '',
+      companyName: data.companyName || '',
       requestDate: data.requestDate ? new Date(data.requestDate).toISOString() : new Date().toISOString(),
       shiftDate: data.shiftDate ? new Date(data.shiftDate).toISOString() : undefined,
       completeDate: data.completeDate ? new Date(data.completeDate).toISOString() : undefined,
@@ -125,8 +123,8 @@ export const repairsApi = {
       cost: data.cost || 0,
       status: data.status || 'Pending',
       priority: data.priority || 'Medium',
-      developmentOfficer: data.developmentOfficer || undefined,
-      engineer: data.engineer || undefined,
+      developmentOfficer: data.developmentOfficer || '',
+      engineer: data.engineer || '',
       procurementStage1: data.procurementStage1 || '',
       tenderCall: data.tenderCall || '',
       procurementStage2: data.procurementStage2 || '',

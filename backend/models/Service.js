@@ -1,37 +1,35 @@
-// models/Service.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const serviceSchema = new mongoose.Schema({
   maintenanceId: {
     type: String,
     unique: true,
-    default: function() {
-      return `M${String(Date.now()).slice(-6)}`;
-    }
+    sparse: true,
+    trim: true
   },
   vehicleId: {
     type: String,
-    required: false,  // ✅ Changed to false
+    required: false,
     trim: true,
-    default: 'N/A'
+    default: ''
   },
   driverName: {
     type: String,
-    required: false,  // ✅ Changed to false
+    required: false,
     trim: true,
-    default: 'N/A'
+    default: ''
   },
   description: {
     type: String,
-    required: false,  // ✅ Changed to false
+    required: false,
     trim: true,
-    default: 'N/A'
+    default: ''
   },
   companyName: {
     type: String,
-    required: false,  // ✅ Changed to false
+    required: false,
     trim: true,
-    default: 'N/A'
+    default: ''
   },
   date: {
     type: Date,
@@ -39,7 +37,7 @@ const serviceSchema = new mongoose.Schema({
   },
   shiftDate: {
     type: Date,
-    required: false  // ✅ Changed to false
+    required: false
   },
   completeDate: {
     type: Date
@@ -75,4 +73,4 @@ serviceSchema.index({ vehicleId: 1 });
 serviceSchema.index({ date: -1 });
 serviceSchema.index({ status: 1 });
 
-module.exports = mongoose.model('Service', serviceSchema);
+export default mongoose.model('Service', serviceSchema);

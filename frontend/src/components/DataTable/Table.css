@@ -1,3 +1,4 @@
+/* --- Table Layout & Structure --- */
 .table-wrapper {
   background: white;
   border-radius: 12px;
@@ -45,21 +46,54 @@
   background: #e3f2fd;
 }
 
+/* --- Editable Inputs & Dropdowns --- */
+.editable-input,
+.editable-select,
 .data-table input[type="text"],
 .data-table input[type="date"] {
   width: 100%;
-  padding: 6px 8px;
+  padding: 8px;
   border: 1px solid var(--border-gray);
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.editable-input:focus,
+.editable-select:focus,
 .data-table input[type="text"]:focus,
 .data-table input[type="date"]:focus {
   outline: none;
-  border-color: var(--primary-blue);
+  border-color: #4CAF50; /* Green highlight from your new style */
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
 }
 
+.editable-select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  padding-right: 32px;
+}
+
+.editable-select option:first-child {
+  color: #999;
+}
+
+.editable-input[type="date"] {
+  padding: 7px 8px;
+}
+
+.editable-input[type="number"] {
+  text-align: right;
+}
+
+/* --- Specialized Cells --- */
 .checkbox-col {
   width: 50px;
   text-align: center;
@@ -71,12 +105,23 @@
   height: 16px;
 }
 
+.date-cell {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cell-content {
+  display: inline-block;
+}
+
 .no-data {
   text-align: center;
   color: #999;
   padding: 30px !important;
 }
 
+/* --- Action Buttons & Columns --- */
 .action-col {
   min-width: 200px;
   text-align: center;
@@ -86,9 +131,8 @@
   display: flex;
   flex-direction: row;
   gap: 8px;
-  align-items: center ;
+  align-items: center;
   justify-content: center;
-  justify-content: flex-start;
   flex-wrap: nowrap;
 }
 
@@ -115,71 +159,32 @@
   transform: translateY(0);
 }
 
-.edit-btn {
-  background: #2196F3;
-  color: white;
-}
+/* Button Variants */
+.edit-btn { background: #2196F3; color: white; }
+.edit-btn:hover { background: #1976D2; }
 
-.edit-btn:hover {
-  background: #1976D2;
-}
+.save-btn { background: #4CAF50; color: white; }
+.save-btn:hover { background: #388E3C; }
 
-.save-btn {
-  background: #4CAF50;
-  color: white;
-}
+.delete-btn { background: #f44336; color: white; }
+.delete-btn:hover { background: #d32f2f; }
 
-.save-btn:hover {
-  background: #388E3C;
-}
+.cancel-btn { background: #9E9E9E; color: white; }
+.cancel-btn:hover { background: #757575; }
 
-.delete-btn {
-  background: #f44336;
-  color: white;
-}
+.action-btn.approve { background: #1e88e5; color: white; }
+.action-btn.reject { background: #e53935; color: white; }
 
-.delete-btn:hover {
-  background: #d32f2f;
-}
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .editable-input,
+  .editable-select {
+    font-size: 12px;
+    padding: 6px;
+  }
 
-.cancel-btn {
-  background: #9E9E9E;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background: #757575;
-}
-
-.action-btn.approve {
-  background: #1e88e5;
-  color: white;
-}
-
-.action-btn.approve:hover {
-  background: #1565c0;
-}
-
-.action-btn.reject {
-  background: #e53935;
-  color: white;
-}
-
-.action-btn.reject:hover {
-  background: #c62828;
-}
-
-.date-cell {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.editable-cell input {
-  width: 100%;
-  min-width: 100px;
-}
-
-.editable-input {
-  font-family: inherit;
+  .action-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
 }
