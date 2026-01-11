@@ -17,7 +17,7 @@ const vehicleFormSchema = new mongoose.Schema(
     insuranceExpiryDate: { type: Date, required: true },
     insuranceRenewalDate: { type: Date, required: true },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "vehicleform" }
 );
 
 const VehicleForm = mongoose.model("VehicleForm", vehicleFormSchema);

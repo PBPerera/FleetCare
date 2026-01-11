@@ -15,7 +15,7 @@ export const addDriverForm = async (req, res) => {
 // Get all drivers
 export const getDriverForm = async (req, res) => {
   try {
-    const drivers = await Driver.find();
+    const drivers = await DriverForm.find();
     res.json(drivers);
   } catch (error) {
     console.error(error);
