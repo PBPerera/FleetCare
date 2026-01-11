@@ -1,13 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   getDashboardStats,
   searchMaintenance,
   getMaintenanceHistory
-} = require('../controllers/maintenanceController');
+} from '../controllers/maintenanceController.js';
+
+const router = express.Router();
 
 router.get('/dashboard/stats', getDashboardStats);
 router.get('/search', searchMaintenance);
 router.get('/history/:vehicleId', getMaintenanceHistory);
 
-module.exports = router;
+export default router;
