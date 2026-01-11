@@ -1,18 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const {
+import express from 'express';
+import {
   getAllServices,
   getServiceById,
   createService,
   updateService,
   deleteService,
   getServiceStats
-} = require('../controllers/serviceController');
+} from '../controllers/serviceController.js';
 
-// Get service statistics
+const router = express.Router();
+
 router.get('/stats', getServiceStats);
 
-// CRUD operations
 router.route('/')
   .get(getAllServices)
   .post(createService);
@@ -22,4 +21,4 @@ router.route('/:id')
   .put(updateService)
   .delete(deleteService);
 
-module.exports = router; 
+export default router;

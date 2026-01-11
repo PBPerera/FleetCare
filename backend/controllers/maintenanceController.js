@@ -1,30 +1,22 @@
-// controllers/maintenanceController.js
-const Service = require('../models/Service');
-const Repair = require('../models/Repair');
+import Service from '../models/Service.js';
+import Repair from '../models/Repair.js';
 
-// @desc    Get dashboard statistics
-// @route   GET /api/maintenance/dashboard/stats
-// @access  Public
-exports.getDashboardStats = async (req, res) => {
+export const getDashboardStats = async (req, res) => {
   try {
-    // Service stats
     const totalServices = await Service.countDocuments();
     const scheduledServices = await Service.countDocuments({ status: 'Scheduled' });
     const inProgressServices = await Service.countDocuments({ status: 'In Progress' });
     const completedServices = await Service.countDocuments({ status: 'Completed' });
 
-    // Repair stats
     const totalRepairs = await Repair.countDocuments();
     const pendingRepairs = await Repair.countDocuments({ status: 'Pending' });
     const approvedRepairs = await Repair.countDocuments({ status: 'Approved' });
     const completedRepairs = await Repair.countDocuments({ status: 'Completed' });
 
-    // Combined stats
     const totalRecords = totalServices + totalRepairs;
     const scheduled = scheduledServices + pendingRepairs;
     const inProgress = inProgressServices + approvedRepairs;
     
-    // Completed this month
     const startOfMonth = new Date();
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
@@ -37,7 +29,6 @@ exports.getDashboardStats = async (req, res) => {
       completeDate: { $gte: startOfMonth }
     });
 
-    // Cost calculations
     const serviceCost = await Service.aggregate([
       { $group: { _id: null, total: { $sum: '$cost' } } }
     ]);
@@ -84,10 +75,7 @@ exports.getDashboardStats = async (req, res) => {
   }
 };
 
-// @desc    Search across services and repairs
-// @route   GET /api/maintenance/search
-// @access  Public
-exports.searchMaintenance = async (req, res) => {
+export const searchMaintenance = async (req, res) => {
   try {
     const { query, type = 'all' } = req.query;
 
@@ -136,10 +124,7 @@ exports.searchMaintenance = async (req, res) => {
   }
 };
 
-// @desc    Get maintenance history for a vehicle
-// @route   GET /api/maintenance/history/:vehicleId
-// @access  Public
-exports.getMaintenanceHistory = async (req, res) => {
+export const getMaintenanceHistory = async (req, res) => {
   try {
     const { vehicleId } = req.params;
 
@@ -149,7 +134,6 @@ exports.getMaintenanceHistory = async (req, res) => {
     const repairs = await Repair.find({ vehicleId })
       .sort({ requestDate: -1 });
 
-    // Combine and sort by date
     const history = [
       ...services.map(s => ({ ...s.toObject(), type: 'service', date: s.date })),
       ...repairs.map(r => ({ ...r.toObject(), type: 'repair', date: r.requestDate }))

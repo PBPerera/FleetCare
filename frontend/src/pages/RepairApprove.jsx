@@ -1,5 +1,5 @@
 // src/pages/RepairApprove.jsx
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import SearchBar from '../components/SearchBar/SearchBar.jsx';
 import Table from '../components/DataTable/Table.jsx';
 import Button from '../components/Buttons/Button.jsx';
@@ -13,8 +13,7 @@ export default function RepairApprove() {
     setFilters, 
     updateRepair, 
     addRepair, 
-    deleteRepair, 
-    fetchRepairs 
+    deleteRepair 
   } = useContext(MaintenanceContext);
 
   const approvalColumns = [
@@ -23,35 +22,17 @@ export default function RepairApprove() {
     { key: 'driverName', label: 'Driver Name' },
     { key: 'description', label: 'Description' },
     { key: 'companyName', label: 'Company Name' },
-    { 
-      key: 'procurementStage1', 
-      label: 'Procurement Stage 1',
-    },
-    { 
-      key: 'tenderCall', 
-      label: 'Tender Call',
-    },
-    { 
-      key: 'engineer', 
-      label: 'Engineer',
-    },
-    { 
-      key: 'engineerDate', 
-      label: 'Engineer Date',
-    },
-    { 
-      key: 'procurementStage2', 
-      label: 'Procurement Stage 2',
-    },
-    { 
-      key: 'developmentOfficer', 
-      label: 'Development Officer',
-    },
-    { 
-      key: 'shiftDate', 
-      label: 'Shift Date Of Maintenance',
-    },
-    { key: 'status', label: 'Status' },
+    { key: 'priority', label: 'Priority' },
+    { key: 'developmentOfficer', label: 'Development Officer' },
+    { key: 'procurementStage1', label: 'Procurement Stage 1' },
+    { key: 'tenderCall', label: 'Tender Call' },
+    { key: 'engineer', label: 'Engineer' },
+    { key: 'engineerDate', label: 'Engineer Date' },
+    { key: 'procurementStage2', label: 'Procurement Stage 2' },
+    { key: 'shiftDate', label: 'Shift Date' },
+    { key: 'completeDate', label: 'Complete Date' },
+    { key: 'cost', label: 'Cost ($)' },
+    { key: 'status', label: 'Status' }
   ];
 
   const handleAddApproval = async () => {
@@ -71,11 +52,12 @@ export default function RepairApprove() {
       engineer: '',
       engineerDate: '',
       procurementStage2: '',
-      developmentOfficer: '',
+      developmentOfficer: ''
     };
     
     try {
       await addRepair(newApproval);
+      alert('Repair record added successfully!');
     } catch (error) {
       alert('Error adding approval record: ' + error.message);
     }
@@ -83,7 +65,16 @@ export default function RepairApprove() {
 
   const handleApprovalEdit = async (id, updatedData) => {
     try {
-      await updateRepair(id, updatedData);
+      // Clean up empty strings for enum fields
+      const cleanedData = {
+        ...updatedData,
+        procurementStage1: updatedData.procurementStage1 || '',
+        tenderCall: updatedData.tenderCall || '',
+        procurementStage2: updatedData.procurementStage2 || ''
+      };
+      
+      await updateRepair(id, cleanedData);
+      alert('Repair updated successfully!');
     } catch (error) {
       alert('Error updating approval: ' + error.message);
     }
@@ -92,6 +83,7 @@ export default function RepairApprove() {
   const handleApprovalDelete = async (id) => {
     try {
       await deleteRepair(id);
+      alert('Repair deleted successfully!');
     } catch (error) {
       alert('Error deleting approval: ' + error.message);
     }
@@ -110,12 +102,16 @@ export default function RepairApprove() {
         {state.loading && <div className="loading">Loading...</div>}
         {state.error && <div className="error">Error: {state.error}</div>}
 
-        <SearchBar onFilterChange={setFilters} filterLabel="Company Name" />
+        <h2 className="page-subtitle">
+          Pending Repair Approvals ({pendingRepairs.length})
+        </h2>
+
+        <SearchBar onFilterChange={setFilters} filterLabel="Search by Vehicle ID or Company" />
 
         <div className="action-bar">
           <ExportPdfBtn data={pendingRepairs} filename="repair-approvals" />
           <Button variant="primary" onClick={handleAddApproval}>
-            + Add Approval Record
+            + Add Repair Record
           </Button>
         </div>
 
