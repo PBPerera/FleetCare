@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
+import { verifyOtp, resendOtp } from "../api";
 
 export default function OtpVerification({ email = "", onVerify }) {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const inputsRef = useRef([]);
+  const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
 
   useEffect(() => {
-    
     inputsRef.current?.[0]?.focus();
   }, []);
 
@@ -20,68 +22,85 @@ export default function OtpVerification({ email = "", onVerify }) {
   };
 
   const handleKeyDown = (e, idx) => {
-    if (e.key === "Backspace" && !otp[idx] && idx > 0) {
-      const prev = idx - 1;
-      inputsRef.current[prev].focus();
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      const next = [...otp];
+      
+      if (otp[idx]) {
+        // Clear current box if it has a value
+        next[idx] = "";
+        setOtp(next);
+      } else if (idx > 0) {
+        // Move to previous box and clear it
+        next[idx - 1] = "";
+        setOtp(next);
+        inputsRef.current[idx - 1].focus();
+      }
     }
   };
 
-  const handlePaste = (e) => {
-    const paste = e.clipboardData.getData("text").replace(/\D/g, "");
-    if (!paste) return;
-    const digits = paste.split("").slice(0, 6);
-    const next = ["", "", "", "", "", ""];
-    digits.forEach((d, i) => (next[i] = d));
-    setOtp(next);
-    const focusIndex = digits.length >= 6 ? 5 : digits.length;
-    inputsRef.current[focusIndex]?.focus();
-    e.preventDefault();
+  const handleResend = async () => {
+    try {
+      setResending(true);
+      const res = await resendOtp(email);
+      alert(res.data.msg || "New OTP sent to your email");
+      // Clear OTP inputs
+      setOtp(["", "", "", "", "", ""]);
+      inputsRef.current?.[0]?.focus();
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.msg || "Failed to resend OTP");
+    } finally {
+      setResending(false);
+    }
   };
 
-  const submit = () => {
+  const submit = async () => {
     const code = otp.join("");
-    if (code.length < 6) return; 
-    onVerify && onVerify(code);
+    if (code.length < 6) return alert("Enter full OTP");
+    try {
+      setLoading(true);
+      const res = await verifyOtp(email, code);
+      alert(res.data.message); // backend returns { message: "OTP verified" }
+      onVerify(); // move to ResetPassword component
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Invalid OTP");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="forgot-main">
       <div className="forgot-card-otp">
         <h2 className="forgot-title">Check Your E-mail</h2>
-
         <p className="forgot-instruction">
           We sent an OTP code to <b>{email || "your email"}</b>
-          <br></br><br></br>Enter 6 digit code that mentioned in the email
+          <br />
+          <br />
+          Enter 6 digit code
         </p>
-
-        <div
-          className="otp-inputs"
-          onPaste={handlePaste}
-          aria-label="OTP inputs"
-        >
+        <div className="otp-inputs">
           {otp.map((digit, idx) => (
             <input
               key={idx}
               ref={(el) => (inputsRef.current[idx] = el)}
               type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
               maxLength={1}
               value={digit}
-              onChange={(e) => handleChange(e.target.value.trim(), idx)}
-              onKeyDown={(e) => handleKeyDown(e, idx)}
+              onChange={(e) => handleChange(e.target.value, idx)}
+              onKeyDown={(e) => handleKeyDown(e, idx)}  // ADD THIS LINE
               className="otp-input"
-              aria-label={`OTP digit ${idx + 1}`}
             />
           ))}
         </div>
-
         <div className="btn-row">
-          <button className="gradient-btn" onClick={submit} aria-label="Verify">
-            Verify OTP
+          <button className="gradient-btn" onClick={submit}>
+            {loading ? "Verifying..." : "Verify OTP"}
           </button>
         </div>
-
+        
         <div className="otp-meta" style={{ marginTop: 12, fontSize: 13 }}>
           OTP expires in <b>01:00</b> minutes
           
@@ -89,11 +108,12 @@ export default function OtpVerification({ email = "", onVerify }) {
 
         <div style={{ marginTop: 14}}>
           <button
-            className="resend-otp-btn"
-            onClick={() => alert("Resend OTP (implement API call)")}
+            className="link-btn"
+            onClick={handleResend}
+            disabled={resending}
             aria-label="Resend OTP"
           >
-            Resend New OTP
+            {resending ? "Sending..." : "Resend New OTP"}
           </button>
         </div>
       </div>

@@ -121,7 +121,18 @@ function MaintenanceManagement() {
   ];
 
   const handleAddService = async () => {
+    // 1. Find the highest number currently in the state
+    const maxId = state.services.reduce((max, service) => {
+      const match = service.maintenanceId?.match(/M(\d+)/);
+      const num = match ? parseInt(match[1], 10) : 0;
+      return num > max ? num : max;
+    }, 0);
+  
+    // 2. Increment by 1 (This ensures even if you delete records, you move forward)
+    const nextNumber = maxId + 1;
+  
     const newService = {
+      maintenanceId: `M${String(nextNumber).padStart(4, '0')}`, 
       vehicleId: "",
       driverName: "",
       description: "",
@@ -136,7 +147,12 @@ function MaintenanceManagement() {
     try {
       await addService(newService);
     } catch (error) {
-      alert('Error adding service: ' + error.message);
+      // Check if the error message from the backend contains "E11000"
+      if (error.message.includes("E11000")) {
+        alert("Database Conflict: This ID already exists in the system index. Please refresh or contact admin.");
+      } else {
+        alert('Error adding service: ' + error.message);
+      }
     }
   };
 

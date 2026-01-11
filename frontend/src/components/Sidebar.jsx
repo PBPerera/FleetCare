@@ -12,7 +12,7 @@ import {
   Bell,
   FileText,
 } from "lucide-react";
-import logo from "../assets/logo-small.png"; 
+import logo from "../assets/logo-smallss.png"; 
 
 export default function Sidebar({
   collapsed = false,
@@ -30,7 +30,6 @@ export default function Sidebar({
     { icon: <CalendarDays size={18} />, label: "Trip Scheduling", path: "/trip-scheduling" },
     { icon: <MapPin size={18} />, label: "Trip Allocation", path: "/trip-allocation" },
     { icon: <Wrench size={18} />, label: "Maintenance Management", path: "/maintenance" },
-    { icon: <BarChart3 size={18} />, label: "Reporting & Analytics", path: "/reports" },
     { icon: <Bell size={18} />, label: "Notification Management", path: "/notification-management" },
     { icon: <FileText size={18} />, label: "Audit Log", path: "/audit-log" },
   ];
