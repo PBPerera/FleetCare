@@ -1,10 +1,6 @@
-// controllers/serviceController.js
-const Service = require('../models/Service');
+import Service from '../models/Service.js';
 
-// @desc    Get all services
-// @route   GET /api/services
-// @access  Public
-exports.getAllServices = async (req, res) => {
+export const getAllServices = async (req, res) => {
   try {
     const { 
       status, 
@@ -18,7 +14,6 @@ exports.getAllServices = async (req, res) => {
       sortOrder = 'desc'
     } = req.query;
 
-    // Build query
     let query = {};
 
     if (status) query.status = status;
@@ -40,7 +35,6 @@ exports.getAllServices = async (req, res) => {
       ];
     }
 
-    // Pagination
     const skip = (page - 1) * limit;
     const sort = { [sortBy]: sortOrder === 'desc' ? -1 : 1 };
 
@@ -68,10 +62,7 @@ exports.getAllServices = async (req, res) => {
   }
 };
 
-// @desc    Get single service
-// @route   GET /api/services/:id
-// @access  Public
-exports.getServiceById = async (req, res) => {
+export const getServiceById = async (req, res) => {
   try {
     const service = await Service.findById(req.params.id);
 
@@ -95,19 +86,15 @@ exports.getServiceById = async (req, res) => {
   }
 };
 
-// @desc    Create new service
-// @route   POST /api/services
-// @access  Public
-exports.createService = async (req, res) => {
+export const createService = async (req, res) => {
   try {
-    // Generate unique maintenance ID
     const count = await Service.countDocuments();
     const maintenanceId = `M${String(count + 1).padStart(4, '0')}`;
 
     const service = await Service.create({
       ...req.body,
       maintenanceId,
-      createdBy: req.user?._id // if authentication is enabled
+      createdBy: req.user?._id
     });
 
     res.status(201).json({
@@ -124,10 +111,7 @@ exports.createService = async (req, res) => {
   }
 };
 
-// @desc    Update service
-// @route   PUT /api/services/:id
-// @access  Public
-exports.updateService = async (req, res) => {
+export const updateService = async (req, res) => {
   try {
     let service = await Service.findById(req.params.id);
 
@@ -142,7 +126,7 @@ exports.updateService = async (req, res) => {
       req.params.id,
       {
         ...req.body,
-        updatedBy: req.user?._id // if authentication is enabled
+        updatedBy: req.user?._id
       },
       {
         new: true,
@@ -164,10 +148,7 @@ exports.updateService = async (req, res) => {
   }
 };
 
-// @desc    Delete service
-// @route   DELETE /api/services/:id
-// @access  Public
-exports.deleteService = async (req, res) => {
+export const deleteService = async (req, res) => {
   try {
     const service = await Service.findById(req.params.id);
 
@@ -194,23 +175,18 @@ exports.deleteService = async (req, res) => {
   }
 };
 
-// @desc    Get service statistics
-// @route   GET /api/services/stats
-// @access  Public
-exports.getServiceStats = async (req, res) => {
+export const getServiceStats = async (req, res) => {
   try {
     const totalServices = await Service.countDocuments();
     const scheduled = await Service.countDocuments({ status: 'Scheduled' });
     const inProgress = await Service.countDocuments({ status: 'In Progress' });
     const completed = await Service.countDocuments({ status: 'Completed' });
     
-    // Total cost
     const costAggregation = await Service.aggregate([
       { $group: { _id: null, totalCost: { $sum: '$cost' } } }
     ]);
     const totalCost = costAggregation[0]?.totalCost || 0;
 
-    // Completed this month
     const startOfMonth = new Date();
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);

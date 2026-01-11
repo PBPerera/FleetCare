@@ -1,10 +1,9 @@
-// controllers/repairController.js
-const Repair = require('../models/Repair');
+import Repair from '../models/Repair.js';
 
 // @desc    Get all repairs
 // @route   GET /api/repairs
 // @access  Public
-exports.getAllRepairs = async (req, res) => {
+export const getAllRepairs = async (req, res) => {
   try {
     const { 
       status, 
@@ -47,9 +46,7 @@ exports.getAllRepairs = async (req, res) => {
     const repairs = await Repair.find(query)
       .sort(sort)
       .limit(parseInt(limit))
-      .skip(skip)
-      .populate('createdBy', 'name email')
-      .populate('approvalHistory.approvedBy', 'name email');
+      .skip(skip);
 
     const total = await Repair.countDocuments(query);
 
@@ -73,11 +70,10 @@ exports.getAllRepairs = async (req, res) => {
 // @desc    Get pending repairs
 // @route   GET /api/repairs/pending
 // @access  Public
-exports.getPendingRepairs = async (req, res) => {
+export const getPendingRepairs = async (req, res) => {
   try {
     const repairs = await Repair.find({ status: 'Pending' })
-      .sort({ requestDate: -1 })
-      .populate('createdBy', 'name email');
+      .sort({ requestDate: -1 });
 
     res.status(200).json({
       success: true,
@@ -96,11 +92,9 @@ exports.getPendingRepairs = async (req, res) => {
 // @desc    Get single repair
 // @route   GET /api/repairs/:id
 // @access  Public
-exports.getRepairById = async (req, res) => {
+export const getRepairById = async (req, res) => {
   try {
-    const repair = await Repair.findById(req.params.id)
-      .populate('createdBy', 'name email')
-      .populate('approvalHistory.approvedBy', 'name email');
+    const repair = await Repair.findById(req.params.id);
 
     if (!repair) {
       return res.status(404).json({
@@ -125,7 +119,7 @@ exports.getRepairById = async (req, res) => {
 // @desc    Create new repair
 // @route   POST /api/repairs
 // @access  Public
-exports.createRepair = async (req, res) => {
+export const createRepair = async (req, res) => {
   try {
     const count = await Repair.countDocuments();
     const maintenanceId = `R${String(count + 1).padStart(4, '0')}`;
@@ -153,7 +147,7 @@ exports.createRepair = async (req, res) => {
 // @desc    Update repair
 // @route   PUT /api/repairs/:id
 // @access  Public
-exports.updateRepair = async (req, res) => {
+export const updateRepair = async (req, res) => {
   try {
     let repair = await Repair.findById(req.params.id);
 
@@ -193,7 +187,7 @@ exports.updateRepair = async (req, res) => {
 // @desc    Approve repair
 // @route   PUT /api/repairs/:id/approve
 // @access  Private/Admin
-exports.approveRepair = async (req, res) => {
+export const approveRepair = async (req, res) => {
   try {
     const repair = await Repair.findById(req.params.id);
 
@@ -224,7 +218,7 @@ exports.approveRepair = async (req, res) => {
 // @desc    Reject repair
 // @route   PUT /api/repairs/:id/reject
 // @access  Private/Admin
-exports.rejectRepair = async (req, res) => {
+export const rejectRepair = async (req, res) => {
   try {
     const repair = await Repair.findById(req.params.id);
 
@@ -263,7 +257,7 @@ exports.rejectRepair = async (req, res) => {
 // @desc    Update approval stage
 // @route   PUT /api/repairs/:id/approval-stage
 // @access  Private
-exports.updateApprovalStage = async (req, res) => {
+export const updateApprovalStage = async (req, res) => {
   try {
     const repair = await Repair.findById(req.params.id);
 
@@ -310,7 +304,7 @@ exports.updateApprovalStage = async (req, res) => {
 // @desc    Delete repair
 // @route   DELETE /api/repairs/:id
 // @access  Public
-exports.deleteRepair = async (req, res) => {
+export const deleteRepair = async (req, res) => {
   try {
     const repair = await Repair.findById(req.params.id);
 
@@ -340,7 +334,7 @@ exports.deleteRepair = async (req, res) => {
 // @desc    Get repair statistics
 // @route   GET /api/repairs/stats
 // @access  Public
-exports.getRepairStats = async (req, res) => {
+export const getRepairStats = async (req, res) => {
   try {
     const totalRepairs = await Repair.countDocuments();
     const pending = await Repair.countDocuments({ status: 'Pending' });
@@ -349,11 +343,9 @@ exports.getRepairStats = async (req, res) => {
     const inProgress = await Repair.countDocuments({ status: 'In Progress' });
     const completed = await Repair.countDocuments({ status: 'Completed' });
 
-    // Priority breakdown
     const critical = await Repair.countDocuments({ priority: 'Critical', status: 'Pending' });
     const high = await Repair.countDocuments({ priority: 'High', status: 'Pending' });
 
-    // Cost statistics
     const costAggregation = await Repair.aggregate([
       { $group: { _id: null, totalCost: { $sum: '$cost' } } }
     ]);
