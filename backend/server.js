@@ -7,7 +7,9 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/passwordRoutes.js";
 import driverFormRoutes from "./routes/driverFormRoutes.js";
 import vehicleFormRoutes from "./routes/vehicleFormRoutes.js";
-
+import vehicleRoute from  "./routes/vehicles.js";
+import driverRoute from "./routes/driver.js";
+import loginauthRoute from "./routes/auth.js";
 //MaintenanceManagement Routes
 import maintenanceRoutes from "./routes/maintenance.js";
 import serviceRoutes from "./routes/services.js";
@@ -19,10 +21,12 @@ app.use(cors());
 app.use(express.json());
 
 connectDB();
-
+app.use("/api/loginauth", loginauthRoute); //1
 app.use("/api/auth", authRoutes);
 app.use("/api/driverforms", driverFormRoutes);
 app.use("/api/vehicleforms", vehicleFormRoutes);
+app.use("/api/vehicle", vehicleRoute); //2
+app.use("/api/driver", driverRoute); //3
 
 //Register Maintenance Routes
 app.use("/api/maintenance", maintenanceRoutes);
