@@ -32,53 +32,7 @@ export default function DriverManagement() {
   // NOTE: To cooperate with your TableRow's "new row" detection,
   // we assign vehicleId = nic for existing rows (non-empty),
   // and set vehicleId = "" only for newly added rows.
-  const [drivers, setDrivers] = useState([
-    {
-      id: 1,
-      vehicleId: "199912365498", // non-empty -> not auto-edit
-      nic: "199912365498",
-      name: "Sarath Kumara",
-      address: "No. 25, Temple Road, Kandy",
-      email: "sarathkumara@gmail.com",
-      phone: "0760021526",
-      licenseNo: "B1234567",
-      registerDate: "2020-05-15",
-      licenseRenewalDate: "2024-09-20",
-      licenseExpiry: "2025-09-25",
-      healthAssessment: "2024-06-10",
-      status: "Available",
-    },
-    {
-      id: 2,
-      vehicleId: "200078945612",
-      nic: "200078945612",
-      name: "Ajith Pushpakumara",
-      address: "45/3, Galle Road, Colombo 06",
-      email: "ajithpushpakumara@gmail.com",
-      phone: "0723816829",
-      licenseNo: "B7654321",
-      registerDate: "2019-11-22",
-      licenseRenewalDate: "2024-12-15",
-      healthAssessment: "2024-05-20",
-      licenseExpiry: "2025-10-12",
-      status: "On Trip",
-    },
-    {
-      id: 3,
-      vehicleId: "199854123698",
-      nic: "199854123698",
-      name: "Kasun Thilakarathna",
-      address: "No. 12, Station Lane, Kurunegala",
-      email: "kasunthilakarathna@gmail.com",
-      phone: "0714856045",
-      licenseNo: "B1715942",
-      registerDate: "2019-11-22",
-      licenseRenewalDate: "2024-12-15",
-      healthAssessment: "2024-05-20",
-      licenseExpiry: "2025-10-12",
-      status: "Off Duty",
-    },
-  ]);
+  const [drivers, setDrivers] = useState([]);
 
   // ===== Cards / metrics (same pattern as Vehicles/Maintenance) =====
   const dashboardCards = useMemo(() => {
