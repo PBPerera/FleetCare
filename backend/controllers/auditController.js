@@ -1,11 +1,10 @@
-// controllers/auditController.js
-const Service = require('../models/Service');
-const Repair = require('../models/Repair');
+import Service from '../models/Service.js';
+import Repair from '../models/Repair.js';
 
 // @desc    Get all completed audit logs (services + repairs)
 // @route   GET /api/audit/logs
 // @access  Public
-exports.getAuditLogs = async (req, res) => {
+export const getAuditLogs = async (req, res) => {
   try {
     const {
       vehicleId,
@@ -94,7 +93,7 @@ exports.getAuditLogs = async (req, res) => {
 // @desc    Get completed services
 // @route   GET /api/audit/services
 // @access  Public
-exports.getCompletedServices = async (req, res) => {
+export const getCompletedServices = async (req, res) => {
   try {
     const {
       vehicleId,
@@ -155,7 +154,7 @@ exports.getCompletedServices = async (req, res) => {
 // @desc    Get completed repairs
 // @route   GET /api/audit/repairs
 // @access  Public
-exports.getCompletedRepairs = async (req, res) => {
+export const getCompletedRepairs = async (req, res) => {
   try {
     const {
       vehicleId,
@@ -212,4 +211,3 @@ exports.getCompletedRepairs = async (req, res) => {
     });
   }
 };
-

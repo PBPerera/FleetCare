@@ -38,6 +38,7 @@ export default function AuditLog() {
     "Audit Log": "/audit-log",
   };
 
+  // Updated columns - Added Maintenance ID
   const auditColumns = [
     { key: "maintenanceId", label: "Maintenance ID" },
     { key: "vehicleId", label: "Vehicle ID" },
@@ -95,7 +96,6 @@ export default function AuditLog() {
 
   const handleServiceSearch = (filters) => setServiceFilters(filters);
   const handleRepairSearch = (filters) => setRepairFilters(filters);
-  const handleAction = (action, row) => console.log("Audit log action:", action, row);
 
   const serviceCompanies = [...new Set(completedServices.map(s => s.companyName))].filter(Boolean);
   const repairCompanies = [...new Set(completedRepairs.map(r => r.companyName))].filter(Boolean);
@@ -167,8 +167,8 @@ export default function AuditLog() {
           <Table
             columns={auditColumns}
             rows={completedServices}
-            onAction={handleAction}
             editable={false}
+            showActions={false}
           />
 
           {/* REPAIRS AUDIT */}
@@ -211,8 +211,8 @@ export default function AuditLog() {
           <Table
             columns={auditColumns}
             rows={completedRepairs}
-            onAction={handleAction}
             editable={false}
+            showActions={false}
           />
         </div>
       </main>

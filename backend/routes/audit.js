@@ -1,11 +1,10 @@
-// routes/audit.js
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const {
+import {
   getAuditLogs,
   getCompletedServices,
   getCompletedRepairs
-} = require('../controllers/auditController');
+} from '../controllers/auditController.js';
 
 // Get all audit logs (completed services + repairs)
 router.get('/logs', getAuditLogs);
@@ -16,4 +15,4 @@ router.get('/services', getCompletedServices);
 // Get completed repairs only
 router.get('/repairs', getCompletedRepairs);
 
-module.exports = router;
+export default router;
