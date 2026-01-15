@@ -1,6 +1,15 @@
 // src/components/DataTable/TableRow.jsx
 import { useState } from 'react';
 
+// Dropdown options for enum fields
+const FIELD_OPTIONS = {
+  status: ['Pending', 'Approved', 'Rejected', 'In Progress', 'Completed'],
+  priority: ['Low', 'Medium', 'High', 'Critical'],
+  procurementStage1: ['', 'Pending', 'Approved', 'Rejected'],
+  procurementStage2: ['', 'Pending', 'Approved', 'Rejected'],
+  tenderCall: ['', 'Not Started', 'In Progress', 'Completed']
+};
+
 const TableRow = ({ 
   row, 
   columns, 
@@ -13,7 +22,6 @@ const TableRow = ({
   onDelete,
   showActions = true
 }) => {
-  // Use MongoDB _id instead of id for backend compatibility
   const rowId = row._id || row.id;
   const isNewRow = !row.vehicleId || row.vehicleId === '';
   const [editMode, setEditMode] = useState(editable && isNewRow);
@@ -26,7 +34,6 @@ const TableRow = ({
 
   const handleSave = () => {
     if (onEdit) {
-      // Pass the MongoDB _id and the updated data
       onEdit(rowId, editedData);
     }
     setEditMode(false);
@@ -51,7 +58,6 @@ const TableRow = ({
     }
   };
 
-  // Format date fields for display
   const formatDate = (dateString) => {
     if (!dateString) return '-';
     try {
@@ -65,17 +71,75 @@ const TableRow = ({
   const renderCellValue = (col) => {
     const value = editedData[col.key];
     
-    // Format dates for display
     if ((col.key.includes('Date') || col.key.includes('date')) && value && !editMode) {
       return formatDate(value);
     }
     
-    // Format cost
     if (col.key === 'cost' && value && !editMode) {
       return `$${Number(value).toFixed(2)}`;
     }
     
     return value || '-';
+  };
+
+  const renderEditableField = (col) => {
+    const fieldKey = col.key;
+    const value = editedData[fieldKey];
+
+    // Check if this field has dropdown options
+    if (FIELD_OPTIONS[fieldKey]) {
+      return (
+        <select
+          value={value || ''}
+          onChange={(e) => handleEdit(fieldKey, e.target.value)}
+          className="editable-select"
+        >
+          {FIELD_OPTIONS[fieldKey].map((option) => (
+            <option key={option} value={option}>
+              {option || '-- Select --'}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    // Date fields
+    if (fieldKey.includes('Date') || fieldKey.includes('date')) {
+      return (
+        <input
+          type="date"
+          value={value ? new Date(value).toISOString().split('T')[0] : ''}
+          onChange={(e) => handleEdit(fieldKey, e.target.value)}
+          className="editable-input"
+        />
+      );
+    }
+
+    // Number fields
+    if (fieldKey === 'cost') {
+      return (
+        <input
+          type="number"
+          value={value || ''}
+          onChange={(e) => handleEdit(fieldKey, e.target.value)}
+          placeholder={`Enter ${col.label}`}
+          className="editable-input"
+          step="0.01"
+          min="0"
+        />
+      );
+    }
+
+    // Text fields
+    return (
+      <input
+        type="text"
+        value={value || ''}
+        onChange={(e) => handleEdit(fieldKey, e.target.value)}
+        placeholder={`Enter ${col.label}`}
+        className="editable-input"
+      />
+    );
   };
 
   return (
@@ -90,25 +154,7 @@ const TableRow = ({
           {col.render ? (
             col.render(editedData, onAction)
           ) : editMode && col.key !== '_id' && col.key !== 'id' && col.key !== 'maintenanceId' ? (
-            <input
-              type={
-                col.key.includes('Date') || col.key.includes('date') 
-                  ? 'date' 
-                  : col.key === 'cost' 
-                  ? 'number' 
-                  : 'text'
-              }
-              value={
-                col.key.includes('Date') || col.key.includes('date')
-                  ? (editedData[col.key] ? new Date(editedData[col.key]).toISOString().split('T')[0] : '')
-                  : (editedData[col.key] || '')
-              }
-              onChange={(e) => handleEdit(col.key, e.target.value)}
-              placeholder={`Enter ${col.label}`}
-              className="editable-input"
-              step={col.key === 'cost' ? '0.01' : undefined}
-              min={col.key === 'cost' ? '0' : undefined}
-            />
+            renderEditableField(col)
           ) : (
             <span className="cell-content">{renderCellValue(col)}</span>
           )}

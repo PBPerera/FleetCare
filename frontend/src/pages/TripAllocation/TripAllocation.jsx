@@ -5,37 +5,7 @@ import { MdDashboard, MdDirectionsCar, MdNotifications, MdOutlineSettings } from
 import { IoMdArrowDropdown } from "react-icons/io";
 
 const TripAllocation = () => {
-  const tripRequests = [
-    {
-      requestId: "R0001",
-      vehicleId: "WWA-2258",
-      driverName: "Kumara Silva",
-      contact: "07046589",
-      pickup: "Panadura Hospital",
-      destination: "Colombo Hospital",
-      tripDate: "2025-09-25",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: 3,
-      status:  
-      <><button className="Approved-btn">Approved</button>
-      </> ,
-    },
-    // Sample rows
-    { requestId: "R0002", vehicleId: "AAA-1234", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Approved-btn">Approved</button></>},
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Rejected-btn">Rejected</button> </>},
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Approved-btn">Approved</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Rejected-btn">Rejected</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Rejected-btn">Rejected</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Approved-btn">Approved</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Rejected-btn">Rejected</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Approved-btn">Approved</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Approved-btn">Approved</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Rejected-btn">Rejected</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Approved-btn">Approved</button> </> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",status:  <><button className="Approved-btn">Approved</button> </> },
-  ];
+  const tripRequests = [];
 
   const tableRef = useRef(null);
 

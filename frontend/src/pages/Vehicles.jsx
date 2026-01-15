@@ -31,64 +31,7 @@ export default function Vehicles() {
 
   // ===== Data (demo set; swap with API/context later) =====
   // Keep an internal numeric/string 'id' AND the visible 'vehicleId'
-  const [vehicles, setVehicles] = useState([
-    {
-      id: 1,
-      vehicleId: "WP-CAR-1990",
-      type: "Car",
-      wheelSerial: "BK182553",
-      wheelSize: "195/65 R15",
-      engineNo: "E111458",
-      batteryNo: "B00245",
-      chassisNo: "1HGCM82633A123456",
-      registerdate: "2022-05-10",
-      insurancerenewaldate: "2024-12-10",
-      insuranceExpiry: "2025-12-10",
-      status: "Available",
-    },
-    {
-      id: 2,
-      vehicleId: "WP-NA-4565",
-      type: "Van",
-      wheelSerial: "BL182553",
-      wheelSize: "205/55 R16",
-      engineNo: "E118848",
-      batteryNo: "B00245",
-      chassisNo: "JHMFA16586S012345",
-      registerdate: "2021-08-15",
-      insurancerenewaldate: "2024-11-05",
-      insuranceExpiry: "2025-11-05",
-      status: "Assigned",
-    },
-    {
-      id: 3,
-      vehicleId: "WP-LB-5425",
-      type: "Lorry",
-      wheelSerial: "CK182553",
-      wheelSize: "225/50 R17",
-      engineNo: "E258848",
-      batteryNo: "B00245",
-      chassisNo: "2T1BU4EE9AC123456",
-      registerdate: "2020-03-20",
-      insurancerenewaldate: "2024-10-20",
-      insuranceExpiry: "2026-01-20",
-      status: "Available",
-    },
-    {
-      id: 4,
-      vehicleId: "253-5465",
-      type: "Van",
-      wheelSerial: "MG182673",
-      wheelSize: "235/45 R18",
-      engineNo: "E119148",
-      batteryNo: "B00245",
-      chassisNo: "WDBUF56X98B123456",
-      registerdate: "2019-11-30",
-      insurancerenewaldate: "2024-09-15",
-      insuranceExpiry: "2025-10-15",
-      status: "Maintenance",
-    },
-  ]);
+  const [vehicles, setVehicles] = useState([]);
 
   // ===== Cards / metrics (same style as Maintenance) =====
   const dashboardCards = useMemo(() => {
