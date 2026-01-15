@@ -14,11 +14,6 @@ import loginauthRoute from "./routes/auth.js";
 import maintenanceRoutes from "./routes/maintenance.js";
 import serviceRoutes from "./routes/services.js";
 import repairRoutes from "./routes/repairs.js";
-
-//MaintenanceManagement Routes
-import maintenanceRoutes from "./routes/maintenance.js";
-import serviceRoutes from "./routes/services.js";
-import repairRoutes from "./routes/repairs.js";
 import auditRoutes from './routes/audit.js';
 
 const app = express();
