@@ -7,40 +7,11 @@ import logo from "../assets/logo-small.png";
 export default function Login() {
   const navigate = useNavigate();
   const [showPwd, setShowPwd] = useState(false);
-  const [form, setForm] = useState({
-    username: "",
-    password: ""
-  });
 
-  const update = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/loginauth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          UserName: form.username,
-          Password: form.password,
-        }),
-      });
-      
-      const data = await response.json();
-      console.log('Login response:', data);
-      
-      if (response.ok) {
-        document.cookie = `token=${data.token}; path=/; max-age=86400; secure; samesite=strict`;
-        navigate("/admindashboard");
-      } else {
-        alert(data.message || 'Login failed');
-      }
-    } catch (error) {
-      alert('Network error. Please try again.');
-    }
+    // TODO: replace with real auth call
+    navigate("/admindashboard");
   };
 
   return (
@@ -75,11 +46,8 @@ export default function Login() {
               <label htmlFor="username" className="lp-label">Username</label>
               <input
                 id="username"
-                name="username"
                 className="lp-input"
                 placeholder="Enter your  Username"
-                value={form.username}
-                onChange={update}
                 autoComplete="username"
                 required
               />
@@ -88,12 +56,9 @@ export default function Login() {
               <div className="lp-input-pwd">
                 <input
                   id="password"
-                  name="password"
                   className="lp-input"
                   type={showPwd ? "text" : "password"}
                   placeholder="Enter your password"
-                  value={form.password}
-                  onChange={update}
                   autoComplete="current-password"
                   required
                 />
