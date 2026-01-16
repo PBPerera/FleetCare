@@ -14,6 +14,7 @@ import loginauthRoute from "./routes/auth.js";
 import maintenanceRoutes from "./routes/maintenance.js";
 import serviceRoutes from "./routes/services.js";
 import repairRoutes from "./routes/repairs.js";
+import auditRoutes from './routes/audit.js';
 
 const app = express();
 
@@ -32,6 +33,23 @@ app.use("/api/driver", driverRoute); //3
 app.use("/api/maintenance", maintenanceRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/repairs", repairRoutes);
+
+//Health endpoints
+app.get("/api/health", (req, res) => {
+    res.json({ 
+      status: "OK", 
+      message: "FleetCare API is running",
+      timestamp: new Date().toISOString()
+    });
+  });
+  
+
+//Register Maintenance Routes
+app.use("/api/maintenance", maintenanceRoutes);
+app.use("/api/services", serviceRoutes);
+app.use("/api/repairs", repairRoutes);
+
+app.use('/api/audit', auditRoutes);
 
 //Health endpoints
 app.get("/api/health", (req, res) => {
