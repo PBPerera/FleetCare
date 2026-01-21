@@ -12,6 +12,7 @@ export default function DriverForm({ onSubmit }) {
   // Driver form state
   const [driverData, setDriverData] = useState({
     fullName: "",
+    address: "",
     emailAddress: "",
     phoneNumber: "",
     nicNo: "",
@@ -42,35 +43,45 @@ export default function DriverForm({ onSubmit }) {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/driverforms/staff/add", {
+      const payload = {
+        driver_id: parseInt(Date.now().toString().slice(-6)),
+        nic_no: driverData.nicNo,
+        name: driverData.fullName,
+        address: driverData.address,
+        email: driverData.emailAddress,
+        phone_no: driverData.phoneNumber,
+        licenseNo: driverData.licenseNo,
+        registerDate: new Date().toISOString().split('T')[0],
+        licenseRenewalDate: driverData.licenseRenewalDate,
+        licenseExpiryDate: driverData.licenseExpiryDate,
+        healthAssessment: driverData.healthAssessment,
+        status: "Active"
+      };
+
+      const response = await fetch("http://localhost:5000/api/driver", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(driverData),
+        body: JSON.stringify(payload),
       });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("Driver details added successfully!");
-        console.log("Saved Driver:", result);
-
-        // Clear form
-        setDriverData({
-          fullName: "",
-          emailAddress: "",
-          phoneNumber: "",
-          nicNo: "",
-          licenseNo: "",
-          licenseExpiryDate: "",
-          licenseRenewalDate: "",
-          healthAssessment: "",
-        });
-      } else {
-        alert(result.message || "Failed to add driver");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      alert("Driver added successfully!");
+      setDriverData({
+        fullName: "",
+        address: "",
+        emailAddress: "",
+        phoneNumber: "",
+        nicNo: "",
+        licenseNo: "",
+        licenseExpiryDate: "",
+        licenseRenewalDate: "",
+        healthAssessment: "",
+      });
     } catch (error) {
-      console.error("Request Error:", error);
-      alert("Error connecting to backend. Check console.");
+      alert("Error adding driver: " + error.message);
     }
   };
 
@@ -122,6 +133,27 @@ export default function DriverForm({ onSubmit }) {
                   name="fullName"
                   className="input-field-d"
                   value={driverData.fullName}
+                  onChange={handleChange}
+                  required
+                  style={{
+                    height: "40px",
+                    width: "745px",
+                    padding: "10px",
+                    fontSize: "14px",
+                    borderRadius: "8px",
+                    border: "1px solid rgba(75, 150, 220, 0.45)",
+                  }}
+                />
+              </div>
+
+              {/* Address */}
+              <div className="form-group full-width">
+                <label>Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  className="input-field-d"
+                  value={driverData.address}
                   onChange={handleChange}
                   required
                   style={{

@@ -1,12 +1,13 @@
-﻿const express = require('express');
-const router = express.Router();
+﻿import { Router } from "express";
+import {createVehicle,getVehicles,getVehicleById,updateVehicle,deleteVehicle} from "../controllers/vehicleController.js";
 
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'Vehicles endpoint', data: [] });
-});
 
-router.post('/', (req, res) => {
-  res.json({ success: true, message: 'Create vehicle', data: req.body });
-});
+const router = Router();
 
-module.exports = router;
+router.get("/",getVehicles);
+router.get("/:vehicle_id", getVehicleById);
+router.post("/",createVehicle);
+router.put("/:vehicle_id", updateVehicle);
+router.delete("/:vehicle_id", deleteVehicle);
+
+export default router;
