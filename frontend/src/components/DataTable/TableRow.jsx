@@ -172,39 +172,6 @@ const TableRow = ({
                 >
                   💾 SAVE
                 </button>
-<<<<<<< HEAD
-              )}
-            </>
-          ) : (
-            <>
-              <button 
-                className="action-btn edit-btn"
-                onClick={handleEditClick}
-                title="Edit"
-              >
-                ✏️ EDIT
-              </button>
-              <button 
-                className="action-btn delete-btn"
-                onClick={() => onAction && onAction('delete', row)}
-                title="Delete"
-              >
-                🗑️ DELETE
-              </button>
-            </>
-          )}
-        </div>
-      </td>
-=======
-                {!isNewRow && (
-                  <button 
-                    className="action-btn cancel-btn"
-                    onClick={handleCancel}
-                    title="Cancel"
-                  >
-                    ✖ CANCEL
-                  </button>
-                )}
               </>
             ) : (
               <>
@@ -217,7 +184,7 @@ const TableRow = ({
                 </button>
                 <button 
                   className="action-btn delete-btn"
-                  onClick={handleDeleteClick}
+                  onClick={() => onAction && onAction('delete', row)}
                   title="Delete"
                 >
                   🗑️ DELETE
@@ -227,7 +194,6 @@ const TableRow = ({
           </div>
         </td>
       )}
->>>>>>> 3af2a90d432a9ab42d92346f737d3ed164cb5c77
     </tr>
   );
 };
