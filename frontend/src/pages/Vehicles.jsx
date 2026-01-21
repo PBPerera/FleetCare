@@ -29,6 +29,7 @@ export default function Vehicles() {
     "Audit Log": "/audit-log",
   };
 
+<<<<<<< HEAD
   // ===== Data (load from backend) =====
   const [vehicles, setVehicles] = useState([]);
 
@@ -64,6 +65,11 @@ export default function Vehicles() {
     
     fetchVehicles();
   }, []);
+=======
+  // ===== Data (demo set; swap with API/context later) =====
+  // Keep an internal numeric/string 'id' AND the visible 'vehicleId'
+  const [vehicles, setVehicles] = useState([]);
+>>>>>>> 3af2a90d432a9ab42d92346f737d3ed164cb5c77
 
   // ===== Cards / metrics (same style as Maintenance) =====
   const dashboardCards = useMemo(() => {

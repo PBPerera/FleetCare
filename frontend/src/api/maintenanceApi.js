@@ -205,3 +205,24 @@ export const maintenanceApi = {
     return fetchAPI(`/maintenance/history/${vehicleId}`);
   },
 };
+
+// ADD THIS NEW EXPORT FOR AUDIT API
+export const auditApi = {
+  getAuditLogs: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/audit/logs?${queryString}` : '/audit/logs';
+    return fetchAPI(endpoint);
+  },
+
+  getCompletedServices: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/audit/services?${queryString}` : '/audit/services';
+    return fetchAPI(endpoint);
+  },
+
+  getCompletedRepairs: async (params = {}) => {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/audit/repairs?${queryString}` : '/audit/repairs';
+    return fetchAPI(endpoint);
+  },
+};

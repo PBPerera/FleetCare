@@ -27,6 +27,7 @@ export default function DriverManagement() {
     "Audit Log": "/audit-log",
   };
 
+<<<<<<< HEAD
   // ===== Data (load from backend) =====
   const [drivers, setDrivers] = useState([]);
 
@@ -81,6 +82,13 @@ export default function DriverManagement() {
     
     fetchDrivers();
   }, []);
+=======
+  // ===== Demo data (swap with API/Context later) =====
+  // NOTE: To cooperate with your TableRow's "new row" detection,
+  // we assign vehicleId = nic for existing rows (non-empty),
+  // and set vehicleId = "" only for newly added rows.
+  const [drivers, setDrivers] = useState([]);
+>>>>>>> 3af2a90d432a9ab42d92346f737d3ed164cb5c77
 
   // ===== Cards / metrics (same pattern as Vehicles/Maintenance) =====
   const dashboardCards = useMemo(() => {

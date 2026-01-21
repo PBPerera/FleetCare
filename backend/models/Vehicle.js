@@ -41,6 +41,7 @@ const vehicalSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+<<<<<<< HEAD
     wheel_size: {
       type: String,
       required: true,
@@ -53,6 +54,8 @@ const vehicalSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+=======
+>>>>>>> 3af2a90d432a9ab42d92346f737d3ed164cb5c77
     status: {
       type: String,
       required: true,
