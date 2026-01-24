@@ -16,9 +16,9 @@ const mongoose = require("mongoose");
 const VehicleSchema = new mongoose.Schema({
   vehicleId: String,
   vehicleType: String,
-  insuranceExpiry: Date,
-  assignedDriver: String,
-  contactNumber: String
+  insuranceExpiryDate: Date,
+  driverName: String,
+  contact: String,
 });
 
 module.exports = mongoose.model("Vehicle", VehicleSchema);

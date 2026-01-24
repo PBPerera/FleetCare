@@ -15,9 +15,9 @@ const mongoose = require("mongoose");
 
 const DriverSchema = new mongoose.Schema({
   driverId: String,
-  name: String,
-  licenseExpiry: Date,
-  contact: String
+  driverName: String,
+  licenseExpiryDate: Date,
+  contact: String,
 });
 
 module.exports = mongoose.model("Driver", DriverSchema);

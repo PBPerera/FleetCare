@@ -64,44 +64,16 @@
 
 // module.exports = mongoose.model('Notification', NotificationSchema);
 
+
 const mongoose = require("mongoose");
 
-const NotificationSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-
-    role: {
-      type: String,
-      enum: ["staff", "admin", "driver"],
-      default: "staff",
-    },
-
-    type: {
-      type: String,
-      enum: ["approved", "rejected", "info"],
-      required: true,
-    },
-
-    title: {
-      type: String,
-      required: true,
-    },
-
-    message: String,
-    from: String,
-    reason: String,
-    schedule: String,
-
-    isRead: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  { timestamps: true }
-);
+const NotificationSchema = new mongoose.Schema({
+  type: String, // maintenance
+  vehicleNumber: String,
+  driverName: String,
+  contactNumber: String,
+  message: String,
+  company: String,
+});
 
 module.exports = mongoose.model("Notification", NotificationSchema);

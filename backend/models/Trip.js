@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 const TripSchema = new mongoose.Schema({
   tripDate: String,
   tripTime: String,
-  purpose: String,           // pickup & destination
+  destination: String,
   vehicleId: String,
   driverName: String,
-  contactNumber: String
+  contact: String,
 });
 
 module.exports = mongoose.model("Trip", TripSchema);

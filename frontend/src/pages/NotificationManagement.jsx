@@ -299,9 +299,6 @@ export default function NotificationManagement() {
 
   
 
-  // ============================================================
-  // OTHER 3 TABLES – KEEP SAMPLE DATA AS IS
-  // ============================================================
 
   const tableData = [
     {
