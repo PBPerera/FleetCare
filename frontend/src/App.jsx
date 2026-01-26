@@ -77,7 +77,7 @@ export default function App() {
       {/* Staff area */}
   <Route path="/staff/dashboard" element={<StaffDashboard />} />
   <Route path="/staff/vehicle-request" element={<div>Vehicle Request</div>} />
-  <Route path="/staff/my-requests" element={<div>My Requests</div>} />
+  <Route path="/staff/my-requests" element={<MyRequests />} />
   {/* 
   <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} /> */}
    <Route path="/staff/add-vehicle" element={<VehicleForm />} />
@@ -93,7 +93,7 @@ export default function App() {
         {/* Staff Area Routes */}
         <Route path="/staff/dashboard" element={<StaffDashboard />} />
         <Route path="/staff/vehicle-request" element={<div>Vehicle Request</div>} />
-        <Route path="/staff/my-requests" element={<div>My Requests</div>} />
+        <Route path="/staff/my-requests" element={<MyRequests />} />
         <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} />
         <Route path="/staff/driver-details" element={<div>Driver Details</div>} />
         <Route path="/staff/reports" element={<div>Search & Reports</div>} />
