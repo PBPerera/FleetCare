@@ -76,7 +76,49 @@ html, body, #root {
   min-width: 0; /* allow this flex child to shrink when inner content is wider */
 }
 
+.sd-header{
+  position:sticky; top:0; z-index:10;
+  display:flex; align-items:center; justify-content:start; gap:12px;
+  height:65px; padding:0 14px;
+  background: linear-gradient(180deg, #48AAFF);
+  backdrop-filter:saturate(1.2) blur(6px);
+  border-bottom:1px solid var(--sd-border);
+}
+
+.sd-header-title{ font-weight:800; letter-spacing:.2px; justify-self: left; }
+.sd-header-right{ display:flex; align-items:center; gap:10px; }
+
+.sd-burger{ display:block; width:18px; height:2px; background:#111; position:relative; }
+.sd-burger::before,.sd-burger::after{
+  content:""; position:absolute; left:0; right:0; height:2px; background:#111;
+}
+.sd-burger::before{ top:-6px; } .sd-burger::after{ top:6px; }
+
 /* Search Bar */
+.um-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #d6dbe7;
+  background: #f7f9fc;
+  border-radius: 999px;
+  padding: 8px 14px;
+  max-width: 600px;
+}
+.um-search-ico {
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+}
+.um-search input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 14px;
+}
+
 .search-bar {
   background: #fff;
   display: flex;
