@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './VehicleRequest.css';
-//react-icons
+// react-icons
 import {
   FaSearch,
   FaUser,
@@ -13,7 +13,9 @@ import {
   FaBars,
   FaTh,
   FaNetworkWired,
+  FaUserCircle 
 } from 'react-icons/fa';
+import { MdDashboard, MdDirectionsCar, MdNotifications, MdOutlineSettings } from "react-icons/md";
 
 export default function VehicleRequest() {
   const [showAvailables, setShowAvailables] = useState(false);
@@ -43,30 +45,28 @@ export default function VehicleRequest() {
 
   return (
     <div className="vehicle-request-page">
-      <div className="header-bar">
-        <div className="header-left">
-          <div className="network-icon">
-            <FaNetworkWired aria-hidden="true" />
-          </div>
-          <div className="header-title">Vehicle Requests</div>
-        </div>
-        <div className="user-profile-icon">
-          <FaUser aria-hidden="true" />
-        </div>
-      </div>
-
-      <div className="main-container">
-        <aside className="sidebar">
-          <div className="nav-icon dashboard-icon active"><FaTh aria-hidden="true" /></div>
-          <div className="nav-icon refresh-icon"><FaSyncAlt aria-hidden="true" /></div>
-          <div className="nav-icon document-icon"><FaFileAlt aria-hidden="true" /></div>
-          <div className="nav-icon vehicle-icon"><FaCar aria-hidden="true" /></div>
-          <div className="nav-icon user-group-icon"><FaUsers aria-hidden="true" /></div>
-          <div className="nav-icon notification-icon"><FaBell aria-hidden="true" /></div>
-          <div className="nav-icon undo-icon"><FaUndo aria-hidden="true" /></div>
-        </aside>
+            <div className="main-container">
+      {/* Sidebar */}
+      <aside className="sidebar">
+              <div className="logo">
+                <MdDashboard size={30} />
+              </div>
+              <nav>
+                <ul>
+                  <li><MdDashboard /></li>
+                  <li><MdDirectionsCar /></li>
+                  <li><MdNotifications /></li>
+                  <li><MdOutlineSettings /></li>
+                </ul>
+              </nav>
+            </aside>
 
         <main className="main-content">
+          <header className="header">
+                    <h2>Vehicle Request</h2>
+                    <FaUserCircle className="user-icon" />
+                  </header>
+
           {/* Left: Request Form */}
           <section className="request-form-container">
             <div className="section-title">Trip Date & Time</div>
