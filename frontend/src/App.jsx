@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { MaintenanceProvider } from './context/MaintenanceContext';
+import { MaintenanceProvider } from "./context/MaintenanceContext";
 
 import Onboard from "./pages/Onboard.jsx";
 import Login from "./pages/Login.jsx";
@@ -20,9 +20,8 @@ import TripScheduling from "./pages/TripScheduling/TripScheduling";
 import TripAllocation from "./pages/TripAllocation/TripAllocation";
 import MyRequests from "./pages/MyRequests/MyRequests";
 import MaintenanceManagement from "./pages/MaintenanceManagement";
-import RepairApprove from './pages/RepairApprove';
-import AuditLog from './pages/AuditLog';
-
+import RepairApprove from "./pages/RepairApprove";
+import AuditLog from "./pages/AuditLog";
 
 // ✅ Keep ONLY ONE of these, matching your actual filename:
 import NotificationManagement from "./pages/NotificationManagement.jsx";
@@ -54,36 +53,39 @@ export default function App() {
         {/* Notifications */}
         <Route path="/notification-center" element={<NotificationCenter />} />
         <Route path="/notification-staff" element={<NotificationStaff />} />
-        <Route path="/notification-management" element={<NotificationManagement />} />
+        <Route
+          path="/notification-management"
+          element={<NotificationManagement />}
+        />
 
-      {/* Others */}
-      {/* <Route path="/add-vehicle" element={<VehicleForm />} /> */}
-      <Route path="/update-vehicle" element={<UpdateVehiclePage />} />
-      {/* <Route path="/add-driver" element={<AddDriverPage />} /> */}
-      <Route path="/update-driver" element={<UpdateDriverPage />} />
-      <Route path="/user-management" element={<UserManagement />} />
-      <Route path="/vehicles" element={<Vehicles />} />
-      <Route path="/driver-management" element={<DriverManagement />} />
-      <Route path="/vehicle-request" element={<VehicleRequest />} />
-      <Route path="/trip-scheduling" element={<TripScheduling />} />
-      <Route path="/trip-allocation" element={<TripAllocation />} />
-      <Route path="/my-requests" element={<MyRequests />} />
-      
-      {/* Maintenance Management Routes */}
-      <Route path="/maintenance" element={<MaintenanceManagement />} />
-      <Route path="/repairs/approve" element={<RepairApprove />} />
-      <Route path="/audit-log" element={<AuditLog />} />
+        {/* Others */}
+        {/* <Route path="/add-vehicle" element={<VehicleForm />} /> */}
+        <Route path="/update-vehicle" element={<UpdateVehiclePage />} />
+        {/* <Route path="/add-driver" element={<AddDriverPage />} /> */}
+        <Route path="/update-driver" element={<UpdateDriverPage />} />
+        <Route path="/user-management" element={<UserManagement />} />
+        <Route path="/vehicles" element={<Vehicles />} />
+        <Route path="/driver-management" element={<DriverManagement />} />
+        <Route path="/vehicle-request" element={<VehicleRequest />} />
+        <Route path="/trip-scheduling" element={<TripScheduling />} />
+        <Route path="/trip-allocation" element={<TripAllocation />} />
+        <Route path="/my-requests" element={<MyRequests />} />
 
-      {/* Staff area */}
-  <Route path="/staff/dashboard" element={<StaffDashboard />} />
-  <Route path="/staff/vehicle-request" element={<div>Vehicle Request</div>} />
-  <Route path="/staff/my-requests" element={<MyRequests />} />
-  {/* 
+        {/* Maintenance Management Routes */}
+        <Route path="/maintenance" element={<MaintenanceManagement />} />
+        <Route path="/repairs/approve" element={<RepairApprove />} />
+        <Route path="/audit-log" element={<AuditLog />} />
+
+        {/* Staff area */}
+        <Route path="/staff/dashboard" element={<StaffDashboard />} />
+        <Route path="/staff/vehicle-request" element={<VehicleRequest />} />
+        <Route path="/staff/my-requests" element={<MyRequests />} />
+        {/* 
   <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} /> */}
-   <Route path="/staff/add-vehicle" element={<VehicleForm />} />
-  <Route path="/staff/add-driver" element={<DriverForm/>} />
-  <Route path="/staff/reports" element={<div>Search & Reports</div>} />
-  <Route path="/staff/notifications" element={<div>Notifications</div>} />
+        <Route path="/staff/add-vehicle" element={<VehicleForm />} />
+        <Route path="/staff/add-driver" element={<DriverForm />} />
+        <Route path="/staff/reports" element={<div>Search & Reports</div>} />
+        <Route path="/staff/notifications" element={<div>Notifications</div>} />
 
         {/* User, Vehicle & Driver Management */}
         <Route path="/user-management" element={<UserManagement />} />
@@ -92,15 +94,24 @@ export default function App() {
 
         {/* Staff Area Routes */}
         <Route path="/staff/dashboard" element={<StaffDashboard />} />
-        <Route path="/staff/vehicle-request" element={<div>Vehicle Request</div>} />
+        <Route path="/staff/vehicle-request" element={<VehicleRequest />} />
         <Route path="/staff/my-requests" element={<MyRequests />} />
-        <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} />
-        <Route path="/staff/driver-details" element={<div>Driver Details</div>} />
+        <Route
+          path="/staff/vehicle-details"
+          element={<div>Vehicle Details</div>}
+        />
+        <Route
+          path="/staff/driver-details"
+          element={<div>Driver Details</div>}
+        />
         <Route path="/staff/reports" element={<div>Search & Reports</div>} />
         <Route path="/staff/notifications" element={<div>Notifications</div>} />
 
         {/* Fallback */}
-        <Route path="*" element={<h1 style={{ padding: 20 }}>404 - Page Not Found</h1>} />
+        <Route
+          path="*"
+          element={<h1 style={{ padding: 20 }}>404 - Page Not Found</h1>}
+        />
       </Routes>
     </MaintenanceProvider>
   );
