@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const vehicleRoutes = require('./routes/vehicles');
 const userRoutes = require('./routes/users');
-const driverRoutes = require('./routes/drivers');
+const driverRoutes = require('./routes/driver');
 const tripRoutes = require('./routes/trips');
 const maintenanceRoutes = require('./routes/maintenance');
 
