@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import TableRow from './TableRow.jsx'
 
-const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false, onEdit, onDelete }) => {
+const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false, onEdit, onDelete, showActions = true }) => {
   const [selectedRows, setSelectedRows] = useState([])
 
   const toggleSelectAll = () => {
@@ -37,7 +37,7 @@ const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false
             {columns.map((col) => (
               <th key={col.key}>{col.label}</th>
             ))}
-            <th className="action-col">Actions</th>
+            {showActions && <th className="action-col">Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -54,11 +54,12 @@ const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false
                 editable={editable}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                showActions={showActions}
               />
             ))
           ) : (
             <tr>
-              <td colSpan={columns.length + (showCheckbox ? 1 : 0) + 1} className="no-data">
+              <td colSpan={columns.length + (showCheckbox ? 1 : 0) + (showActions ? 1 : 0)} className="no-data">
                 No data available
               </td>
             </tr>

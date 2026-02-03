@@ -1,5 +1,4 @@
-// src/pages/DriverManagement.jsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Cards from "../components/DashboardCards/Cards.jsx";
@@ -28,57 +27,60 @@ export default function DriverManagement() {
     "Audit Log": "/audit-log",
   };
 
-  // ===== Demo data (swap with API/Context later) =====
-  // NOTE: To cooperate with your TableRow's "new row" detection,
-  // we assign vehicleId = nic for existing rows (non-empty),
-  // and set vehicleId = "" only for newly added rows.
-  const [drivers, setDrivers] = useState([
-    {
-      id: 1,
-      vehicleId: "199912365498", // non-empty -> not auto-edit
-      nic: "199912365498",
-      name: "Sarath Kumara",
-      address: "No. 25, Temple Road, Kandy",
-      email: "sarathkumara@gmail.com",
-      phone: "0760021526",
-      licenseNo: "B1234567",
-      registerDate: "2020-05-15",
-      licenseRenewalDate: "2024-09-20",
-      licenseExpiry: "2025-09-25",
-      healthAssessment: "2024-06-10",
-      status: "Available",
-    },
-    {
-      id: 2,
-      vehicleId: "200078945612",
-      nic: "200078945612",
-      name: "Ajith Pushpakumara",
-      address: "45/3, Galle Road, Colombo 06",
-      email: "ajithpushpakumara@gmail.com",
-      phone: "0723816829",
-      licenseNo: "B7654321",
-      registerDate: "2019-11-22",
-      licenseRenewalDate: "2024-12-15",
-      healthAssessment: "2024-05-20",
-      licenseExpiry: "2025-10-12",
-      status: "On Trip",
-    },
-    {
-      id: 3,
-      vehicleId: "199854123698",
-      nic: "199854123698",
-      name: "Kasun Thilakarathna",
-      address: "No. 12, Station Lane, Kurunegala",
-      email: "kasunthilakarathna@gmail.com",
-      phone: "0714856045",
-      licenseNo: "B1715942",
-      registerDate: "2019-11-22",
-      licenseRenewalDate: "2024-12-15",
-      healthAssessment: "2024-05-20",
-      licenseExpiry: "2025-10-12",
-      status: "Off Duty",
-    },
-  ]);
+  // ===== Data (load from backend) =====
+  const [drivers, setDrivers] = useState([]);
+
+  // Load drivers from backend on component mount
+  useEffect(() => {
+    const fetchDrivers = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/driver');
+        const data = await response.json();
+        console.log('Raw API response:', data);
+        console.log('Drivers array:', data.drivers);
+        
+        // Handle different response formats
+        let driversArray = [];
+        if (data.Drivers && Array.isArray(data.Drivers)) {
+          driversArray = data.Drivers;
+        } else if (data.drivers && Array.isArray(data.drivers)) {
+          driversArray = data.drivers;
+        } else if (Array.isArray(data)) {
+          driversArray = data;
+        }
+        
+        console.log('Processing drivers:', driversArray);
+        
+        // Map backend data to frontend format (matching database model)
+        const mappedDrivers = driversArray.map(driver => {
+          console.log('Mapping driver:', driver);
+          return {
+            id: driver._id,
+            vehicleId: driver.nic_no || '', // Use nic_no as vehicleId for table logic
+            driverId: driver.driver_id, // Store driver_id for API calls
+            nic: driver.nic_no,
+            name: driver.name,
+            address: driver.address,
+            email: driver.email,
+            phone: driver.phone_no,
+            licenseNo: driver.licenseNo,
+            registerDate: driver.registerDate,
+            licenseRenewalDate: driver.licenseRenewalDate,
+            licenseExpiry: driver.licenseExpiryDate,
+            healthAssessment: driver.healthAssessment,
+            status: driver.status || 'Active'
+          };
+        });
+        
+        console.log('Mapped drivers:', mappedDrivers);
+        setDrivers(mappedDrivers);
+      } catch (error) {
+        console.error('Error loading drivers:', error);
+      }
+    };
+    
+    fetchDrivers();
+  }, []);
 
   // ===== Cards / metrics (same pattern as Vehicles/Maintenance) =====
   const dashboardCards = useMemo(() => {
@@ -94,7 +96,7 @@ export default function DriverManagement() {
     ];
   }, [drivers]);
 
-  // ===== Table columns (unique keys + Actions) =====
+  // ===== Table columns (matching database model) =====
   const columns = useMemo(
     () => [
       { key: "nic", label: "NIC No" },
@@ -184,13 +186,79 @@ export default function DriverManagement() {
     setDrivers((prev) => [newRow, ...prev]);
   };
 
-  const handleEdit = (id, updated) => {
-    setDrivers((prev) => prev.map((d) => (d.id === id ? { ...d, ...updated } : d)));
+  const handleEdit = async (id, updated) => {
+    try {
+      // Check if driver exists in current data (means it's an edit)
+      const existingDriver = drivers.find(d => d.id === id);
+      const isEdit = existingDriver && existingDriver.driverId;
+      
+      // Map frontend fields to backend schema
+      const payload = {
+        driver_id: updated.nic, // Use nic as driver_id
+        nic_no: updated.nic,
+        name: updated.name,
+        address: updated.address,
+        email: updated.email,
+        phone_no: updated.phone,
+        licenseNo: updated.licenseNo,
+        registerDate: updated.registerDate,
+        licenseRenewalDate: updated.licenseRenewalDate,
+        licenseExpiryDate: updated.licenseExpiry,
+        healthAssessment: updated.healthAssessment || 'Pending',
+        status: updated.status || 'Active'
+      };
+      
+      let response;
+      if (isEdit) {
+        // PUT for existing driver using driver_id
+        response = await fetch(`http://localhost:5000/api/driver/${existingDriver.driverId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        // POST for new driver
+        response = await fetch('http://localhost:5000/api/driver', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        alert(isEdit ? 'Driver updated successfully!' : 'Driver added successfully!');
+        window.location.reload();
+      } else {
+        alert('Error: ' + (result.error || result.msg || 'Failed to save'));
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      alert('Error saving driver: ' + error.message);
+    }
   };
 
-  const handleAction = (action, row) => {
+  const handleAction = async (action, row) => {
     if (action === "delete") {
-      setDrivers((prev) => prev.filter((d) => d.id !== row.id));
+      if (window.confirm('Are you sure you want to delete this driver?')) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/driver/${row.driverId}`, {
+            method: 'DELETE'
+          });
+          
+          if (response.ok) {
+            alert('Driver deleted successfully!');
+            setDrivers((prev) => prev.filter((d) => d.id !== row.id));
+          } else {
+            const result = await response.json();
+            alert('Error deleting driver: ' + (result.error || result.msg));
+          }
+        } catch (error) {
+          console.error('Delete error:', error);
+          alert('Error deleting driver: ' + error.message);
+        }
+      }
     }
     if (action === "details") {
       navigate("/drivers/details", { state: { driver: row } });
@@ -242,9 +310,10 @@ export default function DriverManagement() {
           <SearchBar onFilterChange={() => {}} filterLabel="License Expiry" />
 
           {/* Action bar: export + add button (same layout as Maintenance/Vehicles) */}
-          <div className="action-bar">
+          {/* <div className="action-bar">
             <ExportPdfBtn data={filtered} filename="drivers" />
-          </div>
+            <Button variant="primary" onClick={handleAddDriver}>+ Add Driver</Button>
+          </div> */}
 
           {/* Data table */}
           <Table

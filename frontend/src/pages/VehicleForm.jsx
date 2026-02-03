@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
-import "./staff-dashboard.css"; // Use staff dashboard CSS for consistent styling
+import "./staff-dashboard.css";
 
 export default function VehicleForm({ onSubmit }) {
   const navigate = useNavigate();
@@ -42,45 +42,49 @@ export default function VehicleForm({ onSubmit }) {
     e.preventDefault();
 
     try {
-      // Convert date strings to Date objects
       const payload = {
-        ...vehicleData,
-        vehicleRegisterDate: new Date(vehicleData.vehicleRegisterDate),
-        insuranceExpiryDate: new Date(vehicleData.insuranceExpiryDate),
-        insuranceRenewalDate: new Date(vehicleData.insuranceRenewalDate),
+        vehicle_id: parseInt(vehicleData.vehicleId),
+        type: vehicleData.vehicleType,
+        fuel_average: 0,
+        capacity: 0,
+        chassis_no: vehicleData.chassisNo,
+        engine_no: vehicleData.engineNo,
+        battery_serial: vehicleData.batteryNo,
+        insurance_expiry: vehicleData.insuranceExpiryDate,
+        wheel_serial: vehicleData.wheelSerialNo,
+        wheel_size: vehicleData.wheelSize,
+        register_date: vehicleData.vehicleRegisterDate,
+        insurance_renewal_date: vehicleData.insuranceRenewalDate,
+        status: "Active"
       };
 
-      const res = await fetch("http://localhost:5000/api/vehicleforms/staff/add", {
+      const response = await fetch("http://localhost:5000/api/vehicle", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        alert("Vehicle added successfully!");
-        // Reset form
-        setVehicleData({
-          vehicleId: "",
-          vehicleType: "",
-          wheelSerialNo: "",
-          wheelSize: "",
-          batteryNo: "",
-          chassisNo: "",
-          engineNo: "",
-          vehicleRegisterDate: "",
-          insuranceExpiryDate: "",
-          insuranceRenewalDate: "",
-        });
-      } else {
-        alert("Failed to add vehicle: " + data.msg);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      console.log("Response from backend:", data);
+      alert("Vehicle added successfully!");
+      setVehicleData({
+        vehicleId: "",
+        vehicleType: "",
+        wheelSerialNo: "",
+        wheelSize: "",
+        batteryNo: "",
+        chassisNo: "",
+        engineNo: "",
+        vehicleRegisterDate: "",
+        insuranceExpiryDate: "",
+        insuranceRenewalDate: "",
+      });
     } catch (error) {
-      console.error("Error connecting to backend:", error);
-      alert("Error connecting to backend. Check console.");
+      alert("Error adding vehicle: " + error.message);
     }
   };
 
@@ -122,7 +126,7 @@ export default function VehicleForm({ onSubmit }) {
           </section>
 
           {/* Vehicle form container */}
-          <div className="vehicle-form-container">
+          <div className="vehicle-form-container" style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
             <form className="vehicle-form" onSubmit={handleSubmit}>
               {/* Vehicle ID */}
               <div className="form-group full-width">

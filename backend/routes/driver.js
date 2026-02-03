@@ -1,12 +1,13 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from "express";
+import {createDriver,getDrivers,getDriversById,updateDriver,deleteDriver} from "../controllers/driverController.js";
 
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'Drivers endpoint', data: [] });
-});
 
-router.post('/', (req, res) => {
-  res.json({ success: true, message: 'Create driver', data: req.body });
-});
+const router = Router();
 
-module.exports = router; 
+router.get("/",getDrivers);
+router.get("/:driver_id", getDriversById);
+router.post("/",createDriver);
+router.put("/:driver_id", updateDriver);
+router.delete("/:driver_id", deleteDriver);
+
+export default router;

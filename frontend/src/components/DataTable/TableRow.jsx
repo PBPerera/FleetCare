@@ -19,7 +19,8 @@ const TableRow = ({
   showCheckbox, 
   editable = false, 
   onEdit, 
-  onDelete 
+  onDelete,
+  showActions = true
 }) => {
   const rowId = row._id || row.id;
   const isNewRow = !row.vehicleId || row.vehicleId === '';
@@ -159,47 +160,40 @@ const TableRow = ({
           )}
         </td>
       ))}
-      <td className="action-col">
-        <div className="action-buttons">
-          {editMode ? (
-            <>
-              <button 
-                className="action-btn save-btn"
-                onClick={handleSave}
-                title="Save"
-              >
-                💾 SAVE
-              </button>
-              {!isNewRow && (
+      {showActions && (
+        <td className="action-col">
+          <div className="action-buttons">
+            {editMode ? (
+              <>
                 <button 
-                  className="action-btn cancel-btn"
-                  onClick={handleCancel}
-                  title="Cancel"
+                  className="action-btn save-btn"
+                  onClick={handleSave}
+                  title="Save"
                 >
-                  ✖ CANCEL
+                  💾 SAVE
                 </button>
-              )}
-            </>
-          ) : (
-            <>
-              <button 
-                className="action-btn edit-btn"
-                onClick={handleEditClick}
-                title="Edit"
-              >
-                ✏️ EDIT
-              </button>
-              <button 
-                className="action-btn delete-btn"
-                onClick={handleDeleteClick}
-                title="Delete"
-              >
-                🗑️ DELETE
-              </button>
-            </>
-          )}
-        </div>
-      </td>
+              </>
+            ) : (
+              <>
+                <button 
+                  className="action-btn edit-btn"
+                  onClick={handleEditClick}
+                  title="Edit"
+                >
+                  ✏️ EDIT
+                </button>
+                <button 
+                  className="action-btn delete-btn"
+                  onClick={() => onAction && onAction('delete', row)}
+                  title="Delete"
+                >
+                  🗑️ DELETE
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+      )}
     </tr>
   );
 };
