@@ -1,0 +1,384 @@
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* General layout */
+.trip-page {
+  display: flex;
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: #f9fafc;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 60px;
+  background: linear-gradient(to bottom, #a9d0f5, #d5e9fa);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.sidebar .logo {
+  margin-bottom: 20px;
+  color: #0a66c2;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.sidebar ul li {
+  font-size: 22px;
+  color: #333;
+  margin: 20px 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.sidebar ul li:hover {
+  color: #0a66c2;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #7eb9f5;
+  padding: 15px 30px;
+  border-radius: 0;
+}
+
+.header h2 {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  min-width: 0; /* allow this flex child to shrink when inner content is wider */
+  gap: 0;
+}
+
+/* Search Bar */
+.search-bar {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: -8px 8px 6px rgba(0, 0, 0, 0.2);
+  margin: 3rem 2rem;
+  border: 1px solid darkgray;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: white;
+  border-radius: 8px;
+  padding: 10px 40px;
+  font-size: 14px;
+}
+
+/* Search input with left icon */
+.search-input {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  border: 1px solid darkgray;
+  border-radius: 8px;
+}
+
+.search-input .input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 16px;
+  pointer-events: none; /* icon shouldn't block clicks into the input */
+}
+
+.search-input input {
+  width: 100%;
+  padding-left: 36px; /* make room for icon */
+  padding-right: 12px;
+  box-sizing: border-box;
+}
+
+.status-picker {
+  background: white;
+  padding: 8px 12px; /* tighter padding so content aligns cleanly */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+  width: 160px; /* fixed width for predictable alignment */
+  border: 1px solid darkgray;
+}
+
+.status-picker-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* text on left, icon on right */
+  width: 100%;
+  gap: 8px;
+  margin-left: 0px;
+}
+  
+.search-btn {
+  background: white;
+  color: gray;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.search-btn:hover {
+  background: #004a99;
+}
+
+/* Table */
+.trip-allocation {
+  display: block;
+  background: #fff;
+  margin: 0.4rem 2rem;
+  padding: 20px;
+  /* reserve space for the vertical scrollbar inside the white box so it doesn't sit on the outer edge */
+  padding-right: 16px;
+  border-radius: 12px;
+  border: 1px solid darkgray;
+  box-shadow: -8px 8px 6px rgba(0, 0, 0, 0.2);
+  /* vertical scrolling allowed; horizontal handled by inner .table-container */
+  overflow-y: auto;
+  overflow-x: visible;
+  scrollbar-gutter: stable;
+  margin-bottom: 3rem;
+}
+
+.table-container {
+  max-width: 100%;
+  overflow-x: auto; /* allow wide table to scroll horizontally inside container */
+  overflow-y: visible;
+  /* pull the inner content right so it uses the reserved padding space and the scrollbar appears inside the box */
+  margin-right: -16px;
+  scrollbar-gutter: stable;
+}
+
+th, td {
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;;
+}
+
+th {
+  font-weight: 600;
+  color: #444;
+}
+
+td {
+  color: #555;
+  font-weight: 400; /* ensure normal weight for table cells */
+}
+
+.calendar-icon {
+  color: black;
+  vertical-align:auto;
+}
+
+.Approved-btn {
+  padding: 8px 16px; /* Vertical and horizontal padding */
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;  
+  background: rgb(52, 226, 52);  
+  color: green; 
+  font-size: 20px; 
+  font-weight: bold; 
+  font-family: Arial, sans-serif;
+} 
+
+.Rejected-btn {
+  padding: 8px 20px; /* Vertical and horizontal padding */
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;  
+  background: rgb(241, 71, 71);  
+  color: rgb(182, 15, 15); 
+  font-size: 20px; 
+  font-weight: bold; 
+  font-family: Arial, sans-serif;
+}
+
+
+/* Table header with export button */
+.table-header{
+  display: flex;
+  align-items: center;
+  /* keep the export button right-aligned even if the left heading is removed */
+  justify-content: flex-end;
+  padding: 0 1rem 16px 2rem;
+}
+
+.export-btn{
+  background: linear-gradient(to left, #0a66c2, #084f9a);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(10,102,194,0.2);
+}
+
+.export-btn:hover{
+  background: #084f9a;
+}
+
+.ta-content {
+  flex: 1;
+  padding: 24px;
+  background: #f8fafc;
+}
+
+.ad-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Toolbar */
+.ta-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  background: #fff;
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.ta-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #d6dbe7;
+  background: #f7f9fc;
+  border-radius: 999px;
+  padding: 8px 14px;
+  max-width: 600px;
+}
+.ta-search-ico {
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+}
+.ta-search input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 14px;
+}
+
+.ta-select {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ta-select label {
+  font-size: 12px;
+  color: var(--muted);
+}
+.ta-select select {
+  min-width: 170px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #d6dbe7;
+  background: #fff;
+  outline: 0;
+}
+.ta-select select:focus {
+  border-color: var(--ring);
+}
+
+/* Table */
+.ta-table-container {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+}
+
+.ta-title {
+  margin: 0 0 16px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+  position: absolute;
+}
+
+.ta-table-wrapper {
+  overflow-x: auto;
+}
+
+.ta-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 2500px;
+  border-spacing: 20px 10px;
+}
+
+.ta-table th,
+.ta-table td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid #eef1f7;
+  font-size: 14px;
+}
+.ta-table thead th {
+  background: #f6f8fe;
+  color: #374151;
+  font-weight: 700;
+}
+
+.ta-header-title{ font-weight:800; letter-spacing:.2px; justify-self: left; }
+
+.ta-toggle{ border:0; background:transparent; cursor:pointer; padding:8px; border-radius:8px; }
+.ta-burger{ display:block; width:18px; height:2px; background:#111; position:relative; }
+.ta-burger::before,.ta-burger::after{
+  content:""; position:absolute; left:0; right:0; height:2px; background:#111;
+}
+.ta-burger::before{ top:-6px; } .ta-burger::after{ top:6px; }
+
+.ta-header-title{ font-weight:800; letter-spacing:.2px; justify-self: left; }
+.ta-header-right{ display:flex; align-items:center; gap:10px; }
+
+/* Content */
+.ta-content{ padding:18px; display:flex; flex-direction:column; gap:18px; }
+.ta-page-title h1{ margin:0 0 6px; }
+.ta-page-title p{ margin:0; color:var(--ta-muted); }
