@@ -126,7 +126,7 @@ export default function VehicleForm({ onSubmit }) {
           </section>
 
           {/* Vehicle form container */}
-          <div className="vehicle-form-container">
+          <div className="vehicle-form-container" style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
             <form className="vehicle-form" onSubmit={handleSubmit}>
               {/* Vehicle ID */}
               <div className="form-group full-width">

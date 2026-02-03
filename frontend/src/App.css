@@ -208,7 +208,7 @@ button, input { font: inherit; color: inherit; }
   padding: 50px 50px;
   border-radius: 14px;
   width: 900px;
-  margin: 100px auto 100px;
+  margin: 0px auto 0px;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
@@ -341,7 +341,7 @@ label {
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
-   margin: 100px auto;
+  margin: 0px auto 0px;
 }
 
 .dform-title {
