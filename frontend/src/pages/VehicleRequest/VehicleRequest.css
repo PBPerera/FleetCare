@@ -12,6 +12,23 @@ body {
   background-color: #f5f5f5;
 }
 
+input[type="text"],
+textarea,
+select {
+  width: 75%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
 .vehicle-request-page {
   min-height: 100vh;
   background-color: #f0f4f8;
@@ -127,6 +144,7 @@ body {
   display: flex;
   gap: 60px;
   overflow-x: auto;
+  height: fit-content;
 }
 
 /* Left Panel - Request Form */
@@ -173,23 +191,6 @@ body {
 
 .date-time-inputs input {
   flex: 1;
-}
-
-input[type="text"],
-textarea,
-select {
-  width: 75%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 14px;
-  background-color: white;
-  color: #333;
-}
-
-textarea {
-  resize: vertical;
-  min-height: 80px;
 }
 
 .select-wrapper {
@@ -296,7 +297,7 @@ textarea {
     hsl(210, 100%, 75%) , /* A slightly more saturated, medium blue */
     hsl(210, 100%, 90%)/* A very light, unsaturated blue */
   );
-  min-height: 100vh;
+  min-height: 100%;
   padding: 25px 50px;
   min-width: 180px;
   display: flex;
@@ -400,4 +401,11 @@ textarea {
   .availables-container {
     max-width: 100%;
   }
+}
+
+.ad-content {
+  display: flex;
+  flex: 1;
+  padding: 24px;
+  background: #f8fafc;
 }
