@@ -125,7 +125,7 @@ export default function VehicleForm({ onSubmit }) {
             <p>Fill in the form below to add a new vehicle to the system.</p>
           </section>
 
-          {/* Vehicle form container */}
+          {/* Vehicle form container*/}
           <div className="vehicle-form-container" style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
             <form className="vehicle-form" onSubmit={handleSubmit}>
               {/* Vehicle ID */}
