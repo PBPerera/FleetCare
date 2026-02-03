@@ -26,14 +26,55 @@ export default function Signup() {
   const update = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirm) {
       alert("Passwords do not match.");
       return;
     }
-    // TODO: replace with real signup API call
-    navigate("/login");
+    
+    if (!form.email || form.email.trim() === '') {
+      alert("Email address is required.");
+      return;
+    }
+    
+    try {
+      console.log('Form data:', form);
+      const payload = {
+        FullName: form.fullName,
+        emailaddress: form.email.trim(),
+        PhoneNumber: form.phone,
+        NIC: form.nic,
+        DepartmentORUnit: form.department,
+        Role: form.role,
+        EmployeeID: form.employeeId,
+        Designation: form.designation,
+        UserName: form.username,
+        Password: form.password,
+      };
+      console.log('Payload:', payload);
+      
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/loginauth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      const data = await response.json();
+      console.log('Response:', response.status, data);
+      
+      if (response.ok) {
+        alert('Account created successfully!');
+        navigate("/login");
+      } else {
+        alert(`Registration failed: ${data.message || JSON.stringify(data)}`);
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert(`Network error: ${error.message}`);
+    }
   };
 
   return (
@@ -85,7 +126,7 @@ export default function Signup() {
                 placeholder="Enter your phone number"
                 value={form.phone}
                 onChange={update}
-                pattern="^[0-9+\-\s()]{7,}$"
+                pattern="^[0-9+\s()]{7,}$"
                 required
               />
             </div>
