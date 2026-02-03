@@ -287,16 +287,27 @@
 //   );
 // }
 
-import {React,useState} from "react";
-import "./TripScheduling.css";
+import { React, useState, useRef, useMemo } from "react";
 import Sidebar from "../../components/Sidebar";
+import { Search } from "lucide-react";
 import { FaSearch, FaUserCircle, FaCalendarAlt } from "react-icons/fa";
-import { MdDashboard, MdDirectionsCar, MdNotifications, MdOutlineSettings } from "react-icons/md";
+import {
+  MdDashboard,
+  MdDirectionsCar,
+  MdNotifications,
+  MdOutlineSettings,
+} from "react-icons/md";
 import { IoMdArrowDropdown } from "react-icons/io";
+import "./TripScheduling.css";
 
-const TripScheduling = () => {
+export default function TripScheduling() {
   // Sidebar + header state
   const [collapsed, setCollapsed] = useState(false);
+  const [q, setQ] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const tableRef = useRef(null);
 
   const tripRequests = [
     {
@@ -311,114 +322,388 @@ const TripScheduling = () => {
       purpose: "Patient Transport",
       vehicleType: "Van",
       noOfPassengers: 3,
-      approveOrReject:  
-      <><button className="Approve-btn">Approve</button>
-      <button className="Reject-btn">Reject</button>
-      </> ,
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
     },
     // Sample rows
-    { requestId: "R0002", vehicleId: "AAA-1234", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></>},
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></>},
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
-    { requestId: "R0003", vehicleId: "BBB-5678", driverName: "Name", contact: "Number", pickup: "Location", destination: "Location", tripDate: "Date", tripTime: "10:00 AM", purpose: "Patient Transport", vehicleType: "Van", noOfPassengers: "3",approveOrReject:  <><button className="Approve-btn">Approve</button><button className="Reject-btn">Reject</button></> },
+    {
+      requestId: "R0002",
+      vehicleId: "AAA-1234",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
+    {
+      requestId: "R0003",
+      vehicleId: "BBB-5678",
+      driverName: "Name",
+      contact: "Number",
+      pickup: "Location",
+      destination: "Location",
+      tripDate: "Date",
+      tripTime: "10:00 AM",
+      purpose: "Patient Transport",
+      vehicleType: "Van",
+      noOfPassengers: "3",
+      approveOrReject: (
+        <>
+          <button className="Approve-btn">Approve</button>
+          <button className="Reject-btn">Reject</button>
+        </>
+      ),
+    },
   ];
+
+  // Filter trips based on vehicle ID search and selected date
+  const filteredTrips = useMemo(() => {
+    return tripRequests.filter((trip) => {
+      const matchesVehicleId = trip.vehicleId.toLowerCase().includes(q.toLowerCase());
+      const matchesDate = !selectedDate || trip.tripDate === selectedDate;
+      return matchesVehicleId && matchesDate;
+    });
+  }, [q, selectedDate]);
 
   return (
     <div className="trip-page">
       {/* Sidebar */}
-    <Sidebar
-            collapsed={collapsed}
-            active="Trip Scheduling"
-            onLogout={() => (window.location.href = "/login")}
-          />
+      <Sidebar
+        collapsed={collapsed}
+        active="Trip Scheduling"
+        onLogout={() => (window.location.href = "/login")}
+      />
 
-      {/* Main Content */}
+      {/* Main section */}
       <main className="main-content">
-      <header className="sd-header">
+        {/* Top Header */}
+        <header className="ts-header">
           <button
             className="sd-toggle"
             onClick={() => setCollapsed((v) => !v)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand" : "Collapse"}
           >
-            <span className="sd-burger" />
+            <span className="ts-burger" />
           </button>
 
-          <div className="sd-header-title">Trip Scheduling</div>
-          <div className="sd-header-right" />
+          <div className="ts-header-title">Trip Scheduling</div>
         </header>
 
-        {/* Search Bar */}
-        <div className="search-bar">
-          <div className="search-input">
-            <FaSearch className="input-icon" />
-            <input type="text" placeholder="Search by Vehicle ID" />
-          </div>
-          <div className="date-picker">
-            <div className="date-picker-container">
-              <span className="date-text">Trip Date</span>
-              <FaCalendarAlt className="date-icon" />
+        {/* Content area */}
+        <div className="ad-content" style={{ display: "block" }}>
+          {/* Toolbar */}
+          <div className="ts-toolbar">
+            <div className="ts-search">
+              <span className="ts-search-ico">
+                <Search size={16} />
+              </span>
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search by Vehicle ID"
+              />
             </div>
-          </div>
-          <button className="search-btn">
-            <FaSearch />
-          </button>
-        </div>
 
-        {/* Table */}
-        <section className="trip-requests">
-          <h3>Trip Requests</h3>
-          <div className="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Request ID</th>
-                  <th>Vehicle ID</th>
-                  <th>Driver Name</th>
-                  <th>Driver Contact Number</th>
-                  <th>Pickup & Destination</th>
-                  <th>Trip Date</th>
-                  <th>Trip Time</th>
-                  <th>Purpose</th>
-                  <th>Vehicle Type</th>
-                  <th>No. of Passengers</th>
-                  <th>Approve/Reject</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tripRequests.map((trip, index) => (
-                  <tr key={index}>
-                    <td>{trip.requestId}</td>
-                    <td>{trip.vehicleId}</td>
-                    <td>{trip.driverName}</td>
-                    <td>{trip.contact}</td>
-                    <td>{trip.pickup} to {trip.destination}</td>
-                    <td>
-                      <FaCalendarAlt className="calendar-icon" />{" "}
-                      {trip.tripDate}
-                    </td>
-                    <td>{trip.tripTime}</td>
-                    <td>{trip.purpose}</td>
-                    <td>{trip.vehicleType}</td>
-                    <td>{trip.noOfPassengers}</td>
-                    <td>{trip.approveOrReject}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="date-picker">
+              <div className="date-picker-container" onClick={() => setShowDatePicker(!showDatePicker)}>
+                <span className="date-text">Trip Date</span>
+                <FaCalendarAlt className="date-icon" style={{ cursor: "pointer" }} />
+              </div>
+              
+              {showDatePicker && (
+                <div className="date-picker-modal">
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value);
+                      setShowDatePicker(false);
+                    }}
+                    className="date-input"
+                  />
+                  {selectedDate && (
+                    <button
+                      className="clear-date-btn"
+                      onClick={() => {
+                        setSelectedDate("");
+                        setShowDatePicker(false);
+                      }}
+                    >
+                      Clear Date
+                    </button>
+                  )}
+                </div>
+              )}
+              {selectedDate && (
+                <span className="selected-date-display">{selectedDate}</span>
+              )}
+            </div>
+
+            <button className="search-btn">
+              <FaSearch />
+            </button>
           </div>
-        </section>
+
+          {/* Table */}
+          <section className="ts-table-container">
+            <h3 className="ts-title">Trip Requests</h3>
+            <div className="table-header"></div>
+            <div
+              className="ts-table-wrapper"
+              ref={tableRef}
+              style={{
+                maxHeight: "calc(60vh)",
+                overflowY: "auto",
+              }}
+            >
+              <table className="ts-table">
+                <thead>
+                  <tr>
+                    <th>Request ID</th>
+                    <th>Vehicle ID</th>
+                    <th>Driver Name</th>
+                    <th>Driver Contact Number</th>
+                    <th>Pickup & Destination</th>
+                    <th>Trip Date</th>
+                    <th>Trip Time</th>
+                    <th>Purpose</th>
+                    <th>Vehicle Type</th>
+                    <th>No. of Passengers</th>
+                    <th>Approve/Reject</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredTrips.map((trip, index) => (
+                    <tr key={index}>
+                      <td>{trip.requestId}</td>
+                      <td>{trip.vehicleId}</td>
+                      <td>{trip.driverName}</td>
+                      <td>{trip.contact}</td>
+                      <td>
+                        {trip.pickup} to {trip.destination}
+                      </td>
+                      <td>
+                        <FaCalendarAlt className="calendar-icon" />{" "}
+                        {trip.tripDate}
+                      </td>
+                      <td>{trip.tripTime}</td>
+                      <td>{trip.purpose}</td>
+                      <td>{trip.vehicleType}</td>
+                      <td>{trip.noOfPassengers}</td>
+                      <td>{trip.approveOrReject}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
       </main>
     </div>
   );
-};
-
-export default TripScheduling;
+}
