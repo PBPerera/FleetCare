@@ -1,5 +1,4 @@
-// src/pages/Vehicles.jsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Cards from "../components/DashboardCards/Cards.jsx";
@@ -7,6 +6,7 @@ import SearchBar from "../components/SearchBar/SearchBar.jsx";
 import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
 import ExportPdfBtn from "../components/ExportPdfBtn.jsx";
+import { addVehicle } from "../api";
 import "./Pages.css";
 
 export default function Vehicles() {
@@ -29,9 +29,41 @@ export default function Vehicles() {
     "Audit Log": "/audit-log",
   };
 
-  // ===== Data (demo set; swap with API/context later) =====
-  // Keep an internal numeric/string 'id' AND the visible 'vehicleId'
+  // ===== Data (load from backend) =====
   const [vehicles, setVehicles] = useState([]);
+
+  // Load vehicles from backend on component mount
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/vehicle');
+        const data = await response.json();
+        console.log('Loaded vehicles:', data);
+        
+        // Map backend data to frontend format
+        const mappedVehicles = data.vehicles?.map(vehicle => ({
+          id: vehicle._id,
+          vehicleId: vehicle.vehicle_id,
+          type: vehicle.type,
+          wheelSerial: vehicle.wheel_serial,
+          wheelSize: vehicle.wheel_size,
+          engineNo: vehicle.engine_no,
+          batteryNo: vehicle.battery_serial,
+          chassisNo: vehicle.chassis_no,
+          registerdate: vehicle.register_date,
+          insurancerenewaldate: vehicle.insurance_renewal_date,
+          insuranceExpiry: vehicle.insurance_expiry,
+          status: vehicle.status || 'Available'
+        })) || [];
+        
+        setVehicles(mappedVehicles);
+      } catch (error) {
+        console.error('Error loading vehicles:', error);
+      }
+    };
+    
+    fetchVehicles();
+  }, []);
 
   // ===== Cards / metrics (same style as Maintenance) =====
   const dashboardCards = useMemo(() => {
@@ -132,13 +164,80 @@ export default function Vehicles() {
     setVehicles((prev) => [newRow, ...prev]);
   };
 
-  const handleEdit = (id, updated) => {
-    setVehicles((prev) => prev.map((v) => (v.id === id ? { ...v, ...updated } : v)));
+  const handleEdit = async (id, updated) => {
+    try {
+      // Check if vehicle exists in current data (means it's an edit)
+      const existingVehicle = vehicles.find(v => v.id === id);
+      const isEdit = existingVehicle && existingVehicle.vehicleId;
+      
+      // Map frontend fields to backend schema
+      const payload = {
+        vehicle_id: updated.vehicleId,
+        type: updated.type,
+        wheel_serial: updated.wheelSerial,
+        wheel_size: updated.wheelSize,
+        engine_no: updated.engineNo,
+        battery_serial: updated.batteryNo,
+        chassis_no: updated.chassisNo,
+        register_date: updated.registerdate,
+        insurance_renewal_date: updated.insurancerenewaldate,
+        insurance_expiry: updated.insuranceExpiry,
+        capacity: updated.capacity || '5',
+        fuel_average: updated.fuel_average || '15',
+        status: updated.status || 'Available'
+      };
+      
+      let response;
+      if (isEdit) {
+        // PUT for existing vehicle
+        response = await fetch(`http://localhost:5000/api/vehicle/${existingVehicle.vehicleId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } else {
+        // POST for new vehicle
+        response = await fetch('http://localhost:5000/api/vehicle', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      }
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        alert(isEdit ? 'Vehicle updated successfully!' : 'Vehicle added successfully!');
+        window.location.reload();
+      } else {
+        alert('Error: ' + (result.error || result.msg || 'Failed to save'));
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      alert('Error saving vehicle: ' + error.message);
+    }
   };
 
-  const handleAction = (action, row) => {
+  const handleAction = async (action, row) => {
     if (action === "delete") {
-      setVehicles((prev) => prev.filter((v) => v.id !== row.id));
+      if (window.confirm('Are you sure you want to delete this vehicle?')) {
+        try {
+          const response = await fetch(`http://localhost:5000/api/vehicle/${row.vehicleId}`, {
+            method: 'DELETE'
+          });
+          
+          if (response.ok) {
+            alert('Vehicle deleted successfully!');
+            setVehicles((prev) => prev.filter((v) => v.id !== row.id));
+          } else {
+            const result = await response.json();
+            alert('Error deleting vehicle: ' + (result.error || result.msg));
+          }
+        } catch (error) {
+          console.error('Delete error:', error);
+          alert('Error deleting vehicle: ' + error.message);
+        }
+      }
     }
     if (action === "details") {
       navigate("/vehicles/details", { state: { vehicle: row } });
@@ -187,10 +286,10 @@ export default function Vehicles() {
           <SearchBar onFilterChange={() => {}} filterLabel="Insurance Expiry" />
 
           {/* Action bar: export + add button (same layout as Maintenance) */}
-          <div className="action-bar">
+          {/* <div className="action-bar">
             <ExportPdfBtn data={filtered} filename="vehicles" />
             <Button variant="primary" onClick={handleAddVehicle}>+ Add Vehicle</Button>
-          </div>
+          </div> */}
 
           {/* Data table */}
           <Table

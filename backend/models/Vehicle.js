@@ -41,6 +41,18 @@ const vehicalSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    wheel_size: {
+      type: String,
+      required: true,
+    },
+    register_date: {
+      type: Date,
+      required: true,
+    },
+    insurance_renewal_date: {
+      type: Date,
+      required: true,
+    },
     status: {
       type: String,
       required: true,
