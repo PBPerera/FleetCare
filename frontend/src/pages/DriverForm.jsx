@@ -123,7 +123,7 @@ export default function DriverForm({ onSubmit }) {
           </section>
 
           {/* Driver form container */}
-          <div className="driver-form-container">
+          <div className="driver-form-container" style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
             <form className="driver-form" onSubmit={handleSubmit}>
               {/* Full Name */}
               <div className="form-group full-width">
