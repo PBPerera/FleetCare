@@ -287,7 +287,7 @@
 //   );
 // }
 
-import { React, useState, useRef, useMemo } from "react";
+import { React, useState, useRef, useMemo, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
 import { Search } from "lucide-react";
 import { FaSearch, FaUserCircle, FaCalendarAlt } from "react-icons/fa";
@@ -306,268 +306,160 @@ export default function TripScheduling() {
   const [q, setQ] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [tripRequests, setTripRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const tableRef = useRef(null);
 
-  const tripRequests = [
-    {
-      requestId: "R0001",
-      vehicleId: "WWA-2258",
-      driverName: "Kumara Silva",
-      contact: "07046589",
-      pickup: "Panadura Hospital",
-      destination: "Colombo Hospital",
-      tripDate: "2025-09-25",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: 3,
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    // Sample rows
-    {
-      requestId: "R0002",
-      vehicleId: "AAA-1234",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      approveOrReject: (
-        <>
-          <button className="Approve-btn">Approve</button>
-          <button className="Reject-btn">Reject</button>
-        </>
-      ),
-    },
-  ];
+  // Fetch pending vehicle requests on mount
+  useEffect(() => {
+    const fetchPendingRequests = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/vehicleRequests?status=Pending"
+        );
+        const data = await response.json();
+        if (data.data) {
+          setTripRequests(data.data);
+        }
+      } catch (err) {
+        setError("Failed to fetch trip requests");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPendingRequests();
+  }, []);
 
   // Filter trips based on vehicle ID search and selected date
   const filteredTrips = useMemo(() => {
     return tripRequests.filter((trip) => {
-      const matchesVehicleId = trip.vehicleId.toLowerCase().includes(q.toLowerCase());
-      const matchesDate = !selectedDate || trip.tripDate === selectedDate;
+      const matchesVehicleId = trip.vehicleId
+        .toLowerCase()
+        .includes(q.toLowerCase());
+      const matchesDate =
+        !selectedDate || new Date(trip.tripDate).toISOString().split("T")[0] === selectedDate;
       return matchesVehicleId && matchesDate;
     });
-  }, [q, selectedDate]);
+  }, [q, selectedDate, tripRequests]);
+
+  // Handle approve button click
+  const handleApprove = async (requestId, vehicleRequest) => {
+    try {
+      const tripData = {
+        requestId: vehicleRequest.requestId,
+        vehicleId: vehicleRequest.vehicleId,
+        driverName: vehicleRequest.driverName,
+        driverContact: vehicleRequest.driverContact,
+        pickupDestination: vehicleRequest.pickupDestination,
+        tripDate: vehicleRequest.tripDate,
+        tripTime: vehicleRequest.tripTime,
+        purpose: vehicleRequest.purpose,
+        vehicleType: vehicleRequest.vehicleType,
+        noOfPassengers: vehicleRequest.noOfPassengers,
+        status: "Approved",
+        vehicleRequestId: vehicleRequest._id,
+      };
+
+      // Create trip in Trip collection
+      const tripResponse = await fetch("http://localhost:5000/api/trips", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tripData),
+      });
+
+      if (!tripResponse.ok) {
+        throw new Error("Failed to create trip");
+      }
+
+      // Update vehicle request status to Approved
+      const updateResponse = await fetch(
+        `http://localhost:5000/api/vehicleRequests/${vehicleRequest._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: "Approved" }),
+        }
+      );
+
+      if (!updateResponse.ok) {
+        throw new Error("Failed to update vehicle request");
+      }
+
+      // Remove from pending list
+      setTripRequests((prev) =>
+        prev.filter((trip) => trip.requestId !== requestId)
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Error approving trip: " + err.message);
+    }
+  };
+
+  // Handle reject button click
+  const handleReject = async (requestId, vehicleRequest) => {
+    try {
+      const tripData = {
+        requestId: vehicleRequest.requestId,
+        vehicleId: vehicleRequest.vehicleId,
+        driverName: vehicleRequest.driverName,
+        driverContact: vehicleRequest.driverContact,
+        pickupDestination: vehicleRequest.pickupDestination,
+        tripDate: vehicleRequest.tripDate,
+        tripTime: vehicleRequest.tripTime,
+        purpose: vehicleRequest.purpose,
+        vehicleType: vehicleRequest.vehicleType,
+        noOfPassengers: vehicleRequest.noOfPassengers,
+        status: "Rejected",
+        vehicleRequestId: vehicleRequest._id,
+      };
+
+      // Create trip in Trip collection
+      const tripResponse = await fetch("http://localhost:5000/api/trips", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tripData),
+      });
+
+      if (!tripResponse.ok) {
+        throw new Error("Failed to create trip");
+      }
+
+      // Update vehicle request status to Rejected
+      const updateResponse = await fetch(
+        `http://localhost:5000/api/vehicleRequests/${vehicleRequest._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: "Rejected" }),
+        }
+      );
+
+      if (!updateResponse.ok) {
+        throw new Error("Failed to update vehicle request");
+      }
+
+      // Remove from pending list
+      setTripRequests((prev) =>
+        prev.filter((trip) => trip.requestId !== requestId)
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Error rejecting trip: " + err.message);
+    }
+  };
 
   return (
     <div className="trip-page">
@@ -610,11 +502,17 @@ export default function TripScheduling() {
             </div>
 
             <div className="date-picker">
-              <div className="date-picker-container" onClick={() => setShowDatePicker(!showDatePicker)}>
+              <div
+                className="date-picker-container"
+                onClick={() => setShowDatePicker(!showDatePicker)}
+              >
                 <span className="date-text">Trip Date</span>
-                <FaCalendarAlt className="date-icon" style={{ cursor: "pointer" }} />
+                <FaCalendarAlt
+                  className="date-icon"
+                  style={{ cursor: "pointer" }}
+                />
               </div>
-              
+
               {showDatePicker && (
                 <div className="date-picker-modal">
                   <input
@@ -649,9 +547,13 @@ export default function TripScheduling() {
             </button>
           </div>
 
+          {/* Loading/Error Messages */}
+          {loading && <div className="info-message">Loading trip requests...</div>}
+          {error && <div className="error-message">{error}</div>}
+
           {/* Table */}
           <section className="ts-table-container">
-            <h3 className="ts-title">Trip Requests</h3>
+            <h3 className="ts-title">Trip Requests - Pending Approval</h3>
             <div className="table-header"></div>
             <div
               className="ts-table-wrapper"
@@ -678,26 +580,47 @@ export default function TripScheduling() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredTrips.map((trip, index) => (
-                    <tr key={index}>
-                      <td>{trip.requestId}</td>
-                      <td>{trip.vehicleId}</td>
-                      <td>{trip.driverName}</td>
-                      <td>{trip.contact}</td>
-                      <td>
-                        {trip.pickup} to {trip.destination}
+                  {filteredTrips.length > 0 ? (
+                    filteredTrips.map((trip, index) => (
+                      <tr key={index}>
+                        <td>{trip.requestId}</td>
+                        <td>{trip.vehicleId}</td>
+                        <td>{trip.driverName}</td>
+                        <td>{trip.driverContact}</td>
+                        <td>
+                          {trip.pickupDestination}
+                        </td>
+                        <td>
+                          <FaCalendarAlt className="calendar-icon" />{" "}
+                          {new Date(trip.tripDate).toISOString().split("T")[0]}
+                        </td>
+                        <td>{trip.tripTime}</td>
+                        <td>{trip.purpose}</td>
+                        <td>{trip.vehicleType}</td>
+                        <td>{trip.noOfPassengers}</td>
+                        <td>
+                          <button
+                            className="Approve-btn"
+                            onClick={() => handleApprove(trip.requestId, trip)}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="Reject-btn"
+                            onClick={() => handleReject(trip.requestId, trip)}
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="11" style={{ textAlign: "center" }}>
+                        No pending trip requests
                       </td>
-                      <td>
-                        <FaCalendarAlt className="calendar-icon" />{" "}
-                        {trip.tripDate}
-                      </td>
-                      <td>{trip.tripTime}</td>
-                      <td>{trip.purpose}</td>
-                      <td>{trip.vehicleType}</td>
-                      <td>{trip.noOfPassengers}</td>
-                      <td>{trip.approveOrReject}</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
