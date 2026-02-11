@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
@@ -44,3 +45,14 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+=======
+import { Router } from "express";
+import {registerUser,loginUser} from "../controllers/authController.js"
+const router = Router();
+
+router.post('/register',registerUser);
+
+router.post('/login',loginUser )
+
+export default router;
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* html, body, #root {
+=======
+html, body, #root {
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
   margin: 0;
   padding: 0;
   height: 100%;
@@ -121,7 +125,11 @@
   margin-bottom: 10px;
 }
 
+<<<<<<< HEAD
 
+=======
+/* Scrollable area for each table */
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 .table-scroll {
   max-height: 220px;
   overflow-y: auto;
@@ -247,6 +255,7 @@ input[type="text"] {
 
 .user-menu .menu-item:hover {
   background-color: #f2f2f2;
+<<<<<<< HEAD
 } */
 
 
@@ -468,3 +477,6 @@ input[type="text"] {
 .user-menu .menu-item:hover {
   background-color: #f2f2f2;
 }
+=======
+}
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

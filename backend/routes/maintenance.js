@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const express = require('express');
 const router = express.Router();
 const Maintenance = require('../models/Maintenance');
@@ -27,3 +28,19 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+=======
+import express from 'express';
+import {
+  getDashboardStats,
+  searchMaintenance,
+  getMaintenanceHistory
+} from '../controllers/maintenanceController.js';
+
+const router = express.Router();
+
+router.get('/dashboard/stats', getDashboardStats);
+router.get('/search', searchMaintenance);
+router.get('/history/:vehicleId', getMaintenanceHistory);
+
+export default router;
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

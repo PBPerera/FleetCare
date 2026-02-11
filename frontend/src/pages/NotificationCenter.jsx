@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import React, { useState } from "react";
 // //import "./NotificationCenter.css";
 // import {
@@ -425,19 +426,38 @@ import {
   FaBell,
 } from "react-icons/fa";
 import { MdInfoOutline } from "react-icons/md";
+=======
+import React, { useState } from "react";
+//import "./NotificationCenter.css";
+import {
+  FaUserCircle, FaSignOutAlt, FaPhoneAlt, FaUserTie, FaBell, FaTools, FaClipboardList
+} from "react-icons/fa";
+import {
+  MdDashboard, MdPeople, MdDirectionsCar, MdSchedule, MdInfoOutline
+} from "react-icons/md";
+import { HiOutlineDocumentReport } from "react-icons/hi";
+import { RiUserSettingsLine } from "react-icons/ri";
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 
 export default function NotificationCenter() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
+<<<<<<< HEAD
   const handleUserClick = () => setIsMenuOpen(!isMenuOpen);
+=======
+  const handleUserClick = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 
   const handleViewMessage = (message) => {
     setPopupMessage(message);
     setShowPopup(true);
   };
 
+<<<<<<< HEAD
   const handleClosePopup = () => setShowPopup(false);
 
   // Initial table data
@@ -449,31 +469,61 @@ export default function NotificationCenter() {
         { name: "Nimal Perera", contact: "0712345678", message: "", phoneInput: "" },
         { name: "Kamal Silva", contact: "0771234567", message: "", phoneInput: "" },
         { name: "Ruwan Jayasuriya", contact: "0717894561", message: "", phoneInput: "" },
+=======
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+  const tables = [
+    {
+      title: "Trip Schedule Notifications for Drivers",
+      data: [
+        { name: "Saman Kumara", contact: "0763435761", message: "" },
+        { name: "Nimal Perera", contact: "0712345678", message: "" },
+        { name: "Kamal Silva", contact: "0771234567", message: "" },
+        { name: "Ruwan Jayasuriya", contact: "0717894561", message: "" },
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
       ],
     },
     {
       title: "Vehicle Maintenance Notification for Drivers",
       data: [
+<<<<<<< HEAD
         { name: "Saman Kumara", contact: "0763435761", message: "", phoneInput: "" },
         { name: "Kamal Silva", contact: "0771234567", message: "", phoneInput: "" },
+=======
+        { name: "Saman Kumara", contact: "0763435761", message: "" },
+        { name: "Kamal Silva", contact: "0771234567", message: "" },
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
       ],
     },
     {
       title: "Vehicle Insurance Expiry Notifications for Drivers",
       data: [
+<<<<<<< HEAD
         { name: "Saman Kumara", contact: "0763435761", message: "", phoneInput: "" },
         { name: "Nimal Perera", contact: "0712345678", message: "", phoneInput: "" },
+=======
+        { name: "Saman Kumara", contact: "0763435761", message: "" },
+        { name: "Nimal Perera", contact: "0712345678", message: "" },
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
       ],
     },
     {
       title: "Driver License Expiry Notifications for Drivers",
       data: [
+<<<<<<< HEAD
         { name: "Saman Kumara", contact: "0763435761", message: "", phoneInput: "" },
         { name: "Kamal Silva", contact: "0771234567", message: "", phoneInput: "" },
+=======
+        { name: "Saman Kumara", contact: "0763435761", message: "" },
+        { name: "Kamal Silva", contact: "0771234567", message: "" },
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
       ],
     },
   ];
 
+<<<<<<< HEAD
   const [tableData, setTableData] = useState(initialTables);
 
   // Handle message typing
@@ -514,20 +564,57 @@ export default function NotificationCenter() {
       console.error(error);
       alert("Server error while opening WhatsApp.");
     }
+=======
+  const [tableData, setTableData] = useState(tables);
+
+  const handleInputChange = (tableIndex, rowIndex, value) => {
+    const updatedTables = [...tableData];
+    updatedTables[tableIndex].data[rowIndex].message = value;
+    setTableData(updatedTables);
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
   };
 
   return (
     <div className="app-wrapper">
       <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
+<<<<<<< HEAD
 
         {/* MAIN AREA */}
+=======
+        {/* Sidebar */}
+        <aside className="sidebar">
+          <div className="logo-section">
+            <FaUserCircle className="logo-icon" />
+          </div>
+          <ul className="menu">
+            <li><MdDashboard /></li>
+            <li><MdPeople /></li>
+            <li><MdDirectionsCar /></li>
+            <li><FaUserTie /></li>
+            <li><MdSchedule /></li>
+            <li><FaClipboardList /></li>
+            <li><FaTools /></li>
+            <li><HiOutlineDocumentReport /></li>
+            <li className="active"><FaBell /></li>
+            <li><RiUserSettingsLine /></li>
+          </ul>
+          <div className="logout">
+            <FaSignOutAlt />
+          </div>
+        </aside>
+
+        {/* Main Area */}
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
         <main className="main-content">
           <header className="header">
             <div className="header-left">
               <FaBell />
               <h3>Notification Management</h3>
             </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
             <div className="fausercircle" onClick={handleUserClick}>
               <FaUserCircle size={26} />
             </div>
@@ -535,15 +622,25 @@ export default function NotificationCenter() {
 
           <div className="text">
             <h1>Notification Center</h1>
+<<<<<<< HEAD
             <p>Driver Alerts & Notifications</p>
           </div>
 
           {/* TABLES */}
+=======
+            <p>Driver Alerts, Driver Location Status</p>
+          </div>
+
+          {/* Scrollable dashboard */}
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
           <div className="dashboard-body">
             {tableData.map((table, tableIndex) => (
               <div key={tableIndex} className="notification-table">
                 <h4>{table.title}</h4>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                 <div className="table-scroll">
                   <table>
                     <thead>
@@ -551,29 +648,44 @@ export default function NotificationCenter() {
                         <th>Driver Name</th>
                         <th>Contact No</th>
                         <th>Message</th>
+<<<<<<< HEAD
                         <th>WhatsApp Number</th>
                         <th>Send</th>
                       </tr>
                     </thead>
 
+=======
+                        <th>Enter WhatsApp Number</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                     <tbody>
                       {table.data.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                           <td>{row.name}</td>
                           <td>{row.contact}</td>
+<<<<<<< HEAD
 
                           {/* MESSAGE INPUT */}
+=======
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                           <td>
                             <input
                               type="text"
                               value={row.message}
                               onChange={(e) =>
+<<<<<<< HEAD
                                 handleMessageChange(
+=======
+                                handleInputChange(
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                                   tableIndex,
                                   rowIndex,
                                   e.target.value
                                 )
                               }
+<<<<<<< HEAD
                               placeholder="Type message"
                             />
 
@@ -583,11 +695,20 @@ export default function NotificationCenter() {
                                 handleViewMessage(
                                   row.message || "No message typed"
                                 )
+=======
+                              placeholder="Type the message here"
+                            />
+                            <button
+                              className="view-btn"
+                              onClick={() =>
+                                handleViewMessage(row.message || "No message typed")
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                               }
                             >
                               View
                             </button>
                           </td>
+<<<<<<< HEAD
 
                           {/* PHONE INPUT */}
                           <td>
@@ -627,6 +748,13 @@ export default function NotificationCenter() {
                             >
                               Send
                             </button>
+=======
+                          <td>
+                            <input type="text" placeholder="Enter Phone Number" />
+                          </td>
+                          <td>
+                            <button className="send-btn">Send</button>
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                           </td>
                         </tr>
                       ))}
@@ -639,7 +767,11 @@ export default function NotificationCenter() {
         </main>
       </div>
 
+<<<<<<< HEAD
       {/* USER MENU */}
+=======
+      {/* User Menu */}
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
       {isMenuOpen && (
         <div className="user-menu">
           <div className="menu-item"><FaUserCircle /> View Profile</div>
@@ -648,11 +780,19 @@ export default function NotificationCenter() {
         </div>
       )}
 
+<<<<<<< HEAD
       {/* MESSAGE PREVIEW POPUP */}
       {showPopup && (
         <div className="popup-overlay" onClick={handleClosePopup}>
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <h4>Message Preview</h4>
+=======
+      {/* Popup */}
+      {showPopup && (
+        <div className="popup-overlay" onClick={handleClosePopup}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <h4>Message</h4>
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
             <p>{popupMessage}</p>
             <button onClick={handleClosePopup}>Close</button>
           </div>
@@ -660,4 +800,8 @@ export default function NotificationCenter() {
       )}
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const express = require('express');
 const router = express.Router();
 const Trip = require('../models/Trip');
@@ -27,3 +28,17 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 module.exports = router;
+=======
+﻿const express = require('express');
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  res.json({ success: true, message: 'Trips endpoint', data: [] });
+});
+
+router.post('/', (req, res) => {
+  res.json({ success: true, message: 'Create trip', data: req.body });
+});
+
+module.exports = router;
+>>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

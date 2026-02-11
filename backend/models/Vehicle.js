@@ -1,24 +1,65 @@
-// const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
-// const VehicleSchema = new mongoose.Schema({
-//   registrationNumber: { type: String, required: true, unique: true },
-//   model: String,
-//   make: String,
-//   year: Number,
-//   status: { type: String, enum: ['available','in_use','maintenance'], default: 'available' },
-//   createdAt: { type: Date, default: Date.now }
-// });
+const vehicalSchema = new mongoose.Schema(
+  {
+    vehicle_id: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+    fuel_average: {
+      type: Number,
+      required: true,
+    },
+    capacity: {
+      type: Number,
+      required: true,
+    },
+    chassis_no: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    engine_no: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    battery_serial: {
+      type: String,
+      required: true,
+    },
+    insurance_expiry: {
+      type: Date,
+      required: true,
+    },
+    wheel_serial: {
+      type: String,
+      required: true,
+    },
+    wheel_size: {
+      type: String,
+      required: true,
+    },
+    register_date: {
+      type: Date,
+      required: true,
+    },
+    insurance_renewal_date: {
+      type: Date,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      default: "Active",
+    },
+  },
+  { timestamps: true }
+);
 
-// module.exports = mongoose.model('Vehicle', VehicleSchema);
-
-const mongoose = require("mongoose");
-
-const VehicleSchema = new mongoose.Schema({
-  vehicleId: String,
-  vehicleType: String,
-  insuranceExpiryDate: Date,
-  driverName: String,
-  contact: String,
-});
-
-module.exports = mongoose.model("Vehicle", VehicleSchema);
+export default mongoose.model("vehicles", vehicalSchema);
