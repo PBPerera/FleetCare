@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // import React, { useState, useEffect } from "react"; 
 // import { useNavigate, useLocation } from "react-router-dom";
 // //import "./NotificationM.css";
@@ -300,36 +299,6 @@ export default function NotificationManagement() {
 
   
 
-=======
-// src/pages/NotificationManagement.jsx
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
-import "./NotificationManagement.css";
-
-import { FaBell, FaUserCircle, FaPhoneAlt } from "react-icons/fa";
-import { MdInfoOutline } from "react-icons/md";
-
-export default function NotificationManagement() {
-  const navigate = useNavigate();
-
-  // sidebar + header state
-  const [collapsed, setCollapsed] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const routeMap = {
-    "Dashboard": "/admindashboard",
-    "User Management": "/user-management",
-    "Vehicle Management": "/vehicles",
-    "Driver Management": "/driver-management",
-    "Trip Scheduling": "/trip-scheduling",
-    "Trip Allocation": "/trip-allocation",
-    "Maintenance Management": "/maintenance",
-    "Reporting & Analytics": "/reports",
-    "Notification Management": "/notification-management",
-    "Audit Log": "/audit-log",
-  };
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 
   const tableData = [
     {
@@ -370,7 +339,6 @@ export default function NotificationManagement() {
         },
       ],
     },
-<<<<<<< HEAD
 
     // ============================================================
     // MAINTENANCE ALERT TABLE (DYNAMIC DATA)
@@ -398,28 +366,6 @@ export default function NotificationManagement() {
         "Driver Name",
         "Contact Number",
       ],
-=======
-    {
-      title: "Maintenance Alert for Services",
-      searchPlaceholder: "Search Vehicle ID",
-      columns: ["Vehicle ID", "Driver Name", "Contact No", "Description", "Company Name"],
-      data: [
-        {
-          vehicleId: "WP-CAR-1990",
-          driver: "Saman Kumara",
-          contact: "0768649704",
-          description: "Oil change",
-          company: "ABC Pvt Ltd",
-        },
-        { vehicleId: "—", driver: "Name", contact: "Number", description: "Type", company: "Company" },
-        { vehicleId: "—", driver: "Name", contact: "Number", description: "Type", company: "Company" },
-      ],
-    },
-    {
-      title: "Expired Vehicles Insurance",
-      searchPlaceholder: "Search Vehicle ID",
-      columns: ["Vehicle ID", "Vehicle Type", "Insurance Expiry Date", "Driver Name", "Contact Number"],
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
       data: [
         {
           vehicleId: "WP-CAR-1990",
@@ -430,10 +376,6 @@ export default function NotificationManagement() {
         },
       ],
     },
-<<<<<<< HEAD
-
-=======
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
     {
       title: "Expired Driver License",
       searchPlaceholder: "Search Driver Name",
@@ -452,7 +394,6 @@ export default function NotificationManagement() {
   const [searches, setSearches] = useState(Array(tableData.length).fill(""));
 
   const handleSearchChange = (index, value) => {
-<<<<<<< HEAD
     const newSearches = [...searches];
     newSearches[index] = value;
     setSearches(newSearches);
@@ -490,57 +431,6 @@ export default function NotificationManagement() {
 
               return (
                 <div key={index} className="trip-table-container">
-=======
-    const next = [...searches];
-    next[index] = value;
-    setSearches(next);
-  };
-
-  return (
-    <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
-      {/* Shared Sidebar */}
-      <Sidebar
-        collapsed={collapsed}
-        active="Notification Management"
-        onNavigate={(label) => navigate(routeMap[label] || "/admindashboard")}
-        onLogout={() => (window.location.href = "/login")}
-      />
-
-      {/* Main area */}
-      <main className="ad-main">
-        {/* Top Header */}
-        <header className="sd-header">
-          <button
-            className="sd-toggle"
-            onClick={() => setCollapsed((v) => !v)}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            title={collapsed ? "Expand" : "Collapse"}
-          >
-            <span className="sd-burger" />
-          </button>
-
-          <div className="sd-header-title">Notification Managements</div>
-          <div className="sd-header-right" />
-        </header>
-
-        {/* Page content */}
-        <div className="ad-content">
-          <section className="ad-page-title">
-            <h1>Notification Management Center</h1>
-            <p>Latest updated trips, maintenance alerts, expired insurance & licenses.</p>
-          </section>
-
-          {/* Tables */}
-          <section className="trip-section">
-            {tableData.map((table, index) => {
-              const searchValue = searches[index].toLowerCase();
-              const filtered = table.data.filter((row) =>
-                Object.values(row).some((v) => String(v).toLowerCase().includes(searchValue))
-              );
-
-              return (
-                <div key={table.title} className="trip-table-container">
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                   <div className="trip-header">
                     <h3>{table.title}</h3>
                     <div className="search-bar">
@@ -556,18 +446,12 @@ export default function NotificationManagement() {
                   <table className="trip-table">
                     <thead>
                       <tr>
-<<<<<<< HEAD
                         {table.columns.map((col, i) => (
                           <th key={i}>{col}</th>
-=======
-                        {table.columns.map((c) => (
-                          <th key={c}>{c}</th>
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                         ))}
                       </tr>
                     </thead>
                     <tbody>
-<<<<<<< HEAD
                       {loading && index === 1 ? (
                         <tr><td colSpan={table.columns.length}>Loading...</td></tr>
                       ) : filtered.length === 0 ? (
@@ -581,21 +465,11 @@ export default function NotificationManagement() {
                           </tr>
                         ))
                       )}
-=======
-                      {filtered.map((row, i) => (
-                        <tr key={i}>
-                          {Object.values(row).map((val, j) => (
-                            <td key={j}>{val}</td>
-                          ))}
-                        </tr>
-                      ))}
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                     </tbody>
                   </table>
                 </div>
               );
             })}
-<<<<<<< HEAD
           </div>
         </main>
       </div>
@@ -605,30 +479,8 @@ export default function NotificationManagement() {
           <div className="menu-item"><FaUserCircle /> View Profile</div>
           <div className="menu-item"><MdInfoOutline /> About Us</div>
           <div className="menu-item"><FaPhoneAlt /> Contact Us</div>
-=======
-          </section>
-        </div>
-      </main>
-
-      {/* User dropdown */}
-      {isMenuOpen && (
-        <div className="user-menu">
-          <div className="menu-item">
-            <FaUserCircle /> View Profile
-          </div>
-          <div className="menu-item">
-            <MdInfoOutline /> About Us
-          </div>
-          <div className="menu-item">
-            <FaPhoneAlt /> Contact Us
-          </div>
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
         </div>
       )}
     </div>
   );
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

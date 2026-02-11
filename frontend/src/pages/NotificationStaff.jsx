@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // import React, { useState } from "react";
 // //import "./NotificationStaff.css";
 // import { useNavigate, useLocation } from "react-router-dom";
@@ -153,20 +152,10 @@ import {
   MdAssignment,
   MdInfoOutline,
 } from "react-icons/md";
-=======
-import React, { useState } from "react";
-//import "./NotificationStaff.css";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
-import { MdDashboard, MdPeople, MdDirectionsCar, MdSchedule, MdInfoOutline, MdReport, MdNotifications,MdAssignment } from "react-icons/md";
-import { FaUserTie, FaBell, FaTools, FaClipboardList } from "react-icons/fa";
-import { HiOutlineDocumentReport } from "react-icons/hi";
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 import { RiUserSettingsLine } from "react-icons/ri";
 
 export default function NotificationStaff() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-<<<<<<< HEAD
   const [notifications, setNotifications] = useState([]);
 
   const navigate = useNavigate();
@@ -187,34 +176,11 @@ export default function NotificationStaff() {
         console.error("Error fetching notifications:", err);
       });
   }, [staffId]);
-=======
-  const navigate = useNavigate();
-      const location = useLocation();
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: "approved",
-      title: "Request Approved",
-      message: "Your trip request for Trip ID T-008 has been approved. Vehicle KL-5678 assigned.",
-      time: "5 min ago",
-      schedule: "Today, 10:00 AM",
-    },
-    {
-      id: 2,
-      type: "rejected",
-      title: "Request Rejected",
-      from: "RDH Hospital trip ID T-009",
-      reason: "Scheduled KL-5678 is unavailable due to unexpected maintenance.",
-      time: "1 hour ago",
-    },
-  ]);
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 
   const handleUserClick = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-<<<<<<< HEAD
   // ✅ MARK AS READ (BACKEND + UI)
   const handleMarkAsRead = async (id) => {
     try {
@@ -227,50 +193,12 @@ export default function NotificationStaff() {
     } catch (error) {
       console.error("Mark as read error:", error);
     }
-=======
-  const handleMarkAsRead = (id) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
   };
 
   return (
     <div className="app-wrapper">
       <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
-<<<<<<< HEAD
         {/* MAIN AREA */}
-=======
-        {/* Sidebar */}
-        <aside className="sidebar">
-          <div className="logo-section">
-            <FaUserCircle className="logo-icon" />
-          </div>
-          <ul className="menu">
-            <li onClick={() => navigate("/StaffDashboard")} style={{ cursor: "pointer" }}>
-                                      <MdDashboard /> 
-                                    </li>
-            
-            <li><MdDirectionsCar /></li>
-            <li><MdAssignment /></li>
-            <li><MdDirectionsCar /></li>
-            <li><FaUserTie /></li>
-            <li><RiUserSettingsLine /></li>
-            <li 
-              className={location.pathname === "/NotificationStaff" ? "active" : ""} 
-              onClick={() => navigate("/NotificationStaff")}
-              style={{ cursor: "pointer" }}
-            >
-              <MdNotifications /> 
-            </li>
-            
-            
-          </ul>
-          <div className="logout">
-            <FaSignOutAlt />
-          </div>
-        </aside>
-
-        {/* Main Area */}
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
         <main className="main-content">
           <header className="header">
             <div className="header-left">
@@ -288,17 +216,12 @@ export default function NotificationStaff() {
             ) : (
               notifications.map((note) => (
                 <div
-<<<<<<< HEAD
                   key={note._id}
-=======
-                  key={note.id}
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                   className={`notification-card ${
                     note.type === "approved" ? "approved" : "rejected"
                   }`}
                 >
                   <h4>{note.title}</h4>
-<<<<<<< HEAD
 
                   {note.type === "approved" ? (
                     <>
@@ -327,24 +250,6 @@ export default function NotificationStaff() {
                   <button
                     className="mark-read-btn"
                     onClick={() => handleMarkAsRead(note._id)}
-=======
-                  {note.type === "approved" ? (
-                    <>
-                      <p>{note.message}</p>
-                      <p className="time">({note.time})</p>
-                      <p className="schedule">🕒 Scheduled: {note.schedule}</p>
-                    </>
-                  ) : (
-                    <>
-                      <p><strong>From:</strong> {note.from}</p>
-                      <p><strong>Reason:</strong> {note.reason}</p>
-                      <p className="time">({note.time})</p>
-                    </>
-                  )}
-                  <button
-                    className="mark-read-btn"
-                    onClick={() => handleMarkAsRead(note.id)}
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
                   >
                     Mark as Read
                   </button>
@@ -355,11 +260,7 @@ export default function NotificationStaff() {
         </main>
       </div>
 
-<<<<<<< HEAD
       {/* USER MENU */}
-=======
-      {/* User Menu */}
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
       {isMenuOpen && (
         <div className="user-menu">
           <div className="menu-item">
@@ -375,8 +276,4 @@ export default function NotificationStaff() {
       )}
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

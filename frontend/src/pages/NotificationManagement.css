@@ -1,15 +1,9 @@
-<<<<<<< HEAD
-
-=======
-/* ===== Base / Page sizing ===== */
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   font-family: "Poppins", sans-serif;
-<<<<<<< HEAD
   overflow: hidden;
 }
 
@@ -18,30 +12,13 @@ html, body, #root {
   height: 100vh;
   width: 100vw;
   display: flex;
-=======
-  /* IMPORTANT: allow the page to scroll; don't lock the viewport */
-  overflow: visible;
-}
-
-/* App frame: sidebar + main */
-.app-wrapper {
-  position: relative;
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  overflow: hidden; /* contain children edges */
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .app-container {
   display: flex;
   height: 100%;
   width: 100%;
-<<<<<<< HEAD
   transition: 0.3s ease;
-=======
-  transition: filter 0.3s ease;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .blurred {
@@ -50,7 +27,6 @@ html, body, #root {
   user-select: none;
 }
 
-<<<<<<< HEAD
 .sidebar {
   width: 90px;
   background: linear-gradient(#48aaff, #ffffff);
@@ -58,16 +34,6 @@ html, body, #root {
   flex-direction: column;
   justify-content: center;
   padding: 20px;
-=======
-/* ===== Sidebar ===== */
-.sidebar {
-  flex: 0 0 90px; /* fixed width */
-  background: linear-gradient(#48aaff, #ffffff);
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  padding: 20px 16px;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
   box-sizing: border-box;
   border-right: 1px solid #cddfff;
 }
@@ -75,53 +41,32 @@ html, body, #root {
 .logo-icon {
   color: #4c95ff;
   font-size: 30px;
-<<<<<<< HEAD
   margin-bottom: 20px;
   margin-left: 9px;
-=======
-  margin: 4px auto 18px;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .menu {
   list-style: none;
   padding: 0;
-<<<<<<< HEAD
   margin-top: 0px;
   flex: 1;
-=======
-  margin: 0;
-  display: grid;
-  gap: 8px;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .menu li {
   display: flex;
   align-items: center;
-<<<<<<< HEAD
   gap: 10px;
   color: #333;
   padding: 10px 15px;
   border-radius: 10px;
   cursor: pointer;
   transition: 0.3s;
-=======
-  justify-content: center;   /* icons centered in narrow bar */
-  gap: 10px;
-  color: #333;
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s ease;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
   font-weight: 500;
 }
 
 .menu li:hover,
 .menu li.active {
   background: #4c95ff;
-<<<<<<< HEAD
   color: white;
 }
 
@@ -155,45 +100,6 @@ html, body, #root {
   height: 100vh;
 }
 
-=======
-  color: #fff;
-}
-
-.logout {
-  margin-top: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: #000;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-/* ===== Main area ===== */
-.main-content {
-  flex: 1 1 auto;
-  min-width: 0;                    /* prevent overflow from long content */
-  display: flex;
-  flex-direction: column;
-  background-color: #f5f8ff;
-  position: relative;
-}
-
-/* Make the inner area the scroll container */
-.scrollable {
-  flex: 1 1 auto;
-  overflow-y: auto;                /* <-- vertical scrolling */
-  overflow-x: hidden;
-  height: auto;                    /* let flex compute the height */
-}
-
-.text {
-  margin-left: 20px;
-}
-
-/* ===== Sticky header ===== */
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 .header {
   background: #4c95ff;
   color: white;
@@ -204,25 +110,14 @@ html, body, #root {
   font-weight: 600;
   position: sticky;
   top: 0;
-<<<<<<< HEAD
   z-index: 10;
-=======
-  z-index: 20;
-  border-bottom: 1px solid #cfe3ff;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .header-left {
   display: flex;
-<<<<<<< HEAD
   align-items: center;   
   gap: 10px;
   color: black;
-=======
-  align-items: center;
-  gap: 10px;
-  color: #111;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
   font-weight: 600;
   font-size: 15px;
 }
@@ -232,11 +127,7 @@ html, body, #root {
   cursor: pointer;
 }
 
-<<<<<<< HEAD
 /* User menu */
-=======
-/* ===== User menu ===== */
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 .user-menu {
   position: absolute;
   top: 60px;
@@ -263,11 +154,7 @@ html, body, #root {
   background-color: #f2f2f2;
 }
 
-<<<<<<< HEAD
 /* Trip tables */
-=======
-/* ===== Page sections & tables ===== */
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 .trip-section {
   padding: 20px;
   display: flex;
@@ -275,22 +162,11 @@ html, body, #root {
   gap: 40px;
 }
 
-<<<<<<< HEAD
 .trip-table-container {
   background: white;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   padding: 20px;
-=======
-/* Box that can scroll horizontally if table is wide */
-.trip-table-container {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  border: 1px solid #eef2f7;
-  padding: 20px;
-  overflow-x: auto;  /* <-- sideways scroll for wide tables */
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .trip-header {
@@ -302,30 +178,18 @@ html, body, #root {
 
 .trip-header h3 {
   color: #333;
-<<<<<<< HEAD
-=======
-  margin: 0;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .search-bar input {
   padding: 8px 12px;
   border-radius: 20px;
-<<<<<<< HEAD
   border: 1px solid #ccc;
   outline: none;
   width: 200px;
-=======
-  border: 1px solid #ccd6e3;
-  outline: none;
-  width: 220px;
-  background: #fff;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .trip-table {
   width: 100%;
-<<<<<<< HEAD
   border-collapse: collapse;
 }
 
@@ -334,19 +198,6 @@ html, body, #root {
   text-align: left;
   padding: 10px;
   font-size: 14px;
-=======
-  min-width: 720px;  /* helps keep columns readable on small screens */
-  border-collapse: collapse;
-}
-
-.trip-table th,
-.trip-table td {
-  border-bottom: 1px solid #edf0f4;
-  text-align: left;
-  padding: 10px 12px;
-  font-size: 14px;
-  white-space: nowrap;   /* compact columns; remove if you want wrapping */
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
 }
 
 .trip-table th {
@@ -355,23 +206,6 @@ html, body, #root {
 }
 
 .trip-table tr:hover {
-<<<<<<< HEAD
   background-color: #f9f9f9;
 }
 
-=======
-  background-color: #fafcff;
-}
-
-/* ===== Optional: nicer scrollbars (WebKit) ===== */
-.scrollable::-webkit-scrollbar,
-.trip-table-container::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
-}
-.scrollable::-webkit-scrollbar-thumb,
-.trip-table-container::-webkit-scrollbar-thumb {
-  background: #c9d4e3;
-  border-radius: 8px;
-}
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
