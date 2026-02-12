@@ -1,4 +1,4 @@
-﻿const express = require('express');
+﻿import express from "express";
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -9,4 +9,4 @@ router.post('/', (req, res) => {
   res.json({ success: true, message: 'Create user', data: req.body });
 });
 
-module.exports = router;
+export default router;

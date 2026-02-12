@@ -15,7 +15,11 @@ import "./pages/Pages.css"
 import "./pages/Maintenance.css"
 import { MaintenanceProvider } from "./context/MaintenanceContext.jsx";
 
-createRoot(document.getElementById('root')).render(
+import "./pages/NotificationManagement.css";
+import "./pages/NotificationCenter.css";
+import "./pages/NotificationStaff.css";
+
+createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
     
