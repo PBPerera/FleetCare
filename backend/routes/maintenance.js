@@ -1,8 +1,14 @@
-<<<<<<< HEAD
-const express = require('express');
+import express from 'express';
+import {
+  getDashboardStats,
+  searchMaintenance,
+  getMaintenanceHistory
+} from '../controllers/maintenanceController.js';
+
+
 const router = express.Router();
-const Maintenance = require('../models/Maintenance');
-const auth = require('../middleware/auth');
+import Maintenance from '../models/Maintenance.js';
+import auth from '../middleware/authMiddleware.js';
 
 // GET /api/maintenance
 router.get('/', auth, async (req, res) => {
@@ -27,20 +33,9 @@ router.delete('/:id', auth, async (req, res) => {
   res.json({ message: 'deleted' });
 });
 
-module.exports = router;
-=======
-import express from 'express';
-import {
-  getDashboardStats,
-  searchMaintenance,
-  getMaintenanceHistory
-} from '../controllers/maintenanceController.js';
-
-const router = express.Router();
 
 router.get('/dashboard/stats', getDashboardStats);
 router.get('/search', searchMaintenance);
 router.get('/history/:vehicleId', getMaintenanceHistory);
 
 export default router;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

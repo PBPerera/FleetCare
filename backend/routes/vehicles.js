@@ -1,8 +1,10 @@
-<<<<<<< HEAD
-const express = require('express');
+
+import {createVehicle,getVehicles,getVehicleById,updateVehicle,deleteVehicle} from "../controllers/vehicleController.js";
+
+import express from "express";
 const router = express.Router();
-const Vehicle = require('../models/Vehicle');
-const auth = require('../middleware/auth');
+import Vehicle from '../models/Vehicle.js';
+import auth from "../middleware/authMiddleware.js";
 
 // GET /api/vehicles
 router.get('/', auth, async (req, res) => {
@@ -30,13 +32,9 @@ router.delete('/:id', auth, async (req, res) => {
   res.json({ message: 'deleted' });
 });
 
-module.exports = router;
-=======
-﻿import { Router } from "express";
-import {createVehicle,getVehicles,getVehicleById,updateVehicle,deleteVehicle} from "../controllers/vehicleController.js";
 
 
-const router = Router();
+
 
 router.get("/",getVehicles);
 router.get("/:vehicle_id", getVehicleById);
@@ -45,4 +43,4 @@ router.put("/:vehicle_id", updateVehicle);
 router.delete("/:vehicle_id", deleteVehicle);
 
 export default router;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852
+

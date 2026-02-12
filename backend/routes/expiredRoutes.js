@@ -1,12 +1,12 @@
-const express = require("express");
+import express from 'express';
 const router = express.Router();
 
-const {
+import {
   getExpiredVehicleInsurance,
   getExpiredDriverLicenses,
-} = require("../controllers/expiredController");
+} from "../controllers/expiredController.js";
 
 router.get("/expired-vehicles-insurance", getExpiredVehicleInsurance);
 router.get("/expired-driver-licenses", getExpiredDriverLicenses);
 
-module.exports = router;
+export default router;

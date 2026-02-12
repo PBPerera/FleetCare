@@ -1,12 +1,12 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-const {
+import {
   getTripSchedule,
   getMaintenanceAlerts,
   getExpiredInsurance,
   getExpiredLicenses,
-} = require("../controllers/notificationManagementController");
+} from "../controllers/notificationManagementController.js";
 
 // Trip Schedule
 router.get("/trips", getTripSchedule);

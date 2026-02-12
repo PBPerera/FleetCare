@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const Trip = require("../models/Trip");  // <-- use existing model
+import Trip from "../models/Trip.js";  // <-- use existing model
 
 // GET all trips for Notification Management
 router.get("/", async (req, res) => {
@@ -12,4 +12,4 @@ router.get("/", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

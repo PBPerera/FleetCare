@@ -1,7 +1,7 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Driver = require('../models/Driver');
-const auth = require('../middleware/auth');
+import Driver from '../models/Driver.js';
+import auth from '../middleware/authMiddleware.js';
 
 // GET /api/drivers
 router.get('/', auth, async (req, res) => {
@@ -26,4 +26,4 @@ router.delete('/:id', auth, async (req, res) => {
   res.json({ message: 'deleted' });
 });
 
-module.exports = router;
+export default router;

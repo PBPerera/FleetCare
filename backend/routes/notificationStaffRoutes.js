@@ -1,12 +1,12 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-const {
+import {
   getStaffNotifications,
   markAsRead,
-} = require("../controllers/notificationStaffController");
+} from "../controllers/notificationStaffController.js";
 
 router.get("/staff/:userId", getStaffNotifications);
 router.put("/read/:id", markAsRead);
 
-module.exports = router;
+export default router;

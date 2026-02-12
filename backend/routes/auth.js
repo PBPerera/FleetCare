@@ -1,8 +1,10 @@
-<<<<<<< HEAD
-const express = require('express');
+import { Router } from "express";
+import {registerUser,loginUser} from "../controllers/authController.js"
+
+import express from "express";
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
@@ -44,15 +46,12 @@ router.post('/login', async (req, res) => {
   }
 });
 
-module.exports = router;
-=======
-import { Router } from "express";
-import {registerUser,loginUser} from "../controllers/authController.js"
-const router = Router();
+
+
+
 
 router.post('/register',registerUser);
 
 router.post('/login',loginUser )
 
 export default router;
->>>>>>> 5b84578c8ca635edd4e638b2fb695f4a3e73f852

@@ -1,8 +1,8 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const auth = require("../middleware/auth");
-const { sendWhatsAppMessage } = require("../controllers/notifyController");
+import auth from "../middleware/authMiddleware.js";
+import { sendWhatsAppMessage } from "../controllers/notifyController.js";
 
 router.post("/send", auth, sendWhatsAppMessage);
 
-module.exports = router;
+export default router;

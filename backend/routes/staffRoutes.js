@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const StaffNotification = require("../models/StaffNotification");
+import StaffNotification from "../models/StaffNotification.js";
 
 // Get all notifications
 router.get("/", async (req, res) => {
@@ -14,4 +14,4 @@ router.put("/:id/read", async (req, res) => {
     res.json({ message: "Marked as read" });
 });
 
-module.exports = router;
+export default router;
