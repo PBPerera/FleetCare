@@ -248,16 +248,16 @@ export default function VehicleRequest() {
         </header>
 
         {/* Content area */}
-        <div className="ad-content">
+        <div className="vr-ad-content">
           {/* <section className="sd-page-title">
             <h1>Vehicle Requests</h1>
           </section> */}
 
-          <section className="request-form-container">
-            <div className="section-title">Trip Date & Time</div>
+          <section className="vr-request-form-container">
+            <div className="vr-section-title">Trip Date & Time</div>
 
-            <div className="form-row">
-              <div className="form-group" style={{ maxWidth: 200 }}>
+            <div className="vr-form-row">
+              <div className="vr-form-group" style={{ maxWidth: 200 }}>
                 <input
                   type="date"
                   name="tripDate"
@@ -266,7 +266,7 @@ export default function VehicleRequest() {
                   placeholder="mm/dd/yyyy"
                 />
               </div>
-              <div className="form-group" style={{ maxWidth: 140 }}>
+              <div className="vr-form-group" style={{ maxWidth: 140 }}>
                 <input
                   type="time"
                   name="tripTime"
@@ -277,17 +277,17 @@ export default function VehicleRequest() {
               </div>
               <button
                 type="button"
-                className="search-btn"
+                className="vr-search-btn"
                 onClick={() => setShowAvailables(true)}
                 title="Search Availables"
               >
-                <FaSearch className="search-icon" aria-hidden="true" />
+                <FaSearch className="vr-search-icon" aria-hidden="true" />
                 Search Availables
               </button>
             </div>
 
-            <div className="form-row wide-gap">
-              <div className="form-group">
+            <div className="vr-form-row wide-gap">
+              <div className="vr-form-group">
                 <label>Driver Contact</label>
                 <input
                   type="text"
@@ -297,7 +297,7 @@ export default function VehicleRequest() {
                   placeholder="Driver Contact"
                 />
               </div>
-              <div className="form-group">
+              <div className="vr-form-group">
                 <label>Pickup & Destination</label>
                 <input
                   type="text"
@@ -309,8 +309,8 @@ export default function VehicleRequest() {
               </div>
             </div>
 
-            <div className="form-row wide-gap">
-              <div className="form-group">
+            <div className="vr-form-row wide-gap">
+              <div className="vr-form-group">
                 <label>Vehicle ID</label>
                 <input
                   type="text"
@@ -320,7 +320,7 @@ export default function VehicleRequest() {
                   placeholder="Vehicle ID"
                 />
               </div>
-              <div className="form-group">
+              <div className="vr-form-group">
                 <label>Driver Name</label>
                 <input
                   type="text"
@@ -332,7 +332,7 @@ export default function VehicleRequest() {
               </div>
             </div>
 
-            <div className="form-group">
+            <div className="vr-form-group">
               <label>Purpose</label>
               <textarea
                 name="purpose"
@@ -342,10 +342,10 @@ export default function VehicleRequest() {
               />
             </div>
 
-            <div className="form-row">
-              <div className="form-group" style={{ maxWidth: 200 }}>
+            <div className="vr-form-row">
+              <div className="vr-form-group" style={{ maxWidth: 200 }}>
                 <label>Vehicle Type</label>
-                <div className="select-wrapper">
+                <div className="vr-select-wrapper">
                   <select
                     name="vehicleType"
                     value={formData.vehicleType}
@@ -356,10 +356,10 @@ export default function VehicleRequest() {
                     <option>Bus</option>
                     <option>SUV</option>
                   </select>
-                  <span className="arrow-down">▾</span>
+                  <span className="vr-arrow-down">▾</span>
                 </div>
               </div>
-              <div className="form-group" style={{ maxWidth: 200 }}>
+              <div className="vr-form-group" style={{ maxWidth: 200 }}>
                 <label>Number of Passengers</label>
                 <input
                   type="number"
@@ -388,9 +388,9 @@ export default function VehicleRequest() {
               </div>
             )}
 
-            <div className="form-actions">
+            <div className="vr-form-actions">
               <button
-                className="submit-btn"
+                className="vr-submit-btn"
                 type="button"
                 onClick={saveVehicleRequest}
                 disabled={loading}
@@ -398,7 +398,7 @@ export default function VehicleRequest() {
                 {loading ? "Submitting..." : "Submit Request"}
               </button>
               <button
-                className="cancel-btn"
+                className="vr-cancel-btn"
                 type="button"
                 onClick={handleCancel}
                 disabled={loading}
@@ -410,38 +410,38 @@ export default function VehicleRequest() {
 
           {/* Right: Availables - appears only after search */}
           {showAvailables && (
-            <section className="availables-container">
-              <div className="tabs-section">
-                <div className="tabs-header">
+            <section className="vr-availables-container">
+              <div className="vr-tabs-section">
+                <div className="vr-tabs-header">
                   <h3>Availables</h3>
-                  <FaBars className="menu-icon" aria-hidden="true" />
+                  <FaBars className="vr-menu-icon" aria-hidden="true" />
                 </div>
-                <div className="tabs-list">
+                <div className="vr-tabs-list">
                   <div
-                    className={`tab-item ${activeTab === "drivers" ? "active" : ""}`}
+                    className={`vr-tab-item ${activeTab === "drivers" ? "active" : ""}`}
                     onClick={() => setActiveTab("drivers")}
                   >
-                    <FaUser className="tab-icon" aria-hidden="true" />
+                    <FaUser className="vr-tab-icon" aria-hidden="true" />
                     <font color="black">Drivers</font>
                   </div>
                   <div
-                    className={`tab-item ${activeTab === "vehicles" ? "active" : ""}`}
+                    className={`vr-tab-item ${activeTab === "vehicles" ? "active" : ""}`}
                     onClick={() => setActiveTab("vehicles")}
                   >
-                    <FaCar className="tab-icon" aria-hidden="true" />
+                    <FaCar className="vr-tab-icon" aria-hidden="true" />
                     <font color="black">Vehicles</font>
                   </div>
                 </div>
               </div>
 
-              <div className="content-section">
+              <div className="vr-content-section">
                 {activeTab === "drivers" && (
                   <>
-                    <div className="content-title">Drivers</div>
-                    <div className="content-subtitle">Driver Name</div>
-                    <div className="items-list">
+                    <div className="vr-content-title">Drivers</div>
+                    <div className="vr-content-subtitle">Driver Name</div>
+                    <div className="vr-items-list">
                       {driverNames.map((name) => (
-                        <div className="list-item" key={name}>
+                        <div className="vr-list-item" key={name}>
                           {name}
                         </div>
                       ))}
@@ -451,11 +451,11 @@ export default function VehicleRequest() {
 
                 {activeTab === "vehicles" && (
                   <>
-                    <div className="content-title">Vehicles</div>
-                    <div className="content-subtitle">Vehicle ID</div>
-                    <div className="items-list">
+                    <div className="vr-content-title">Vehicles</div>
+                    <div className="vr-content-subtitle">Vehicle ID</div>
+                    <div className="vr-items-list">
                       {vehicleIds.map((id) => (
-                        <div className="list-item" key={id}>
+                        <div className="vr-list-item" key={id}>
                           {id}
                         </div>
                       ))}
