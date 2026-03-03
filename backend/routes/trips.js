@@ -1,12 +1,20 @@
-﻿const express = require('express');
-const router = express.Router();
+﻿import { Router } from "express";
+import {
+  createTripFromApproval,
+  getAllTrips,
+  getTripByRequestId,
+  getApprovedTrips,
+  getRejectedTrips,
+  deleteTrip,
+} from "../controllers/tripController.js";
 
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'Trips endpoint', data: [] });
-});
+const router = Router();
 
-router.post('/', (req, res) => {
-  res.json({ success: true, message: 'Create trip', data: req.body });
-});
+router.get("/", getAllTrips);
+router.get("/approved", getApprovedTrips);
+router.get("/rejected", getRejectedTrips);
+router.get("/request/:requestId", getTripByRequestId);
+router.post("/", createTripFromApproval);
+router.delete("/:id", deleteTrip);
 
-module.exports = router;
+export default router;

@@ -16,6 +16,7 @@ import serviceRoutes from "./routes/services.js";
 import repairRoutes from "./routes/repairs.js";
 import auditRoutes from "./routes/audit.js";
 import vehicleRequestRoutes from "./routes/vehicleRequest.js";
+import tripRoutes from "./routes/trips.js";
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use("/api/repairs", repairRoutes);
 
 app.use("/api/audit", auditRoutes);
 app.use("/api/vehicleRequests", vehicleRequestRoutes);
+app.use("/api/trips", tripRoutes);
 
 //Health endpoints
 app.get("/api/health", (req, res) => {

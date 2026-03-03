@@ -117,7 +117,7 @@
 
 // export default TripAllocation;
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import Sidebar from "../../components/Sidebar";
 import { Search } from "lucide-react";
 import {
@@ -130,253 +130,47 @@ import * as XLSX from "xlsx";
 import "./TripAllocation.css";
 
 export default function TripAllocation() {
-  const tripRequests = [
-    {
-      requestId: "R0001",
-      vehicleId: "WWA-2258",
-      driverName: "Kumara Silva",
-      contact: "07046589",
-      pickup: "Panadura Hospital",
-      destination: "Colombo Hospital",
-      tripDate: "2025-09-25",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: 3,
-      status: (
-        <>
-          <button className="Approved-btn">Approved</button>
-        </>
-      ),
-    },
-    // Sample rows
-    {
-      requestId: "R0002",
-      vehicleId: "AAA-1234",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Approved-btn">Approved</button>
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Rejected-btn">Rejected</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Approved-btn">Approved</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Rejected-btn">Rejected</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Rejected-btn">Rejected</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Approved-btn">Approved</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Rejected-btn">Rejected</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Approved-btn">Approved</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Approved-btn">Approved</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Rejected-btn">Rejected</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Approved-btn">Approved</button>{" "}
-        </>
-      ),
-    },
-    {
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Name",
-      contact: "Number",
-      pickup: "Location",
-      destination: "Location",
-      tripDate: "Date",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: "3",
-      status: (
-        <>
-          <button className="Approved-btn">Approved</button>{" "}
-        </>
-      ),
-    },
-  ];
-
   const tableRef = useRef(null);
   // sidebar/header state
   const [collapsed, setCollapsed] = useState(false);
   const [q, setQ] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [trips, setTrips] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  // Filter trips based on vehicle ID search
-  const filteredTrips = tripRequests.filter((trip) =>
-    trip.vehicleId.toLowerCase().includes(q.toLowerCase())
-  );
+  // Fetch trips on mount
+  useEffect(() => {
+    const fetchTrips = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch("http://localhost:5000/api/trips");
+        const data = await response.json();
+        if (data.data) {
+          setTrips(data.data);
+        }
+      } catch (err) {
+        setError("Failed to fetch trip allocations");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTrips();
+  }, []);
+
+  // Filter trips based on vehicle ID search and status
+  const filteredTrips = useMemo(() => {
+    return trips.filter((trip) => {
+      const matchesVehicleId = trip.vehicleId
+        .toLowerCase()
+        .includes(q.toLowerCase());
+      const matchesStatus =
+        statusFilter === "All" ? true : trip.status === statusFilter;
+      return matchesVehicleId && matchesStatus;
+    });
+  }, [q, statusFilter, trips]);
 
   const exportToPDF = () => {
     if (filteredTrips.length === 0) {
@@ -389,15 +183,14 @@ export default function TripAllocation() {
       "Request ID": trip.requestId,
       "Vehicle ID": trip.vehicleId,
       "Driver Name": trip.driverName,
-      "Driver Contact Number": trip.contact,
-      "Pickup": trip.pickup,
-      "Destination": trip.destination,
-      "Trip Date": trip.tripDate,
+      "Driver Contact Number": trip.driverContact,
+      "Pickup & Destination": trip.pickupDestination,
+      "Trip Date": new Date(trip.tripDate).toISOString().split("T")[0],
       "Trip Time": trip.tripTime,
       "Purpose": trip.purpose,
       "Vehicle Type": trip.vehicleType,
       "No. of Passengers": trip.noOfPassengers,
-      "Status": trip.status ? "Approved" : "Rejected",
+      Status: trip.status,
     }));
 
     // Create workbook and worksheet
@@ -411,8 +204,7 @@ export default function TripAllocation() {
       { wch: 12 },
       { wch: 15 },
       { wch: 18 },
-      { wch: 15 },
-      { wch: 15 },
+      { wch: 25 },
       { wch: 12 },
       { wch: 12 },
       { wch: 15 },
@@ -425,6 +217,10 @@ export default function TripAllocation() {
     // Export Excel file
     const timestamp = new Date().toISOString().split("T")[0];
     XLSX.writeFile(workbook, `Trip_Allocation_${timestamp}.xlsx`);
+  };
+
+  const getStatusBadgeClass = (status) => {
+    return status === "Approved" ? "Approved-btn" : "Rejected-btn";
   };
 
   return (
@@ -469,22 +265,26 @@ export default function TripAllocation() {
 
             <div className="ta-select">
               <label>Status</label>
-              <select>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
                 <option>All</option>
-                <option>Admin</option>
-                <option>Staff</option>
+                <option>Approved</option>
+                <option>Rejected</option>
               </select>
             </div>
           </div>
 
+          {/* Loading/Error Messages */}
+          {loading && <div className="info-message">Loading trip allocations...</div>}
+          {error && <div className="error-message">{error}</div>}
+
           {/* Table */}
           <section className="ta-table-container">
-            <h3 className="ta-title">Trip Allocation</h3>
+            <h3 className="ta-title">Trip Allocation - Approved or Rejected</h3>
             <div className="table-header">
-              <button
-                className="custom-btn btn-primary"
-                onClick={exportToPDF}
-              >
+              <button className="custom-btn btn-primary" onClick={exportToPDF}>
                 📄 Export Excel
               </button>
             </div>
@@ -513,26 +313,36 @@ export default function TripAllocation() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredTrips.map((trip, index) => (
-                    <tr key={index}>
-                      <td>{trip.requestId}</td>
-                      <td>{trip.vehicleId}</td>
-                      <td>{trip.driverName}</td>
-                      <td>{trip.contact}</td>
-                      <td>
-                        {trip.pickup} to {trip.destination}
+                  {filteredTrips.length > 0 ? (
+                    filteredTrips.map((trip, index) => (
+                      <tr key={index}>
+                        <td>{trip.requestId}</td>
+                        <td>{trip.vehicleId}</td>
+                        <td>{trip.driverName}</td>
+                        <td>{trip.driverContact}</td>
+                        <td>{trip.pickupDestination}</td>
+                        <td>
+                          <FaCalendarAlt className="calendar-icon" />{" "}
+                          {new Date(trip.tripDate).toISOString().split("T")[0]}
+                        </td>
+                        <td>{trip.tripTime}</td>
+                        <td>{trip.purpose}</td>
+                        <td>{trip.vehicleType}</td>
+                        <td>{trip.noOfPassengers}</td>
+                        <td>
+                          <button className={getStatusBadgeClass(trip.status)}>
+                            {trip.status}
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="11" style={{ textAlign: "center" }}>
+                        No trip allocations found
                       </td>
-                      <td>
-                        <FaCalendarAlt className="calendar-icon" />{" "}
-                        {trip.tripDate}
-                      </td>
-                      <td>{trip.tripTime}</td>
-                      <td>{trip.purpose}</td>
-                      <td>{trip.vehicleType}</td>
-                      <td>{trip.noOfPassengers}</td>
-                      <td>{trip.status}</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
