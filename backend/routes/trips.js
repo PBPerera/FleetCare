@@ -1,6 +1,13 @@
 import express from "express";
 const router = express.Router();
-
+import {
+  createTripFromApproval,
+  getAllTrips,
+  getTripByRequestId,
+  getApprovedTrips,
+  getRejectedTrips,
+  deleteTrip,
+} from "../controllers/tripController.js";
 
 import Trip from '../models/Trip.js';
 import auth from '../middleware/authMiddleware.js';
@@ -34,8 +41,11 @@ router.get('/', (req, res) => {
   res.json({ success: true, message: 'Trips endpoint', data: [] });
 });
 
-router.post('/', (req, res) => {
-  res.json({ success: true, message: 'Create trip', data: req.body });
-});
+router.get("/", getAllTrips);
+router.get("/approved", getApprovedTrips);
+router.get("/rejected", getRejectedTrips);
+router.get("/request/:requestId", getTripByRequestId);
+router.post("/", createTripFromApproval);
+router.delete("/:id", deleteTrip);
 
 export default router;
