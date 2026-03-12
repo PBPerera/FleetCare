@@ -1,28 +1,24 @@
-/* ===== Base / Page sizing ===== */
 html, body, #root {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   font-family: "Poppins", sans-serif;
-  /* IMPORTANT: allow the page to scroll; don't lock the viewport */
-  overflow: visible;
+  overflow: hidden;
 }
 
-/* App frame: sidebar + main */
 .app-wrapper {
   position: relative;
-  min-height: 100vh;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  overflow: hidden; /* contain children edges */
 }
 
 .app-container {
   display: flex;
   height: 100%;
   width: 100%;
-  transition: filter 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .blurred {
@@ -31,14 +27,13 @@ html, body, #root {
   user-select: none;
 }
 
-/* ===== Sidebar ===== */
 .sidebar {
-  flex: 0 0 90px; /* fixed width */
+  width: 90px;
   background: linear-gradient(#48aaff, #ffffff);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  padding: 20px 16px;
+  justify-content: center;
+  padding: 20px;
   box-sizing: border-box;
   border-right: 1px solid #cddfff;
 }
@@ -46,70 +41,65 @@ html, body, #root {
 .logo-icon {
   color: #4c95ff;
   font-size: 30px;
-  margin: 4px auto 18px;
+  margin-bottom: 20px;
+  margin-left: 9px;
 }
 
 .menu {
   list-style: none;
   padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 8px;
+  margin-top: 0px;
+  flex: 1;
 }
 
 .menu li {
   display: flex;
   align-items: center;
-  justify-content: center;   /* icons centered in narrow bar */
   gap: 10px;
   color: #333;
-  padding: 10px 12px;
+  padding: 10px 15px;
   border-radius: 10px;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.3s;
   font-weight: 500;
 }
 
 .menu li:hover,
 .menu li.active {
   background: #4c95ff;
-  color: #fff;
+  color: white;
 }
 
 .logout {
-  margin-top: auto;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
-  color: #000;
+  color: black;
   font-weight: 500;
   cursor: pointer;
+  margin-top: auto;
 }
 
-/* ===== Main area ===== */
+/* Main Area */
 .main-content {
-  flex: 1 1 auto;
-  min-width: 0;                    /* prevent overflow from long content */
+  flex: 1;
   display: flex;
   flex-direction: column;
   background-color: #f5f8ff;
+  overflow: auto;
   position: relative;
 }
 
-/* Make the inner area the scroll container */
-.scrollable {
-  flex: 1 1 auto;
-  overflow-y: auto;                /* <-- vertical scrolling */
-  overflow-x: hidden;
-  height: auto;                    /* let flex compute the height */
-}
-
 .text {
-  margin-left: 20px;
+    margin-left: 20px;
+   
 }
 
-/* ===== Sticky header ===== */
+.scrollable {
+  overflow-y: auto;
+  height: 100vh;
+}
+
 .header {
   background: #4c95ff;
   color: white;
@@ -120,15 +110,14 @@ html, body, #root {
   font-weight: 600;
   position: sticky;
   top: 0;
-  z-index: 20;
-  border-bottom: 1px solid #cfe3ff;
+  z-index: 10;
 }
 
 .header-left {
   display: flex;
-  align-items: center;
+  align-items: center;   
   gap: 10px;
-  color: #111;
+  color: black;
   font-weight: 600;
   font-size: 15px;
 }
@@ -138,7 +127,7 @@ html, body, #root {
   cursor: pointer;
 }
 
-/* ===== User menu ===== */
+/* User menu */
 .user-menu {
   position: absolute;
   top: 60px;
@@ -165,7 +154,7 @@ html, body, #root {
   background-color: #f2f2f2;
 }
 
-/* ===== Page sections & tables ===== */
+/* Trip tables */
 .trip-section {
   padding: 20px;
   display: flex;
@@ -173,14 +162,11 @@ html, body, #root {
   gap: 40px;
 }
 
-/* Box that can scroll horizontally if table is wide */
 .trip-table-container {
-  background: #fff;
+  background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  border: 1px solid #eef2f7;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   padding: 20px;
-  overflow-x: auto;  /* <-- sideways scroll for wide tables */
 }
 
 .trip-header {
@@ -192,31 +178,26 @@ html, body, #root {
 
 .trip-header h3 {
   color: #333;
-  margin: 0;
 }
 
 .search-bar input {
   padding: 8px 12px;
   border-radius: 20px;
-  border: 1px solid #ccd6e3;
+  border: 1px solid #ccc;
   outline: none;
-  width: 220px;
-  background: #fff;
+  width: 200px;
 }
 
 .trip-table {
   width: 100%;
-  min-width: 720px;  /* helps keep columns readable on small screens */
   border-collapse: collapse;
 }
 
-.trip-table th,
-.trip-table td {
-  border-bottom: 1px solid #edf0f4;
+.trip-table th, .trip-table td {
+  border-bottom: 1px solid #ddd;
   text-align: left;
-  padding: 10px 12px;
+  padding: 10px;
   font-size: 14px;
-  white-space: nowrap;   /* compact columns; remove if you want wrapping */
 }
 
 .trip-table th {
@@ -225,17 +206,6 @@ html, body, #root {
 }
 
 .trip-table tr:hover {
-  background-color: #fafcff;
+  background-color: #f9f9f9;
 }
 
-/* ===== Optional: nicer scrollbars (WebKit) ===== */
-.scrollable::-webkit-scrollbar,
-.trip-table-container::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
-}
-.scrollable::-webkit-scrollbar-thumb,
-.trip-table-container::-webkit-scrollbar-thumb {
-  background: #c9d4e3;
-  border-radius: 8px;
-}
