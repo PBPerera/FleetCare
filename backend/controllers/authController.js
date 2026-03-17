@@ -1,6 +1,19 @@
 import RegUser from "../models/RegUser.js";
+import LoginLog from "../models/LoginLog.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
+export async function getLoginLogs(req, res) {
+  try {
+    const logs = await LoginLog.find().sort({ loginTime: -1 });
+    res.status(200).json({
+      success: true,
+      data: logs
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 export async function registerUser(req, res) {
   try {
     const hashedPassword = await bcrypt.hash(req.body.Password, 10);
@@ -30,6 +43,14 @@ export async function loginUser(req, res) {
     
     const isValid = await bcrypt.compare(Password, user.Password);
     if (!isValid) return res.status(401).json({ error: "Invalid credentials" });
+    
+    // Log the login
+    await LoginLog.create({
+      username: user.UserName,
+      fullName: user.FullName,
+      designation: user.Designation,
+      loginTime: new Date()
+    });
     
     const token = jwt.sign(
       { userId: user._id, userName: user.UserName, role: user.Role },
