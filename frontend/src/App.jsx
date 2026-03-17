@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { MaintenanceProvider } from "./context/MaintenanceContext";
