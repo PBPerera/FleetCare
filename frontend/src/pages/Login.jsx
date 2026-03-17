@@ -34,7 +34,14 @@ export default function Login() {
       
       if (response.ok) {
         document.cookie = `token=${data.token}; path=/; max-age=86400; secure; samesite=strict`;
-        navigate("/admindashboard");
+        const role = data.user.role;
+        if (role === 'Admin') {
+          navigate("/admindashboard");
+        } else if (role === 'Staff') {
+          navigate("/staff/dashboard");
+        } else {
+          navigate("/admindashboard"); // fallback
+        }
       } else {
         alert(data.message || 'Login failed');
       }
