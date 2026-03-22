@@ -66,6 +66,7 @@ export default function VehicleRequest() {
       try {
         const response = await fetch("http://localhost:5000/api/driver");
         const data = await response.json();
+        console.log("Drivers : "+data);
         const availableDrivers = data.Drivers.filter(
           (driver) => driver.status === "Available",
         );
@@ -80,24 +81,23 @@ export default function VehicleRequest() {
   const [vehicleIds, setVehicleIds] = useState([]);
 
   useEffect(() => {
-    const fetchVehicles = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/api/vehicle");
-        const data = await response.json();
-        console.log("Fetched vehicles:", data);
-        setVehicleIds(
-          data.vehicles
-            .filter((vehicle) => vehicle.status === "Available")
-            .map((vehicle) => vehicle.vehicleId),
-        );
-        console.log("Available vehicle IDs:", vehicleIds);
-      } catch (error) {
-        console.error("Error fetching vehicles:", error);
-      }
-    };
+  const fetchVehicles = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/vehicle");
+      const data = await response.json();
 
-    fetchVehicles();
-  }, []);
+      const availableIds = data.vehicles
+        .filter((vehicle) => vehicle.status === "Available")
+        .map((vehicle) => vehicle.vehicle_id);
+
+      setVehicleIds(availableIds);
+    } catch (error) {
+      console.error("Error fetching vehicles:", error);
+    }
+  };
+
+  fetchVehicles();
+}, []);
 
   const [q, setQ] = useState("");
 
