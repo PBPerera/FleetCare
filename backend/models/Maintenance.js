@@ -23,3 +23,4 @@ const MaintenanceSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Maintenance", MaintenanceSchema);
+export default Maintenance;

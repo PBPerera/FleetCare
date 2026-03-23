@@ -15,10 +15,53 @@
 //   }
 // }
 
+// import jwt from "jsonwebtoken";
+
+// const secret = process.env.JWT_SECRET || "dev_secret";
+
+// export const required = (req, res, next) => {
+//   const token =
+//     req.headers.authorization &&
+//     req.headers.authorization.split(" ")[1];
+
+//   if (!token) {
+//     return res.status(401).json({ message: "No token" });
+//   }
+
+//   try {
+//     const payload = jwt.verify(token, secret);
+//     req.user = payload;
+//     next();
+//   } catch (err) {
+//     console.error("JWT error", err);
+//     return res.status(401).json({ message: "Invalid token" });
+//   }
+// };
+
+// export const optional = (req, res, next) => {
+//   const authHeader = req.headers.authorization;
+
+//   if (!authHeader) return next();
+
+//   const token = authHeader.split(" ")[1];
+
+//   try {
+//     req.user = jwt.verify(token, secret);
+//   } catch (err) {
+//     // ignore error
+//   }
+
+//   next();
+// };
+
+
+
+// backend/middleware/authMiddleware.js
 import jwt from "jsonwebtoken";
 
 const secret = process.env.JWT_SECRET || "dev_secret";
 
+// Middleware to require a valid token
 export const required = (req, res, next) => {
   const token =
     req.headers.authorization &&
@@ -38,9 +81,9 @@ export const required = (req, res, next) => {
   }
 };
 
+// Middleware to optionally use a token if present
 export const optional = (req, res, next) => {
   const authHeader = req.headers.authorization;
-
   if (!authHeader) return next();
 
   const token = authHeader.split(" ")[1];
@@ -48,7 +91,7 @@ export const optional = (req, res, next) => {
   try {
     req.user = jwt.verify(token, secret);
   } catch (err) {
-    // ignore error
+    // ignore invalid token
   }
 
   next();

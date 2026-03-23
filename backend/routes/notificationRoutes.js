@@ -18,7 +18,7 @@ import express from "express";
 const router = express.Router();
 import controller from "../controllers/notificationController.js";
 
-router.get("/", controller.getAll);
+router.get("/", controller.getAllNotifications);
 router.get("/:id", controller.getById);
 router.post("/", controller.create);
 router.put("/:id", controller.update);
@@ -57,4 +57,4 @@ router.post("/send", (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;
