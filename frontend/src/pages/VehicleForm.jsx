@@ -42,19 +42,25 @@ export default function VehicleForm({ onSubmit }) {
     e.preventDefault();
 
     try {
+      // Auto-generate vehicle_id if not provided or invalid
+      let vehicleId = parseInt(vehicleData.vehicleId);
+      if (isNaN(vehicleId) || !vehicleId) {
+        vehicleId = parseInt(Date.now().toString().slice(-6)) + Math.floor(Math.random() * 1000);
+      }
+
       const payload = {
-        vehicle_id: parseInt(vehicleData.vehicleId),
+        vehicle_id: vehicleId,
         type: vehicleData.vehicleType,
-        fuel_average: 0,
-        capacity: 0,
+        fuel_average: 15,
+        capacity: 5,
         chassis_no: vehicleData.chassisNo,
         engine_no: vehicleData.engineNo,
         battery_serial: vehicleData.batteryNo,
-        insurance_expiry: vehicleData.insuranceExpiryDate,
+        insurance_expiry: new Date(vehicleData.insuranceExpiryDate).toISOString(),
         wheel_serial: vehicleData.wheelSerialNo,
         wheel_size: vehicleData.wheelSize,
-        register_date: vehicleData.vehicleRegisterDate,
-        insurance_renewal_date: vehicleData.insuranceRenewalDate,
+        register_date: new Date(vehicleData.vehicleRegisterDate).toISOString(),
+        insurance_renewal_date: new Date(vehicleData.insuranceRenewalDate).toISOString(),
         status: "Active"
       };
 
@@ -66,8 +72,10 @@ export default function VehicleForm({ onSubmit }) {
         body: JSON.stringify(payload),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(result.error || result.msg || `HTTP error! status: ${response.status}`);
       }
 
       alert("Vehicle added successfully!");
@@ -84,6 +92,7 @@ export default function VehicleForm({ onSubmit }) {
         insuranceRenewalDate: "",
       });
     } catch (error) {
+      console.error("Error details:", error);
       alert("Error adding vehicle: " + error.message);
     }
   };
@@ -130,14 +139,14 @@ export default function VehicleForm({ onSubmit }) {
             <form className="vehicle-form" onSubmit={handleSubmit}>
               {/* Vehicle ID */}
               <div className="form-group full-width">
-                <label>Vehicle ID</label>
+                <label>Vehicle ID (Optional - auto-generated if empty)</label>
                 <input
                   type="text"
                   name="vehicleId"
                   className="input-field-vehicleID"
                   value={vehicleData.vehicleId}
                   onChange={handleChange}
-                  required
+                  placeholder="Leave empty for auto-generation"
                   style={{
                     height: "40px",
                     width: "745px",

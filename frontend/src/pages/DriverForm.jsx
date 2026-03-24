@@ -44,17 +44,17 @@ export default function DriverForm({ onSubmit }) {
 
     try {
       const payload = {
-        driver_id: parseInt(Date.now().toString().slice(-6)),
+        driver_id: parseInt(Date.now().toString().slice(-6)) + Math.floor(Math.random() * 1000),
         nic_no: driverData.nicNo,
         name: driverData.fullName,
         address: driverData.address,
         email: driverData.emailAddress,
         phone_no: driverData.phoneNumber,
         licenseNo: driverData.licenseNo,
-        registerDate: new Date().toISOString().split('T')[0],
-        licenseRenewalDate: driverData.licenseRenewalDate,
-        licenseExpiryDate: driverData.licenseExpiryDate,
-        healthAssessment: driverData.healthAssessment,
+        registerDate: new Date().toISOString(),
+        licenseRenewalDate: new Date(driverData.licenseRenewalDate).toISOString(),
+        licenseExpiryDate: new Date(driverData.licenseExpiryDate).toISOString(),
+        healthAssessment: driverData.healthAssessment || "Pending",
         status: "Active"
       };
 
@@ -64,8 +64,10 @@ export default function DriverForm({ onSubmit }) {
         body: JSON.stringify(payload),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(result.error || result.msg || `HTTP error! status: ${response.status}`);
       }
 
       alert("Driver added successfully!");
@@ -81,6 +83,7 @@ export default function DriverForm({ onSubmit }) {
         healthAssessment: "",
       });
     } catch (error) {
+      console.error("Error details:", error);
       alert("Error adding driver: " + error.message);
     }
   };
@@ -303,6 +306,8 @@ export default function DriverForm({ onSubmit }) {
                   className="input-field-d"
                   value={driverData.healthAssessment}
                   onChange={handleChange}
+                  required
+                  placeholder="e.g., Fit, Pending, Medical Review"
                   style={{
                     height: "40px",
                     width: "745px",
