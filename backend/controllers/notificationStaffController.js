@@ -1,9 +1,9 @@
-const Notification = require("../models/Notification");
+import Notification from "../models/Notification.js";
 
 /**
  * GET staff notifications
  */
-exports.getStaffNotifications = async (req, res) => {
+export const getStaffNotifications = async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -22,7 +22,7 @@ exports.getStaffNotifications = async (req, res) => {
 /**
  * Mark notification as read
  */
-exports.markAsRead = async (req, res) => {
+export const markAsRead = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -37,17 +37,7 @@ exports.markAsRead = async (req, res) => {
 /**
  * Create notification (used by request approval/rejection)
  */
-exports.createNotification = async (data) => {
-  try {
-    await Notification.create(data);
-  } catch (error) {
-    console.error("Notification error:", error.message);
-  }
-};
-
-
-
-exports.createNotification = async (data) => {
+export const createNotification = async (data) => {
   try {
     await Notification.create(data);
   } catch (error) {

@@ -1,6 +1,6 @@
-const axios = require("axios");
+import axios from "axios";
 
-exports.sendWhatsAppMessage = async (req, res) => {
+export const sendWhatsAppMessage = async (req, res) => {
   const { number, message } = req.body;
 
   if (!number || !message) {

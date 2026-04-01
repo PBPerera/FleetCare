@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const StaffNotificationSchema = new mongoose.Schema({
     type: String,
@@ -11,4 +11,4 @@ const StaffNotificationSchema = new mongoose.Schema({
     read: { type: Boolean, default: false }
 });
 
-module.exports = mongoose.model("StaffNotification", StaffNotificationSchema);
+export default mongoose.model("StaffNotification", StaffNotificationSchema);

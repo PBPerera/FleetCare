@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const InsuranceSchema = new mongoose.Schema({
     vehicleId: String,
@@ -8,4 +8,4 @@ const InsuranceSchema = new mongoose.Schema({
     contact: String
 });
 
-module.exports = mongoose.model("Insurance", InsuranceSchema);
+export default mongoose.model("Insurance", InsuranceSchema);

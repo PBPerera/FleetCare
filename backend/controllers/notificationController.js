@@ -87,91 +87,94 @@
 // };
 
 import Trip from "../models/Trip.js";
-import Maintenance from "../models/Maintenance.js";
+import Service from "../models/Service.js";
 import Vehicle from "../models/Vehicle.js";
 import Driver from "../models/Driver.js";
 
 export const getAllNotifications = async (req, res) => {
   try {
-    const today = new Date();
+    const now = new Date();
 
-    // =========================================
-    // 1️⃣ LATEST APPROVED TRIPS
-    // =========================================
+    // 1. Trip schedule (approved trips)
     const trips = await Trip.find({ status: "Approved" })
       .sort({ createdAt: -1 })
-      .limit(5);
+      .limit(100);
 
-    const tripNotifications = trips.map((trip) => ({
-      type: "trip",
+    const tripSchedule = trips.map((trip) => ({
       tripDate: trip.tripDate,
       tripTime: trip.tripTime,
-      destination: trip.pickupDestination,
+      pickupDestination: trip.pickupDestination,
       vehicleId: trip.vehicleId,
-      driver: trip.driverName,
-      contact: trip.driverContact,
+      driverName: trip.driverName,
+      contactNo: trip.driverContact,
     }));
 
-    // =========================================
-    // 2️⃣ MAINTENANCE ALERTS
-    // =========================================
-    const maintenance = await Maintenance.find({ status: "Pending" });
+    // 2. Maintenance alerts for services (use Service model)
+    const maintenanceRecords = await Service.find({
+      status: { $in: ["Scheduled", "In Progress", "Pending"] },
+    }).sort({ date: 1 });
 
-    const maintenanceNotifications = maintenance.map((item) => ({
-      type: "maintenance",
+    const maintenanceAlerts = maintenanceRecords.map((item) => ({
       vehicleId: item.vehicleId,
-      driver: item.driverName,
-      contact: item.contactNumber,
-      description: item.description || item.message,
-      company: item.companyName,
+      driverName: item.driverName,
+      contactNo: item.contactNumber || "N/A",
+      description: item.description || "No description",
+      companyName: item.companyName || "N/A",
     }));
 
-    // =========================================
-    // 3️⃣ EXPIRED VEHICLE INSURANCE
-    // =========================================
-    const expiredInsurance = await Vehicle.find({
-      insuranceExpiryDate: { $lt: today },
+    // 3. Expired vehicle insurance
+    const expiredInsuranceItems = await Vehicle.find({
+      insurance_expiry: { $lt: now },
     });
 
-    const insuranceNotifications = expiredInsurance.map((vehicle) => ({
-      type: "insurance",
-      vehicleId: vehicle.vehicleId,
-      vehicleType: vehicle.vehicleType,
-      expiryDate: vehicle.insuranceExpiryDate,
-      driver: vehicle.driverName,
-      contact: vehicle.contactNumber,
+    const expiredInsurance = expiredInsuranceItems.map((vehicle) => ({
+      vehicleId: vehicle.vehicle_id || vehicle.vehicleId || "N/A",
+      vehicleType: vehicle.type || "N/A",
+      expiryDate: vehicle.insurance_expiry,
+      driverName: vehicle.driverName || "Unassigned",
+      contactNo: vehicle.driverContact || vehicle.contactNumber || "N/A",
     }));
 
-    // =========================================
-    // 4️⃣ EXPIRED DRIVER LICENSE
-    // =========================================
-    const expiredLicenses = await Driver.find({
-      licenseExpiryDate: { $lt: today },
+    // 4. Expired driver license
+    const expiredDrivers = await Driver.find({
+      licenseExpiryDate: { $lt: now },
     });
 
-    const licenseNotifications = expiredLicenses.map((driver) => ({
-      type: "license",
-      driverId: driver.driverId,
-      driver: driver.driverName,
-      expiryDate: driver.licenseExpiryDate,
-      contact: driver.contactNumber,
+    const expiredLicenses = expiredDrivers.map((driver) => ({
+      driverId: driver.driver_id || driver._id,
+      driverName: driver.name || "Unknown",
+      licenceExpiryDate: driver.licenseExpiryDate,
+      contactNo: driver.phone_no || driver.contactNumber || "N/A",
     }));
 
-    // =========================================
-    // COMBINE ALL
-    // =========================================
-    const allNotifications = [
-      ...tripNotifications,
-      ...maintenanceNotifications,
-      ...insuranceNotifications,
-      ...licenseNotifications,
-    ];
+    const result = {
+      tripSchedule,
+      maintenanceAlerts,
+      expiredInsurance,
+      expiredLicenses,
+    };
 
-    res.status(200).json(allNotifications);
+    const type = req.query.type;
+    if (type) {
+      switch (type) {
+        case "trip":
+          return res.json(tripSchedule);
+        case "maintenance":
+          return res.json(maintenanceAlerts);
+        case "insurance":
+          return res.json(expiredInsurance);
+        case "license":
+          return res.json(expiredLicenses);
+        default:
+          return res.status(400).json({ message: "Invalid type" });
+      }
+    }
+
+    return res.status(200).json(result);
   } catch (error) {
     console.error("Notification Error:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-export default controller;
+export default { getAllNotifications };

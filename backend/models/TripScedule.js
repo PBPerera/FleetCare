@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const TripScheduleSchema = new mongoose.Schema({
     date: String,
@@ -9,4 +9,4 @@ const TripScheduleSchema = new mongoose.Schema({
     contact: String
 });
 
-module.exports = mongoose.model("TripSchedule", TripScheduleSchema);
+export default mongoose.model("TripSchedule", TripScheduleSchema);

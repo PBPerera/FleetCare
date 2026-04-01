@@ -65,7 +65,7 @@
 // module.exports = mongoose.model('Notification', NotificationSchema);
 
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const NotificationSchema = new mongoose.Schema({
   type: String, // maintenance
@@ -76,4 +76,4 @@ const NotificationSchema = new mongoose.Schema({
   company: String,
 });
 
-module.exports = mongoose.model("Notification", NotificationSchema);
+export default mongoose.model("Notification", NotificationSchema);
