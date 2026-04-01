@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const driverLicenseSchema = new mongoose.Schema({
   driverId: { type: String, required: true },
@@ -7,7 +7,4 @@ const driverLicenseSchema = new mongoose.Schema({
   contactNumber: { type: String, required: true },
 });
 
-module.exports = mongoose.model(
-  "DriverLicense",
-  driverLicenseSchema
-);
+export default mongoose.model("DriverLicense", driverLicenseSchema);

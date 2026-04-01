@@ -16,15 +16,9 @@
 
 import express from "express";
 const router = express.Router();
-import controller from "../controllers/notificationController.js";
+import notificationController from "../controllers/notificationController.js";
 
-router.get("/", controller.getAllNotifications);
-router.get("/:id", controller.getById);
-router.post("/", controller.create);
-router.put("/:id", controller.update);
-router.delete("/:id", controller.remove);
-
-
+router.get("/", notificationController.getAllNotifications);
 
 
 

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const LicenseSchema = new mongoose.Schema({
     driverId: String,
@@ -7,4 +7,4 @@ const LicenseSchema = new mongoose.Schema({
     contact: String
 });
 
-module.exports = mongoose.model("License", LicenseSchema);
+export default mongoose.model("License", LicenseSchema);

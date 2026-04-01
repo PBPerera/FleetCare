@@ -1,10 +1,10 @@
-const VehicleInsurance = require("../models/VehicleInsurance");
-const DriverLicense = require("../models/DriverLicense");
+import VehicleInsurance from "../models/VehicleInsurance.js";
+import DriverLicense from "../models/DriverLicense.js";
 
 // ============================================
 // GET EXPIRED VEHICLE INSURANCE
 // ============================================
-exports.getExpiredVehicleInsurance = async (req, res) => {
+export const getExpiredVehicleInsurance = async (req, res) => {
   try {
     const today = new Date();
 
@@ -21,7 +21,7 @@ exports.getExpiredVehicleInsurance = async (req, res) => {
 // ============================================
 // GET EXPIRED DRIVER LICENSES
 // ============================================
-exports.getExpiredDriverLicenses = async (req, res) => {
+export const getExpiredDriverLicenses = async (req, res) => {
   try {
     const today = new Date();
 

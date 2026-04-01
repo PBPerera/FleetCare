@@ -20,4 +20,4 @@ router.get("/insurance/expired", getExpiredInsurance);
 // Expired Driver License
 router.get("/license/expired", getExpiredLicenses);
 
-module.exports = router;
+export default router;

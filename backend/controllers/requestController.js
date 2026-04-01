@@ -1,8 +1,7 @@
-const { createNotification } = require("./notificationStaffController");
-const TripRequest = require("../models/TripRequest");
-const { createNotification } = require("./notificationStaffController");
+import { createNotification } from "./notificationStaffController.js";
+import TripRequest from "../models/TripRequest.js";
 
-exports.approveRequest = async (req, res) => {
+export const approveRequest = async (req, res) => {
   try {
     const { requestId } = req.body;
 
@@ -33,7 +32,7 @@ exports.approveRequest = async (req, res) => {
   }
 };
 
-exports.rejectRequest = async (req, res) => {
+export const rejectRequest = async (req, res) => {
   try {
     const { requestId, reason } = req.body;
 

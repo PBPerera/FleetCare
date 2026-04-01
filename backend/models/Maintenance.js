@@ -11,7 +11,7 @@
 // module.exports = mongoose.model("Maintenance", MaintenanceSchema);
 
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const MaintenanceSchema = new mongoose.Schema({
   vehicleId: String,
@@ -22,5 +22,4 @@ const MaintenanceSchema = new mongoose.Schema({
   date: Date
 });
 
-module.exports = mongoose.model("Maintenance", MaintenanceSchema);
-export default Maintenance;
+export default mongoose.model("Maintenance", MaintenanceSchema);

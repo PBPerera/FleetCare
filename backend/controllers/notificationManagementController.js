@@ -1,22 +1,22 @@
-const Trip = require("../models/Trip");
-const Vehicle = require("../models/Vehicle");
-const Driver = require("../models/Driver");
-const Notification = require("../models/Notification");
+import Trip from "../models/Trip.js";
+import Vehicle from "../models/Vehicle.js";
+import Driver from "../models/Driver.js";
+import Notification from "../models/Notification.js";
 
 // ================= TRIP SCHEDULE =================
-exports.getTripSchedule = async (req, res) => {
+export const getTripSchedule = async (req, res) => {
   const trips = await Trip.find();
   res.json(trips);
 };
 
 // ================= MAINTENANCE =================
-exports.getMaintenanceAlerts = async (req, res) => {
+export const getMaintenanceAlerts = async (req, res) => {
   const maintenance = await Notification.find({ type: "maintenance" });
   res.json(maintenance);
 };
 
 // ================= EXPIRED INSURANCE =================
-exports.getExpiredInsurance = async (req, res) => {
+export const getExpiredInsurance = async (req, res) => {
   const today = new Date();
 
   const expired = await Vehicle.find({
@@ -27,7 +27,7 @@ exports.getExpiredInsurance = async (req, res) => {
 };
 
 // ================= EXPIRED DRIVER LICENSE =================
-exports.getExpiredLicenses = async (req, res) => {
+export const getExpiredLicenses = async (req, res) => {
   const today = new Date();
 
   const expired = await Driver.find({
