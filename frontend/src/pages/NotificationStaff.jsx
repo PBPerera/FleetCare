@@ -142,7 +142,7 @@
 
 
 import React, { useState, useEffect } from "react";
-// import "./NotificationStaff.css";
+import "./NotificationStaff.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
 import {
@@ -166,7 +166,7 @@ export default function NotificationStaff() {
 
   // ✅ FETCH NOTIFICATIONS FROM BACKEND
   useEffect(() => {
-    fetch(`http://localhost:5000/api/notifications/staff/${staffId}`)
+    fetch(`http://localhost:4000/api/notifications/staff/${staffId}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("NOTIFICATIONS:", data); // 👈 DEBUG
@@ -181,6 +181,15 @@ export default function NotificationStaff() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const formatRelativeTime = (timestamp) => {
+    if (!timestamp) return "";
+    const diff = Date.now() - new Date(timestamp).getTime();
+    if (diff < 60000) return `${Math.max(1, Math.floor(diff / 1000))} sec ago`;
+    if (diff < 3600000) return `${Math.max(1, Math.floor(diff / 60000))} min ago`;
+    if (diff < 86400000) return `${Math.max(1, Math.floor(diff / 3600000))} hour ago`;
+    return new Date(timestamp).toLocaleDateString();
+  };
+
   // ✅ MARK AS READ (BACKEND + UI)
   const handleMarkAsRead = async (id) => {
     try {
@@ -188,7 +197,6 @@ export default function NotificationStaff() {
         method: "PUT",
       });
 
-      // Remove from UI
       setNotifications((prev) => prev.filter((n) => n._id !== id));
     } catch (error) {
       console.error("Mark as read error:", error);
@@ -214,47 +222,56 @@ export default function NotificationStaff() {
             {notifications.length === 0 ? (
               <p className="no-notifications">No new notifications 🎉</p>
             ) : (
-              notifications.map((note) => (
-                <div
-                  key={note._id}
-                  className={`notification-card ${
-                    note.type === "approved" ? "approved" : "rejected"
-                  }`}
-                >
-                  <h4>{note.title}</h4>
+              <div className="notification-grid">
+                {notifications.map((note) => {
+                  const timeLabel = note.time || formatRelativeTime(note.createdAt);
+                  const isApproved = note.type === "approved";
+                  const statusClass = note.type === "approved" ? "approved" : note.type === "rejected" ? "rejected" : "info";
 
-                  {note.type === "approved" ? (
-                    <>
-                      <p>{note.message}</p>
-                      {note.schedule && (
-                        <p className="schedule">
-                          🕒 Scheduled: {note.schedule}
-                        </p>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {note.from && (
-                        <p>
-                          <strong>From:</strong> {note.from}
-                        </p>
-                      )}
-                      {note.reason && (
-                        <p>
-                          <strong>Reason:</strong> {note.reason}
-                        </p>
-                      )}
-                    </>
-                  )}
+                  return (
+                    <div key={note._id} className={`notification-card ${statusClass}`}>
+                      <div className="notification-card__content">
+                        <div className="notification-card__header">
+                          <h4>{note.title}</h4>
+                        </div>
+                        <div className="notification-card__body">
+                          <p className="notification-message">{note.message}</p>
 
-                  <button
-                    className="mark-read-btn"
-                    onClick={() => handleMarkAsRead(note._id)}
-                  >
-                    Mark as Read
-                  </button>
-                </div>
-              ))
+                          {isApproved ? (
+                            note.schedule && (
+                              <p className="notification-meta">
+                                <span>🕒 Scheduled:</span> {note.schedule}
+                              </p>
+                            )
+                          ) : (
+                            <>
+                              {note.from && (
+                                <p className="notification-meta">
+                                  <strong>From:</strong> {note.from}
+                                </p>
+                              )}
+                              {note.reason && (
+                                <p className="notification-meta">
+                                  <strong>Reason:</strong> {note.reason}
+                                </p>
+                              )}
+                            </>
+                          )}
+                        </div>
+                        <div className="notification-card__footer">
+                          <span className="notification-time">{timeLabel}</span>
+                          <button
+                            className="mark-read-btn"
+                            onClick={() => handleMarkAsRead(note._id)}
+                          >
+                            Mark as Read
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
         </main>
