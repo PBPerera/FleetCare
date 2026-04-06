@@ -63,10 +63,6 @@
 //   });
 // });
 
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -90,6 +86,8 @@ import tripRoutes from "./routes/trips.js";
 
 // ✅ ADD THIS
 import notificationRoutes from "./routes/notificationRoutes.js";
+import notificationTripRoutes from "./routes/notificationTripRoutes.js";
+import notifyRoutes from "./routes/notify.js";
 
 const app = express();
 
@@ -112,8 +110,10 @@ app.use("/api/audit", auditRoutes);
 app.use("/api/vehicleRequests", vehicleRequestRoutes);
 app.use("/api/trips", tripRoutes);
 
-// ✅ REGISTER NOTIFICATION ROUTE
+// Notification routes
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/notification/trips", notificationTripRoutes);
+app.use("/api/notify", notifyRoutes);
 
 // Health endpoint
 app.get("/api/health", (req, res) => {
@@ -124,5 +124,14 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = parseInt(process.env.PORT, 10) || 5000;
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port ${PORT} is already in use. Stop the process using that port or change PORT in .env.`);
+    process.exit(1);
+  }
+  console.error("Server error:", error);
+  process.exit(1);
+});

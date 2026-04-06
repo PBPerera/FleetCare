@@ -493,19 +493,32 @@ export default function NotificationCenter() {
   // ✅ UPDATED SEND FUNCTION
   const sendWhatsApp = async (number, message) => {
     try {
+      // Clean and format phone number
+      let cleanedNumber = number.replace(/\D/g, ""); // Remove non-digits
+      
+      // If number starts with 0, replace with Sri Lanka code (94)
+      if (cleanedNumber.startsWith("0")) {
+        cleanedNumber = "94" + cleanedNumber.substring(1);
+      }
+      
+      // If number doesn't start with country code, add 94 for Sri Lanka
+      if (!cleanedNumber.startsWith("94") && !cleanedNumber.startsWith("+")) {
+        cleanedNumber = "94" + cleanedNumber;
+      }
+
       const res = await fetch("http://localhost:4000/api/notifications/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ number, message }),
+        body: JSON.stringify({ number: cleanedNumber, message }),
       });
 
       const data = await res.json();
 
-      if (data.status === "success") {
-        // 🔥 Open receiver's WhatsApp chat
+      if (data.status === "success" && data.whatsappUrl) {
+        // 🔥 Open receiver's WhatsApp chat with message as draft
         window.open(data.whatsappUrl, "_blank");
       } else {
         alert("Failed to open WhatsApp chat.");
@@ -591,7 +604,7 @@ export default function NotificationCenter() {
                           <td>
                             <input
                               type="text"
-                              placeholder="9477XXXXXXX"
+                              placeholder="0763435761 or +94763435761"
                               value={row.phoneInput}
                               onChange={(e) =>
                                 handlePhoneChange(
