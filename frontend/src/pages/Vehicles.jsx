@@ -68,13 +68,13 @@ export default function Vehicles() {
   // ===== Cards / metrics (same style as Maintenance) =====
   const dashboardCards = useMemo(() => {
     const total = vehicles.length;
-    const available = vehicles.filter((v) => v.status === "Available").length;
-    const assigned = vehicles.filter((v) => v.status === "Assigned").length;
+    const available = vehicles.filter((v) => v.status === "Available" || v.status === "Active").length;
+    const inUse = vehicles.filter((v) => v.status === "In Use").length;
     const maintenance = vehicles.filter((v) => v.status === "Maintenance").length;
     return [
       { title: "Total", count: total, subtitle: "All vehicles", icon: "🚗" },
       { title: "Available", count: available, subtitle: "Free to assign", icon: "✅" },
-      { title: "Assigned", count: assigned, subtitle: "In use", icon: "📌" },
+      { title: "In Use", count: inUse, subtitle: "Assigned trips", icon: "📌" },
       { title: "Maintenance", count: maintenance, subtitle: "In service", icon: "🛠️" },
     ];
   }, [vehicles]);

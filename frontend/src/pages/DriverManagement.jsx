@@ -85,13 +85,13 @@ export default function DriverManagement() {
   // ===== Cards / metrics (same pattern as Vehicles/Maintenance) =====
   const dashboardCards = useMemo(() => {
     const total = drivers.length;
-    const available = drivers.filter((d) => d.status === "Available").length;
-    const onTrip = drivers.filter((d) => d.status === "On Trip").length;
+    const available = drivers.filter((d) => d.status === "Available" || d.status === "Active").length;
+    const inUse = drivers.filter((d) => d.status === "In Use").length;
     const offDuty = drivers.filter((d) => d.status === "Off Duty").length;
     return [
       { title: "Total", count: total, subtitle: "All drivers", icon: "🧑‍✈️" },
       { title: "Available", count: available, subtitle: "Free to assign", icon: "✅" },
-      { title: "On Trip", count: onTrip, subtitle: "Active trips", icon: "📍" },
+      { title: "On Trip", count: inUse, subtitle: "Active trips", icon: "📍" },
       { title: "Off Duty", count: offDuty, subtitle: "Resting", icon: "🌙" },
     ];
   }, [drivers]);
