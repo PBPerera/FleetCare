@@ -48,6 +48,7 @@ export default function VehicleRequest() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [lastRequestNumber, setLastRequestNumber] = useState(0);
 
   const routeMap = {
     Dashboard: "/staff/dashboard",
@@ -101,7 +102,33 @@ export default function VehicleRequest() {
 
   const [q, setQ] = useState("");
 
-  // Handle form input changes
+  useEffect(() => {
+    const fetchLastRequestNumber = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/vehicleRequests");
+        if (!response.ok) {
+          throw new Error("Failed to fetch vehicle requests");
+        }
+
+        const data = await response.json();
+        const maxNumber = data.data.reduce((max, request) => {
+          const match = /^R0*(\d+)$/i.exec(request.requestId || "");
+          if (!match) return max;
+          const num = parseInt(match[1], 10);
+          return Number.isFinite(num) ? Math.max(max, num) : max;
+        }, 0);
+
+        setLastRequestNumber(maxNumber);
+      } catch (error) {
+        console.error("Error fetching last request number:", error);
+      }
+    };
+
+    fetchLastRequestNumber();
+  }, []);
+
+  const formatRequestId = (number) => `R${String(number).padStart(4, "0")}`;
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -112,9 +139,7 @@ export default function VehicleRequest() {
 
   // Generate unique request ID
   const generateRequestId = () => {
-    return (
-      "R" + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase()
-    );
+    return formatRequestId(lastRequestNumber + 1);
   };
 
   // Save vehicle request function
@@ -179,6 +204,7 @@ export default function VehicleRequest() {
 
       const result = await response.json();
       setMessage("Vehicle request submitted successfully!");
+      setLastRequestNumber((prev) => prev + 1);
 
       // Reset form
       setFormData({
