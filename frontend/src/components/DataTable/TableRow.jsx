@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 // Dropdown options for enum fields
 const FIELD_OPTIONS = {
-  status: ['Pending', 'Approved', 'Rejected', 'In Progress', 'Completed'],
+  status: ['Available', 'Assigned', 'Maintenance'],
+  displayStatus: ['Available', 'Assigned', 'Maintenance'],
   priority: ['Low', 'Medium', 'High', 'Critical'],
   procurementStage1: ['', 'Pending', 'Approved', 'Rejected'],
   procurementStage2: ['', 'Pending', 'Approved', 'Rejected'],
@@ -20,7 +21,8 @@ const TableRow = ({
   editable = false, 
   onEdit, 
   onDelete,
-  showActions = true
+  showActions = true,
+  fieldOptions = {}
 }) => {
   const rowId = row._id || row.id;
   const isNewRow = !row.vehicleId || row.vehicleId === '';
@@ -87,14 +89,15 @@ const TableRow = ({
     const value = editedData[fieldKey];
 
     // Check if this field has dropdown options
-    if (FIELD_OPTIONS[fieldKey]) {
+    if (fieldOptions[fieldKey] || FIELD_OPTIONS[fieldKey]) {
+      const options = fieldOptions[fieldKey] || FIELD_OPTIONS[fieldKey];
       return (
         <select
           value={value || ''}
           onChange={(e) => handleEdit(fieldKey, e.target.value)}
           className="editable-select"
         >
-          {FIELD_OPTIONS[fieldKey].map((option) => (
+          {options.map((option) => (
             <option key={option} value={option}>
               {option || '-- Select --'}
             </option>

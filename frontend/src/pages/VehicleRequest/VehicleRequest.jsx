@@ -61,44 +61,58 @@ export default function VehicleRequest() {
   };
 
   const [driverNames, setDriverNames] = useState([]);
+  const [vehicleIds, setVehicleIds] = useState([]);
+  const [availableDrivers, setAvailableDrivers] = useState([]);
+  const [availableVehicles, setAvailableVehicles] = useState([]);
 
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/driver");
         const data = await response.json();
-        console.log("Drivers : "+data);
-        const availableDrivers = data.Drivers.filter(
-          (driver) => driver.status === "Available",
-        );
-        setDriverNames(availableDrivers.map((driver) => driver.name));
+
+        const driversArray =
+          data.Drivers || data.drivers || data.data ||
+          (Array.isArray(data) ? data : []);
+
+        const availableDriversList = (driversArray || [])
+          .filter(
+            (driver) =>
+              driver.status === "Available" || driver.status === "Active",
+          );
+
+        setAvailableDrivers(availableDriversList);
+        setDriverNames(availableDriversList.map((driver) => driver.name || `${driver.firstName || ""} ${driver.lastName || ""}`.trim()).filter(Boolean));
       } catch (error) {
         console.error("Error fetching drivers:", error);
       }
     };
+
+    const fetchVehicles = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/vehicle");
+        const data = await response.json();
+
+        const vehiclesArray =
+          data.vehicles || data.Vehicles || data.data ||
+          (Array.isArray(data) ? data : []);
+
+        const availableVehiclesList = (vehiclesArray || [])
+          .filter(
+            (vehicle) =>
+              vehicle.status === "Available" || vehicle.status === "Active",
+          );
+
+        setAvailableVehicles(availableVehiclesList);
+        setVehicleIds(availableVehiclesList.map((vehicle) => vehicle.vehicle_id || vehicle.vehicleId).filter(Boolean));
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      }
+    };
+
     fetchDrivers();
+    fetchVehicles();
   }, []);
-
-  const [vehicleIds, setVehicleIds] = useState([]);
-
-  useEffect(() => {
-  const fetchVehicles = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/vehicle");
-      const data = await response.json();
-
-      const availableIds = data.vehicles
-        .filter((vehicle) => vehicle.status === "Available")
-        .map((vehicle) => vehicle.vehicle_id);
-
-      setVehicleIds(availableIds);
-    } catch (error) {
-      console.error("Error fetching vehicles:", error);
-    }
-  };
-
-  fetchVehicles();
-}, []);
 
   const [q, setQ] = useState("");
 
@@ -129,6 +143,11 @@ export default function VehicleRequest() {
 
   const formatRequestId = (number) => `R${String(number).padStart(4, "0")}`;
 
+  // Generate next request ID
+  const generateRequestId = () => {
+    return formatRequestId(lastRequestNumber + 1);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -137,9 +156,45 @@ export default function VehicleRequest() {
     }));
   };
 
-  // Generate unique request ID
-  const generateRequestId = () => {
-    return formatRequestId(lastRequestNumber + 1);
+  // Handle driver selection
+  const handleDriverSelect = (driverName) => {
+    const selectedDriver = availableDrivers.find(
+      (driver) => {
+        const driverFullName = driver.name || `${driver.firstName || ""} ${driver.lastName || ""}`.trim();
+        return driverFullName === driverName;
+      }
+    );
+
+    if (selectedDriver) {
+      setFormData((prev) => ({
+        ...prev,
+        driverName: driverName,
+        driverContact: selectedDriver.phone_no || selectedDriver.phone || "",
+      }));
+
+      // Remove from available lists
+      setAvailableDrivers((prev) => prev.filter(
+        (driver) => {
+          const driverFullName = driver.name || `${driver.firstName || ""} ${driver.lastName || ""}`.trim();
+          return driverFullName !== driverName;
+        }
+      ));
+      setDriverNames((prev) => prev.filter((name) => name !== driverName));
+    }
+  };
+
+  // Handle vehicle selection
+  const handleVehicleSelect = (vehicleId) => {
+    setFormData((prev) => ({
+      ...prev,
+      vehicleId: vehicleId,
+    }));
+
+    // Remove from available lists
+    setAvailableVehicles((prev) => prev.filter(
+      (vehicle) => (vehicle.vehicle_id || vehicle.vehicleId) !== vehicleId
+    ));
+    setVehicleIds((prev) => prev.filter((id) => id !== vehicleId));
   };
 
   // Save vehicle request function
@@ -245,6 +300,54 @@ export default function VehicleRequest() {
       noOfPassengers: 1,
     });
     setMessage("");
+
+    // Re-fetch availables to reset the lists
+    const fetchDrivers = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/driver");
+        const data = await response.json();
+
+        const driversArray =
+          data.Drivers || data.drivers || data.data ||
+          (Array.isArray(data) ? data : []);
+
+        const availableDriversList = (driversArray || [])
+          .filter(
+            (driver) =>
+              driver.status === "Available" || driver.status === "Active",
+          );
+
+        setAvailableDrivers(availableDriversList);
+        setDriverNames(availableDriversList.map((driver) => driver.name || `${driver.firstName || ""} ${driver.lastName || ""}`.trim()).filter(Boolean));
+      } catch (error) {
+        console.error("Error fetching drivers:", error);
+      }
+    };
+
+    const fetchVehicles = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/vehicle");
+        const data = await response.json();
+
+        const vehiclesArray =
+          data.vehicles || data.Vehicles || data.data ||
+          (Array.isArray(data) ? data : []);
+
+        const availableVehiclesList = (vehiclesArray || [])
+          .filter(
+            (vehicle) =>
+              vehicle.status === "Available" || vehicle.status === "Active",
+          );
+
+        setAvailableVehicles(availableVehiclesList);
+        setVehicleIds(availableVehiclesList.map((vehicle) => vehicle.vehicle_id || vehicle.vehicleId).filter(Boolean));
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      }
+    };
+
+    fetchDrivers();
+    fetchVehicles();
   };
 
   return (
@@ -466,11 +569,20 @@ export default function VehicleRequest() {
                     <div className="vr-content-title">Drivers</div>
                     <div className="vr-content-subtitle">Driver Name</div>
                     <div className="vr-items-list">
-                      {driverNames.map((name) => (
-                        <div className="vr-list-item" key={name}>
+                      {driverNames.length > 0 ? driverNames.map((name, index) => (
+                        <div
+                          className="vr-list-item"
+                          key={`${name}-${index}`}
+                          onClick={() => handleDriverSelect(name)}
+                          style={{ cursor: "pointer" }}
+                        >
                           {name}
                         </div>
-                      ))}
+                      )) : (
+                        <div className="vr-list-item" style={{ color: "#999" }}>
+                          No available drivers
+                        </div>
+                      )}
                     </div>
                   </>
                 )}
@@ -481,7 +593,12 @@ export default function VehicleRequest() {
                     <div className="vr-content-subtitle">Vehicle ID</div>
                     <div className="vr-items-list">
                       {vehicleIds.map((id) => (
-                        <div className="vr-list-item" key={id}>
+                        <div
+                          className="vr-list-item"
+                          key={id}
+                          onClick={() => handleVehicleSelect(id)}
+                          style={{ cursor: "pointer" }}
+                        >
                           {id}
                         </div>
                       ))}
