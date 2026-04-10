@@ -1,5 +1,5 @@
 // src/pages/TripScheduling/TripScheduling.jsx
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import Cards from "../../components/DashboardCards/Cards.jsx";
@@ -28,54 +28,29 @@ export default function TripScheduling() {
     "Audit Log": "/audit-log",
   };
 
-  // ===== Demo data (swap with API/Context later) =====
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      requestId: "R0001",
-      vehicleId: "WWA-2258",
-      driverName: "Kumara Silva",
-      contact: "07046589",
-      pickup: "Panadura Hospital",
-      destination: "Colombo Hospital",
-      tripDate: "2025-09-25",
-      tripTime: "10:00 AM",
-      purpose: "Patient Transport",
-      vehicleType: "Van",
-      noOfPassengers: 3,
-      status: "Pending",
-    },
-    {
-      id: 2,
-      requestId: "R0002",
-      vehicleId: "AAA-1234",
-      driverName: "Nuwan Perera",
-      contact: "0771234567",
-      pickup: "Galle Hospital",
-      destination: "Karapitiya",
-      tripDate: "2025-09-26",
-      tripTime: "08:30 AM",
-      purpose: "Patient Transfer",
-      vehicleType: "Van",
-      noOfPassengers: 2,
-      status: "Approved",
-    },
-    {
-      id: 3,
-      requestId: "R0003",
-      vehicleId: "BBB-5678",
-      driverName: "Ajith Pushpakumara",
-      contact: "0719998888",
-      pickup: "Kurunegala",
-      destination: "Colombo",
-      tripDate: "2025-09-27",
-      tripTime: "01:00 PM",
-      purpose: "Supplies",
-      vehicleType: "Lorry",
-      noOfPassengers: 1,
-      status: "Rejected",
-    },
-  ]);
+  const [requests, setRequests] = useState([]);
+
+  // Load trips from backend
+  const fetchTrips = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/trips");
+      const result = await response.json();
+      if (result.success) {
+        setRequests(result.data.map(t => ({ 
+          ...t, 
+          id: t._id,
+          contact: t.driverContact,
+          route: t.pickupDestination
+        })));
+      }
+    } catch (error) {
+      console.error("Error fetching trips:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTrips();
+  }, []);
 
   // ===== Cards / metrics (same style as your other screens) =====
   const dashboardCards = useMemo(() => {
@@ -100,12 +75,7 @@ export default function TripScheduling() {
       { key: "contact", label: "Driver Contact No" },
       {
         key: "route",
-        label: "Pickup → Destination",
-        render: (row) => (
-          <span>
-            {row.pickup} → {row.destination}
-          </span>
-        ),
+        label: "Pickup & Destination",
       },
       { key: "tripDate", label: "Trip Date" },
       { key: "tripTime", label: "Trip Time" },
@@ -172,13 +142,24 @@ export default function TripScheduling() {
     setRequests((prev) => prev.map((r) => (r.id === id ? { ...r, ...updated } : r)));
   };
 
-  const handleAction = (action, row) => {
-    if (action === "approve") {
-      setRequests((prev) => prev.map((r) => (r.id === row.id ? { ...r, status: "Approved" } : r)));
-      return;
-    }
-    if (action === "reject") {
-      setRequests((prev) => prev.map((r) => (r.id === row.id ? { ...r, status: "Rejected" } : r)));
+  const handleAction = async (action, row) => {
+    if (action === "approve" || action === "reject") {
+      const newStatus = action === "approve" ? "Approved" : "Rejected";
+      try {
+        const response = await fetch(`http://localhost:5000/api/trips/${row._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: newStatus }),
+        });
+        const result = await response.json();
+        if (result.success) {
+          setRequests((prev) =>
+            prev.map((r) => (r.id === row.id ? { ...r, status: newStatus } : r))
+          );
+        }
+      } catch (error) {
+        console.error(`Error updating status to ${newStatus}:`, error);
+      }
       return;
     }
     if (action === "allocate") {

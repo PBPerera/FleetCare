@@ -1,5 +1,4 @@
-// src/pages/NotificationManagement.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import "./NotificationManagement.css";
@@ -27,6 +26,100 @@ export default function NotificationManagement() {
     "Audit Log": "/audit-log",
   };
 
+  const [tripData, setTripData] = useState([]);
+  const [serviceData, setServiceData] = useState([]);
+  const [insuranceData, setInsuranceData] = useState([]);
+  const [licenseData, setLicenseData] = useState([]);
+
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/trips");
+        const result = await response.json();
+        if (result.success) {
+          const mapped = result.data.map((t) => ({
+            date: t.tripDate ? new Date(t.tripDate).toLocaleDateString() : "—",
+            time: t.tripTime || "—",
+            destination: t.pickupDestination || "—",
+            vehicleId: t.vehicleId || "—",
+            driver: t.driverName || "—",
+            contact: t.driverContact || "—",
+          }));
+          setTripData(mapped);
+        }
+      } catch (error) {
+        console.error("Error fetching trips for notifications:", error);
+      }
+    };
+
+    const fetchServices = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/services?status=Scheduled");
+        const result = await response.json();
+        if (result.success) {
+          const mapped = result.data.map((s) => ({
+            vehicleId: s.vehicleId || "—",
+            driver: s.driverName || "—",
+            contact: s.driverContact || "—",
+            description: s.description || "—",
+            company: s.companyName || "—",
+          }));
+          setServiceData(mapped);
+        }
+      } catch (error) {
+        console.error("Error fetching services for notifications:", error);
+      }
+    };
+
+    const fetchVehicles = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/vehicle");
+        const result = await response.json();
+        if (result.vehicles) {
+          const today = new Date();
+          const expired = result.vehicles
+            .filter((v) => v.insurance_expiry && new Date(v.insurance_expiry) <= today)
+            .map((v) => ({
+              vehicleId: v.vehicle_id || "—",
+              type: v.type || "—",
+              expiryDate: v.insurance_expiry ? new Date(v.insurance_expiry).toLocaleDateString() : "—",
+              driver: v.driverName || "—",
+              contact: v.driverContact || "—",
+            }));
+          setInsuranceData(expired);
+        }
+      } catch (error) {
+        console.error("Error fetching vehicles for notifications:", error);
+      }
+    };
+
+    const fetchDrivers = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/driver");
+        const result = await response.json();
+        if (result.Drivers) {
+          const today = new Date();
+          const expired = result.Drivers
+            .filter((d) => d.licenseExpiryDate && new Date(d.licenseExpiryDate) <= today)
+            .map((d) => ({
+              driverId: d.driver_id || "—",
+              driver: d.name || "—",
+              expiryDate: d.licenseExpiryDate ? new Date(d.licenseExpiryDate).toLocaleDateString() : "—",
+              contact: d.phone_no || "—",
+            }));
+          setLicenseData(expired);
+        }
+      } catch (error) {
+        console.error("Error fetching drivers for notifications:", error);
+      }
+    };
+
+    fetchTrips();
+    fetchServices();
+    fetchVehicles();
+    fetchDrivers();
+  }, []);
+
   const tableData = [
     {
       title: "Trip Schedule",
@@ -39,77 +132,28 @@ export default function NotificationManagement() {
         "Driver Name",
         "Contact No",
       ],
-      data: [
-        {
-          date: "09-27-2025",
-          time: "10.00 AM",
-          destination: "Panadura hospital to Colombo hospital",
-          vehicleId: "WP-CAR-1990",
-          driver: "Saman Kumara",
-          contact: "0768649704",
-        },
-        {
-          date: "09-27-2025",
-          time: "—",
-          destination: "Location",
-          vehicleId: "—",
-          driver: "Name",
-          contact: "Number",
-        },
-        {
-          date: "09-27-2025",
-          time: "—",
-          destination: "Location",
-          vehicleId: "—",
-          driver: "Name",
-          contact: "Number",
-        },
-      ],
+      data: tripData,
     },
     {
       title: "Maintenance Alert for Services",
       searchPlaceholder: "Search Vehicle ID",
       columns: ["Vehicle ID", "Driver Name", "Contact No", "Description", "Company Name"],
-      data: [
-        {
-          vehicleId: "WP-CAR-1990",
-          driver: "Saman Kumara",
-          contact: "0768649704",
-          description: "Oil change",
-          company: "ABC Pvt Ltd",
-        },
-        { vehicleId: "—", driver: "Name", contact: "Number", description: "Type", company: "Company" },
-        { vehicleId: "—", driver: "Name", contact: "Number", description: "Type", company: "Company" },
-      ],
+      data: serviceData,
     },
     {
       title: "Expired Vehicles Insurance",
       searchPlaceholder: "Search Vehicle ID",
       columns: ["Vehicle ID", "Vehicle Type", "Insurance Expiry Date", "Driver Name", "Contact Number"],
-      data: [
-        {
-          vehicleId: "WP-CAR-1990",
-          vehicleType: "Car",
-          expiryDate: "09-27-2025",
-          driver: "Saman Kumara",
-          contact: "0768649704",
-        },
-      ],
+      data: insuranceData,
     },
     {
       title: "Expired Driver License",
       searchPlaceholder: "Search Driver Name",
       columns: ["Driver ID", "Driver Name", "License Expiry Date", "Contact Number"],
-      data: [
-        {
-          driverId: "2002453365",
-          driver: "Kumara Silva",
-          expiryDate: "10-09-2025",
-          contact: "074531892",
-        },
-      ],
+      data: licenseData,
     },
   ];
+
 
   const [searches, setSearches] = useState(Array(tableData.length).fill(""));
 

@@ -1,10 +1,26 @@
 import Vehicle from "../models/Vehicle.js";
+import Trip from "../models/Trip.js";
 
 
 export async function getVehicles(req, res) {
   try {
     const vehicles = await Vehicle.find().sort({ createdAt: -1 });
-    res.json({ vehicles });
+    
+    // Enrich with latest driver info from trips
+    const enrichedVehicles = await Promise.all(vehicles.map(async (v) => {
+      const vehicleObj = v.toObject();
+      const latestTrip = await Trip.findOne({ vehicleId: v.vehicle_id }).sort({ createdAt: -1 });
+      if (latestTrip) {
+        vehicleObj.driverName = latestTrip.driverName;
+        vehicleObj.driverContact = latestTrip.driverContact;
+      } else {
+        vehicleObj.driverName = "—";
+        vehicleObj.driverContact = "—";
+      }
+      return vehicleObj;
+    }));
+
+    res.json({ vehicles: enrichedVehicles });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

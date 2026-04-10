@@ -15,6 +15,7 @@ import maintenanceRoutes from "./routes/maintenance.js";
 import serviceRoutes from "./routes/services.js";
 import repairRoutes from "./routes/repairs.js";
 import auditRoutes from './routes/audit.js';
+import tripRoute from "./routes/trips.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/driverforms", driverFormRoutes);
 app.use("/api/vehicleforms", vehicleFormRoutes);
 app.use("/api/vehicle", vehicleRoute); //2
 app.use("/api/driver", driverRoute); //3
+app.use("/api/trips", tripRoute);
 
 //Register Maintenance Routes
 app.use("/api/maintenance", maintenanceRoutes);

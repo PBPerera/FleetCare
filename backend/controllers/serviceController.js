@@ -1,4 +1,5 @@
 import Service from '../models/Service.js';
+import mongoose from 'mongoose';
 
 export const getAllServices = async (req, res) => {
   try {
@@ -43,15 +44,29 @@ export const getAllServices = async (req, res) => {
       .limit(parseInt(limit))
       .skip(skip);
 
+    // Enrich with driver contact
+    const driverNames = [...new Set(services.map(s => s.driverName).filter(Boolean))];
+    const drivers = await mongoose.model('drivers').find({ name: { $in: driverNames } });
+    const driverMap = drivers.reduce((map, d) => {
+      map[d.name] = d.phone_no;
+      return map;
+    }, {});
+
+    const enrichedData = services.map(s => {
+      const obj = s.toObject();
+      obj.driverContact = driverMap[s.driverName] || '—';
+      return obj;
+    });
+
     const total = await Service.countDocuments(query);
 
     res.status(200).json({
       success: true,
-      count: services.length,
+      count: enrichedData.length,
       total,
       page: parseInt(page),
       pages: Math.ceil(total / limit),
-      data: services
+      data: enrichedData
     });
   } catch (error) {
     res.status(500).json({

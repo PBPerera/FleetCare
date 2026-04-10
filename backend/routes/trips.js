@@ -1,12 +1,10 @@
-﻿const express = require('express');
+import express from "express";
+import { getTrips, createTrip, updateTrip } from "../controllers/tripController.js";
+
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'Trips endpoint', data: [] });
-});
+router.get("/", getTrips);
+router.post("/", createTrip);
+router.put("/:id", updateTrip);
 
-router.post('/', (req, res) => {
-  res.json({ success: true, message: 'Create trip', data: req.body });
-});
-
-module.exports = router;
+export default router;
