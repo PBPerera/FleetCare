@@ -142,15 +142,30 @@ export const approveVehicleRequest = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Get the vehicle request first to access vehicle and driver info
+    const vehicleRequest = await VehicleRequest.findById(id);
+    if (!vehicleRequest) {
+      return res.status(404).json({ message: "Vehicle request not found" });
+    }
+
+    // Update vehicle request status
     const updatedRequest = await VehicleRequest.findByIdAndUpdate(
       id,
       { status: "Approved" },
       { new: true },
     );
 
-    if (!updatedRequest) {
-      return res.status(404).json({ message: "Vehicle request not found" });
-    }
+    // Update vehicle status to "In Use"
+    await Vehicle.findOneAndUpdate(
+      { vehicle_id: vehicleRequest.vehicleId },
+      { status: "In Use" }
+    );
+
+    // Update driver status to "In Use"
+    await Driver.findOneAndUpdate(
+      { name: vehicleRequest.driverName },
+      { status: "In Use" }
+    );
 
     res.status(200).json({
       message: "Vehicle request approved successfully",
@@ -166,15 +181,20 @@ export const rejectVehicleRequest = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Get the vehicle request first to access vehicle and driver info
+    const vehicleRequest = await VehicleRequest.findById(id);
+    if (!vehicleRequest) {
+      return res.status(404).json({ message: "Vehicle request not found" });
+    }
+
     const updatedRequest = await VehicleRequest.findByIdAndUpdate(
       id,
       { status: "Rejected" },
       { new: true },
     );
 
-    if (!updatedRequest) {
-      return res.status(404).json({ message: "Vehicle request not found" });
-    }
+    // Note: When rejecting, we don't change vehicle/driver status back to Available
+    // because they might be assigned to other approved requests
 
     res.status(200).json({
       message: "Vehicle request rejected successfully",
