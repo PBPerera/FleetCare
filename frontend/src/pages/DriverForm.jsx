@@ -52,8 +52,8 @@ export default function DriverForm({ onSubmit }) {
         phone_no: driverData.phoneNumber,
         licenseNo: driverData.licenseNo,
         registerDate: new Date().toISOString(),
-        licenseRenewalDate: new Date(driverData.licenseRenewalDate).toISOString(),
-        licenseExpiryDate: new Date(driverData.licenseExpiryDate).toISOString(),
+        licenseRenewalDate: driverData.licenseRenewalDate ? new Date(driverData.licenseRenewalDate).toISOString() : null,
+        licenseExpiryDate: driverData.licenseExpiryDate ? new Date(driverData.licenseExpiryDate).toISOString() : null,
         healthAssessment: driverData.healthAssessment || "Pending",
         status: "Active"
       };

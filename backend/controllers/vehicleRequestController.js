@@ -1,6 +1,7 @@
 import VehicleRequest from "../models/VehicleRequest.js";
 import Vehicle from "../models/Vehicle.js";
 import Driver from "../models/Driver.js";
+import { createNotification } from "./notificationStaffController.js";
 
 // Create a new vehicle request
 export const createVehicleRequest = async (req, res) => {
@@ -142,15 +143,50 @@ export const approveVehicleRequest = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Get the vehicle request first to access vehicle and driver info
+    const vehicleRequest = await VehicleRequest.findById(id);
+    if (!vehicleRequest) {
+      return res.status(404).json({ message: "Vehicle request not found" });
+    }
+
+    // Update vehicle request status
     const updatedRequest = await VehicleRequest.findByIdAndUpdate(
       id,
       { status: "Approved" },
       { new: true },
     );
 
-    if (!updatedRequest) {
-      return res.status(404).json({ message: "Vehicle request not found" });
-    }
+    // Update vehicle status to "In Use"
+    await Vehicle.findOneAndUpdate(
+      { vehicle_id: vehicleRequest.vehicleId },
+      { status: "In Use" }
+    );
+
+    // Update driver status to "In Use"
+    await Driver.findOneAndUpdate(
+      { name: vehicleRequest.driverName },
+      { status: "In Use" }
+    );
+
+    // Create staff notification
+    await createNotification({
+      userId: "6961093b585ed584551b0864", // Standard staff ID used in frontend
+      role: "staff",
+      type: "approved",
+      title: "Request Approved",
+      message: `Your trip request for Trip ID ${vehicleRequest.requestId} has been approved. Vehicle ${vehicleRequest.vehicleId} assigned.`,
+      requestId: vehicleRequest.requestId,
+      vehicleNumber: vehicleRequest.vehicleId,
+      driverName: vehicleRequest.driverName,
+      contactNumber: vehicleRequest.driverContact,
+      pickupDestination: vehicleRequest.pickupDestination,
+      tripDate: vehicleRequest.tripDate ? vehicleRequest.tripDate.toISOString().split('T')[0] : "N/A",
+      tripTime: vehicleRequest.tripTime,
+      purpose: vehicleRequest.purpose,
+      vehicleType: vehicleRequest.vehicleType,
+      noOfPassengers: vehicleRequest.noOfPassengers,
+      schedule: `Today, ${vehicleRequest.tripTime}`,
+    });
 
     res.status(200).json({
       message: "Vehicle request approved successfully",
@@ -166,15 +202,41 @@ export const rejectVehicleRequest = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Get the vehicle request first to access vehicle and driver info
+    const vehicleRequest = await VehicleRequest.findById(id);
+    if (!vehicleRequest) {
+      return res.status(404).json({ message: "Vehicle request not found" });
+    }
+
     const updatedRequest = await VehicleRequest.findByIdAndUpdate(
       id,
       { status: "Rejected" },
       { new: true },
     );
 
-    if (!updatedRequest) {
-      return res.status(404).json({ message: "Vehicle request not found" });
-    }
+    // Note: When rejecting, we don't change vehicle/driver status back to Available
+    // because they might be assigned to other approved requests
+
+    // Create staff notification
+    await createNotification({
+      userId: "6961093b585ed584551b0864", // Standard staff ID used in frontend
+      role: "staff",
+      type: "rejected",
+      title: "Request Rejected",
+      message: `Your trip request for Trip ID ${vehicleRequest.requestId} has been rejected.`,
+      from: `Trip ID ${vehicleRequest.requestId}`,
+      reason: `Scheduled ${vehicleRequest.vehicleId} is unavailable.`,
+      requestId: vehicleRequest.requestId,
+      vehicleNumber: vehicleRequest.vehicleId,
+      driverName: vehicleRequest.driverName,
+      contactNumber: vehicleRequest.driverContact,
+      pickupDestination: vehicleRequest.pickupDestination,
+      tripDate: vehicleRequest.tripDate ? vehicleRequest.tripDate.toISOString().split('T')[0] : "N/A",
+      tripTime: vehicleRequest.tripTime,
+      purpose: vehicleRequest.purpose,
+      vehicleType: vehicleRequest.vehicleType,
+      noOfPassengers: vehicleRequest.noOfPassengers,
+    });
 
     res.status(200).json({
       message: "Vehicle request rejected successfully",

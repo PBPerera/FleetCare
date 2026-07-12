@@ -100,6 +100,13 @@ const NotificationSchema = new mongoose.Schema(
     driverName: String,
     contactNumber: String,
     company: String,
+    requestId: String,
+    pickupDestination: String,
+    tripDate: String,
+    tripTime: String,
+    purpose: String,
+    vehicleType: String,
+    noOfPassengers: String,
   },
   { timestamps: true }
 );

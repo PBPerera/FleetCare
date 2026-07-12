@@ -6,17 +6,18 @@ import {
   getApprovedTrips,
   getRejectedTrips,
   deleteTrip,
+  completeTrip,
 } from "../controllers/tripController.js";
 import { required as auth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// non-controller endpoints (if needed) now unified with controller logic
-router.get("/", auth, getAllTrips);
-router.get("/approved", auth, getApprovedTrips);
-router.get("/rejected", auth, getRejectedTrips);
-router.get("/request/:requestId", auth, getTripByRequestId);
-router.post("/", auth, createTripFromApproval);
-router.delete("/:id", auth, deleteTrip);
+router.get("/", getAllTrips);
+router.get("/approved", getApprovedTrips);
+router.get("/rejected", getRejectedTrips);
+router.get("/request/:requestId", getTripByRequestId);
+router.post("/", createTripFromApproval);
+router.patch("/:id/complete", completeTrip);
+router.delete("/:id", deleteTrip);
 
 export default router;

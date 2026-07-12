@@ -418,7 +418,7 @@
 // }
 
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaUserCircle,
   FaPhoneAlt,
@@ -476,6 +476,86 @@ export default function NotificationCenter() {
 
   const [tableData, setTableData] = useState(initialTables);
 
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/notifications");
+        const data = await res.json();
+        
+        setTableData(prev => {
+          // Create a shallow copy of the tables array and each table object
+          const newTables = prev.map(t => ({ ...t }));
+          
+          if (data.tripSchedule) {
+            newTables[0].data = data.tripSchedule.map(item => ({
+              name: item.driverName || item.driver || "N/A",
+              contact: item.contactNo || item.contact || item.driverContact || "N/A",
+              message: "",
+              phoneInput: ""
+            }));
+          }
+
+          if (data.maintenanceAlerts) {
+            newTables[1].data = data.maintenanceAlerts.map(item => ({
+              name: item.driverName || item.driver || "N/A",
+              contact: item.contactNo || item.contact || "N/A",
+              message: "",
+              phoneInput: ""
+            }));
+          }
+
+          if (data.expiredInsurance) {
+            newTables[2].data = data.expiredInsurance.map(item => ({
+              name: item.driverName || item.driver || "N/A",
+              contact: item.contactNo || item.contact || "N/A",
+              message: "",
+              phoneInput: ""
+            }));
+          }
+
+          if (data.expiredLicenses) {
+            newTables[3].data = data.expiredLicenses.map(item => ({
+              name: item.driverName || item.driver || "N/A",
+              contact: item.contactNo || item.contact || "N/A",
+              message: "",
+              phoneInput: ""
+            }));
+          }
+
+          // If the API returned an old-style flat array (just to be absolutely safe)
+          if (Array.isArray(data) && data.length > 0 && !data.tripSchedule) {
+            newTables[0].data = data.filter(i => i.type === "trip").map(item => ({
+              name: item.driver || item.driverName || "N/A",
+              contact: item.contact || item.driverContact || "N/A",
+              message: "", phoneInput: ""
+            }));
+            newTables[1].data = data.filter(i => i.type === "maintenance").map(item => ({
+              name: item.driver || item.driverName || "N/A",
+              contact: item.contact || item.contactNo || "N/A",
+              message: "", phoneInput: ""
+            }));
+            newTables[2].data = data.filter(i => i.type === "insurance").map(item => ({
+              name: item.driver || item.driverName || "N/A",
+              contact: item.contact || item.contactNo || "N/A",
+              message: "", phoneInput: ""
+            }));
+            newTables[3].data = data.filter(i => i.type === "license").map(item => ({
+              name: item.driver || item.driverName || "N/A",
+              contact: item.contact || item.contactNo || "N/A",
+              message: "", phoneInput: ""
+            }));
+          }
+
+          return newTables;
+        });
+
+      } catch (err) {
+        console.error("Failed to fetch notifications:", err);
+      }
+    };
+    fetchNotifications();
+  }, []);
+
   // Handle message typing
   const handleMessageChange = (tableIndex, rowIndex, value) => {
     const updated = [...tableData];
@@ -506,7 +586,7 @@ export default function NotificationCenter() {
         cleanedNumber = "94" + cleanedNumber;
       }
 
-      const res = await fetch("http://localhost:4000/api/notifications/send", {
+      const res = await fetch("http://localhost:5000/api/notifications/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

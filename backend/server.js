@@ -86,6 +86,7 @@ import tripRoutes from "./routes/trips.js";
 
 // ✅ ADD THIS
 import notificationRoutes from "./routes/notificationRoutes.js";
+import notificationStaffRoutes from "./routes/notificationStaffRoutes.js";
 import notificationTripRoutes from "./routes/notificationTripRoutes.js";
 import notifyRoutes from "./routes/notify.js";
 
@@ -112,6 +113,7 @@ app.use("/api/trips", tripRoutes);
 
 // Notification routes
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/notifications", notificationStaffRoutes);
 app.use("/api/notification/trips", notificationTripRoutes);
 app.use("/api/notify", notifyRoutes);
 

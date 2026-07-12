@@ -59,35 +59,8 @@ import {
   deleteVehicle,
 } from "../controllers/vehicleController.js";
 
-// Routes using auth middleware
-
-// GET /api/vehicles - protected
-router.get("/", auth, async (req, res) => {
-  const items = await Vehicle.find().sort({ createdAt: -1 });
-  res.json(items);
-});
-
-// POST /api/vehicles - protected
-router.post("/", auth, async (req, res) => {
-  const { registrationNumber, model, make, year, status } = req.body;
-  const v = new Vehicle({ registrationNumber, model, make, year, status });
-  await v.save();
-  res.status(201).json(v);
-});
-
-// PUT /api/vehicles/:id - protected
-router.put("/:id", auth, async (req, res) => {
-  const v = await Vehicle.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.json(v);
-});
-
-// DELETE /api/vehicles/:id - protected
-router.delete("/:id", auth, async (req, res) => {
-  await Vehicle.findByIdAndDelete(req.params.id);
-  res.json({ message: "deleted" });
-});
+// The routes below are handled using controller functions.
+// We remove the duplicate auth routes to allow the controller functions to handle requests properly.
 
 // Routes using controller functions (optional: without auth)
 router.get("/", getVehicles);

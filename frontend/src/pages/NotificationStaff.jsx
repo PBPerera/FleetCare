@@ -154,19 +154,31 @@ import {
 } from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
 
+import StaffSidebar from "../components/StaffSidebar";
+
 export default function NotificationStaff() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  
+  const routeMap = {
+    "Dashboard": "/staff/dashboard",
+    "Vehicle Request": "/staff/vehicle-request",
+    "My Requests": "/staff/my-requests",
+    "Vehicle Details": "/staff/add-vehicle",
+    "Driver Details": "/staff/add-driver",
+    "Search and Reports": "/staff/reports",
+    "Notifications": "/staff/notifications", // Ensure this matches router definition
+  };
+
   const staffId = "6961093b585ed584551b0864";
 
   // ✅ FETCH NOTIFICATIONS FROM BACKEND
   useEffect(() => {
-    fetch(`http://localhost:4000/api/notifications/staff/${staffId}`)
+    fetch(`http://localhost:5000/api/notifications/staff/${staffId}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("NOTIFICATIONS:", data); // 👈 DEBUG
@@ -193,7 +205,7 @@ export default function NotificationStaff() {
   // ✅ MARK AS READ (BACKEND + UI)
   const handleMarkAsRead = async (id) => {
     try {
-      await fetch(`http://localhost:4000/api/notifications/read/${id}`, {
+      await fetch(`http://localhost:5000/api/notifications/read/${id}`, {
         method: "PUT",
       });
 
@@ -204,20 +216,38 @@ export default function NotificationStaff() {
   };
 
   return (
-    <div className="app-wrapper">
-      <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
-        {/* MAIN AREA */}
-        <main className="main-content">
-          <header className="header">
-            <div className="header-left">
-              <MdNotifications />
-              <h3>Notifications</h3>
-            </div>
-            <div className="fausercircle" onClick={handleUserClick}>
-              <FaUserCircle size={26} />
-            </div>
-          </header>
+    <div className={`sd-shell ${collapsed ? "is-collapsed" : ""}`}>
+      <StaffSidebar
+        collapsed={collapsed}
+        active="Notifications"
+        onNavigate={(label) => {
+          if(label === "Notifications") {
+             navigate("/notification-staff");
+          } else {
+             navigate(routeMap[label] || "/staff/dashboard");
+          }
+        }}
+        onLogout={() => (window.location.href = "/login")}
+      />
 
+      {/* MAIN AREA */}
+      <main className="sd-main">
+        <header className="sd-header">
+          <button
+            className="sd-toggle"
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand" : "Collapse"}
+          >
+            <span className="sd-burger" />
+          </button>
+          <div className="sd-header-title">Notifications</div>
+          <div className="sd-header-right">
+             <FaUserCircle size={26} onClick={handleUserClick} style={{cursor: "pointer"}}/>
+          </div>
+        </header>
+
+        <div className="sd-content">
           <div className="notification-body">
             {notifications.length === 0 ? (
               <p className="no-notifications">No new notifications 🎉</p>
@@ -235,14 +265,16 @@ export default function NotificationStaff() {
                           <h4>{note.title}</h4>
                         </div>
                         <div className="notification-card__body">
-                          <p className="notification-message">{note.message}</p>
-
                           {isApproved ? (
-                            note.schedule && (
-                              <p className="notification-meta">
-                                <span>🕒 Scheduled:</span> {note.schedule}
-                              </p>
-                            )
+                            <>
+                              <p className="notification-message">{note.message}</p>
+                              <p className="notification-meta time">({timeLabel})</p>
+                              {note.schedule && (
+                                <p className="notification-meta schedule">
+                                  <span>🕒 Scheduled:</span> {note.schedule}
+                                </p>
+                              )}
+                            </>
                           ) : (
                             <>
                               {note.from && (
@@ -255,11 +287,11 @@ export default function NotificationStaff() {
                                   <strong>Reason:</strong> {note.reason}
                                 </p>
                               )}
+                              <p className="notification-meta time">({timeLabel})</p>
                             </>
                           )}
                         </div>
                         <div className="notification-card__footer">
-                          <span className="notification-time">{timeLabel}</span>
                           <button
                             className="mark-read-btn"
                             onClick={() => handleMarkAsRead(note._id)}
@@ -274,8 +306,8 @@ export default function NotificationStaff() {
               </div>
             )}
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
 
       {/* USER MENU */}
       {isMenuOpen && (

@@ -148,3 +148,42 @@ export const deleteTrip = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Complete trip and release vehicle/driver
+export const completeTrip = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Get the trip first to access vehicle and driver info
+    const trip = await Trip.findById(id);
+    if (!trip) {
+      return res.status(404).json({ message: "Trip not found" });
+    }
+
+    // Update trip status to Completed
+    const updatedTrip = await Trip.findByIdAndUpdate(
+      id,
+      { status: "Completed" },
+      { new: true }
+    );
+
+    // Release vehicle back to Available
+    await Vehicle.findOneAndUpdate(
+      { vehicle_id: trip.vehicleId },
+      { status: "Available" }
+    );
+
+    // Release driver back to Available
+    await Driver.findOneAndUpdate(
+      { name: trip.driverName },
+      { status: "Available" }
+    );
+
+    res.status(200).json({
+      message: "Trip completed successfully and resources released",
+      data: updatedTrip,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

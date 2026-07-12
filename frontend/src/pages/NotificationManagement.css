@@ -9,17 +9,19 @@ html, body, #root {
 
 .app-wrapper {
   position: relative;
-  height: 100vh;
+  height: 100vh !important;
   width: 100vw;
   display: flex;
+  overflow: hidden !important;
 }
 
 .app-container {
   display: flex;
-  height: 100%;
+  height: 100vh !important;
   width: 100%;
-  min-height: 100vh;
+  min-height: 0 !important;
   transition: 0.3s ease;
+  overflow: hidden !important;
 }
 
 .blurred {
@@ -81,14 +83,15 @@ html, body, #root {
   margin-top: auto;
 }
 
-/* Main Area */
 .main-content {
-  flex: 1 1 auto;
-  min-height: 0;
+  flex: 1 !important;
+  min-height: 0 !important;
+  height: 100vh !important;
   display: flex;
   flex-direction: column;
   background-color: #f5f8ff;
   position: relative;
+  overflow-y: auto !important; /* Force override of App.css overflow: hidden */
 }
 
 .text {
@@ -96,10 +99,9 @@ html, body, #root {
 }
 
 .scrollable {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: 100% !important;
 }
 
 .header {

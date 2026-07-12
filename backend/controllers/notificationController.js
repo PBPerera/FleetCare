@@ -90,6 +90,7 @@ import Trip from "../models/Trip.js";
 import Service from "../models/Service.js";
 import Vehicle from "../models/Vehicle.js";
 import Driver from "../models/Driver.js";
+import Repair from "../models/Repair.js";
 
 export const getAllNotifications = async (req, res) => {
   try {
@@ -109,36 +110,70 @@ export const getAllNotifications = async (req, res) => {
       contactNo: trip.driverContact,
     }));
 
-    // 2. Maintenance alerts for services (use Service model)
-    const maintenanceRecords = await Service.find({
-      status: { $in: ["Scheduled", "In Progress", "Pending"] },
-    }).sort({ date: 1 });
+    // 2. Maintenance alerts for repairs (use Repair model for Approved status)
+    const maintenanceRecords = await Repair.find({
+      status: "Approved",
+    }).sort({ requestDate: -1 }).limit(100);
 
-    const maintenanceAlerts = maintenanceRecords.map((item) => ({
-      vehicleId: item.vehicleId,
-      driverName: item.driverName,
-      contactNo: item.contactNumber || "N/A",
-      description: item.description || "No description",
-      companyName: item.companyName || "N/A",
-    }));
+    const maintenanceAlerts = await Promise.all(
+      maintenanceRecords.map(async (item) => {
+        let contactNo = "N/A";
+        if (item.driverName) {
+          const driver = await Driver.findOne({ name: item.driverName });
+          if (driver && driver.phone_no) {
+            contactNo = driver.phone_no;
+          }
+        }
+        return {
+          vehicleId: item.vehicleId || "N/A",
+          driverName: item.driverName || "N/A",
+          contactNo: contactNo,
+          description: item.description || "No description",
+          companyName: item.companyName || "N/A",
+        };
+      })
+    );
 
-    // 3. Expired vehicle insurance
-    const expiredInsuranceItems = await Vehicle.find({
-      insurance_expiry: { $lt: now },
-    });
+    // 3. Expired vehicle insurance (Sorted by expiry date ascending - closest first)
+    const expiredInsuranceItems = await Vehicle.find()
+      .sort({ insurance_expiry: 1 })
+      .limit(100);
 
-    const expiredInsurance = expiredInsuranceItems.map((vehicle) => ({
-      vehicleId: vehicle.vehicle_id || vehicle.vehicleId || "N/A",
-      vehicleType: vehicle.type || "N/A",
-      expiryDate: vehicle.insurance_expiry,
-      driverName: vehicle.driverName || "Unassigned",
-      contactNo: vehicle.driverContact || vehicle.contactNumber || "N/A",
-    }));
+    const expiredInsurance = await Promise.all(
+      expiredInsuranceItems.map(async (vehicle) => {
+        let driverName = "Unassigned";
+        let contactNo = "N/A";
 
-    // 4. Expired driver license
-    const expiredDrivers = await Driver.find({
-      licenseExpiryDate: { $lt: now },
-    });
+        // Find the latest trip for this vehicle to identify the driver
+        const latestTrip = await Trip.findOne({ 
+          vehicleId: String(vehicle.vehicle_id) 
+        }).sort({ createdAt: -1 });
+
+        if (latestTrip && latestTrip.driverName) {
+          driverName = latestTrip.driverName;
+          // Find contact info from Driver model
+          const driver = await Driver.findOne({ name: driverName });
+          if (driver && driver.phone_no) {
+            contactNo = driver.phone_no;
+          } else {
+            contactNo = latestTrip.driverContact || "N/A";
+          }
+        }
+
+        return {
+          vehicleId: vehicle.vehicle_id || vehicle.vehicleId || "N/A",
+          vehicleType: vehicle.type || "N/A",
+          expiryDate: vehicle.insurance_expiry,
+          driverName: driverName,
+          contactNo: contactNo,
+        };
+      })
+    );
+
+    // 4. Expired driver license (Sorted by expiry date ascending)
+    const expiredDrivers = await Driver.find()
+      .sort({ licenseExpiryDate: 1 })
+      .limit(100);
 
     const expiredLicenses = expiredDrivers.map((driver) => ({
       driverId: driver.driver_id || driver._id,

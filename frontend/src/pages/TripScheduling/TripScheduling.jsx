@@ -380,13 +380,9 @@ export default function TripScheduling() {
 
       // Update vehicle request status to Approved
       const updateResponse = await fetch(
-        `http://localhost:5000/api/vehicleRequests/${vehicleRequest._id}`,
+        `http://localhost:5000/api/vehicleRequests/${vehicleRequest._id}/approve`,
         {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: "Approved" }),
+          method: "PATCH",
         }
       );
 
@@ -437,13 +433,9 @@ export default function TripScheduling() {
 
       // Update vehicle request status to Rejected
       const updateResponse = await fetch(
-        `http://localhost:5000/api/vehicleRequests/${vehicleRequest._id}`,
+        `http://localhost:5000/api/vehicleRequests/${vehicleRequest._id}/reject`,
         {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: "Rejected" }),
+          method: "PATCH",
         }
       );
 
