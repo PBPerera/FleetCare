@@ -23,11 +23,20 @@ export const createTripFromApproval = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    // If trip already exists for this requestId, update it instead of erroring
     const existingTrip = await Trip.findOne({ requestId });
     if (existingTrip) {
-      return res
-        .status(400)
-        .json({ message: "Trip for this request already exists" });
+      const updatedTrip = await Trip.findOneAndUpdate(
+        { requestId },
+        { status, vehicleId, driverName, driverContact, pickupDestination,
+          tripDate: new Date(tripDate), tripTime, purpose, vehicleType,
+          noOfPassengers, vehicleRequestId },
+        { new: true }
+      );
+      return res.status(200).json({
+        message: "Trip updated successfully",
+        data: updatedTrip,
+      });
     }
 
     const newTrip = new Trip({

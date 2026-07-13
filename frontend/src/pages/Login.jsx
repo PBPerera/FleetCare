@@ -43,7 +43,7 @@ export default function Login() {
           navigate("/admindashboard"); // fallback
         }
       } else {
-        alert(data.message || 'Login failed');
+        alert(data.message || data.error || 'Login failed');
       }
     } catch (error) {
       alert('Network error. Please try again.');
