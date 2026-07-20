@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { MaintenanceProvider } from "./context/MaintenanceContext";
@@ -90,7 +91,7 @@ export default function App() {
         <Route path="/staff/add-vehicle" element={<VehicleForm />} />
         <Route path="/staff/add-driver" element={<DriverForm />} />
         <Route path="/staff/reports" element={<div>Search & Reports</div>} />
-        <Route path="/staff/notifications" element={<div>Notifications</div>} />
+        <Route path="/staff/notifications" element={<NotificationStaff />} />
 
         {/* User, Vehicle & Driver Management */}
         <Route path="/user-management" element={<UserManagement />} />
@@ -113,7 +114,7 @@ export default function App() {
         <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} />
         <Route path="/staff/driver-details" element={<div>Driver Details</div>} />
         <Route path="/staff/reports" element={<div>Search & Reports</div>} />
-        <Route path="/staff/notifications" element={<div>Notifications</div>} />
+        <Route path="/staff/notifications" element={<NotificationStaff />} />
 
         {/* Fallback */}
         <Route

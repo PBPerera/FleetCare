@@ -31,7 +31,7 @@ export default function VehicleForm({ onSubmit }) {
     "Vehicle Details": "/staff/add-vehicle",
     "Driver Details": "/staff/add-driver",
     "Search and Reports": "/staff/reports",
-    "Notifications": "/staff/notifications",
+    "Notifications": "/notification-staff",
   };
 
   const handleChange = (e) => {
@@ -56,11 +56,11 @@ export default function VehicleForm({ onSubmit }) {
         chassis_no: vehicleData.chassisNo,
         engine_no: vehicleData.engineNo,
         battery_serial: vehicleData.batteryNo,
-        insurance_expiry: new Date(vehicleData.insuranceExpiryDate).toISOString(),
+        insurance_expiry: vehicleData.insuranceExpiryDate ? new Date(vehicleData.insuranceExpiryDate).toISOString() : null,
         wheel_serial: vehicleData.wheelSerialNo,
         wheel_size: vehicleData.wheelSize,
-        register_date: new Date(vehicleData.vehicleRegisterDate).toISOString(),
-        insurance_renewal_date: new Date(vehicleData.insuranceRenewalDate).toISOString(),
+        register_date: vehicleData.vehicleRegisterDate ? new Date(vehicleData.vehicleRegisterDate).toISOString() : null,
+        insurance_renewal_date: vehicleData.insuranceRenewalDate ? new Date(vehicleData.insuranceRenewalDate).toISOString() : null,
         status: "Active"
       };
 

@@ -31,6 +31,7 @@ export default function Sidebar({
     { icon: <MapPin size={18} />, label: "Trip Allocation", path: "/trip-allocation" },
     { icon: <Wrench size={18} />, label: "Maintenance Management", path: "/maintenance" },
     { icon: <Bell size={18} />, label: "Notification Management", path: "/notification-management" },
+    { icon: <Bell size={18} />, label: "Notification Center", path: "/notification-center" },
     { icon: <FileText size={18} />, label: "Audit Log", path: "/audit-log" },
   ];
 

@@ -1,4 +1,4 @@
-﻿import { Router } from "express";
+import express from "express";
 import {
   createTripFromApproval,
   getAllTrips,
@@ -8,8 +8,9 @@ import {
   deleteTrip,
   completeTrip,
 } from "../controllers/tripController.js";
+import { required as auth } from "../middleware/authMiddleware.js";
 
-const router = Router();
+const router = express.Router();
 
 router.get("/", getAllTrips);
 router.get("/approved", getApprovedTrips);
