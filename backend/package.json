@@ -5,19 +5,21 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "npx kill-port 4000 && nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.0",
+    "axios": "^1.18.1",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "crypto": "^1.0.1",
+    "debug": "^4.4.3",
     "dotenv": "^16.6.1",
     "express": "^4.22.1",
+    "https-proxy-agent": "^9.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.8.9",
     "nodemailer": "^7.0.11"
