@@ -54,7 +54,7 @@ export default function Signup() {
       };
       console.log('Payload:', payload);
       
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/loginauth/register`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}api/loginauth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
