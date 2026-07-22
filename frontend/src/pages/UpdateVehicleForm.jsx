@@ -85,7 +85,7 @@ export default function UpdateVehicleForm({ onSubmit }) {
         status: existingVehicle.status || "Active"
       };
 
-      const response = await fetch(`http://localhost:5000/api/vehicle/${existingVehicle.vehicleId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle/${existingVehicle.vehicleId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -82,7 +82,7 @@ export default function UpdateDriverForm({ onSubmit }) {
         status: existingDriver.status || "Active"
       };
 
-      const response = await fetch(`http://localhost:5000/api/driver/${existingDriver.driverId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/driver/${existingDriver.driverId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -34,7 +34,7 @@ export default function DriverManagement() {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/driver');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/driver`);
         const data = await response.json();
         console.log('Raw API response:', data);
         console.log('Drivers array:', data.drivers);
@@ -216,14 +216,14 @@ export default function DriverManagement() {
       let response;
       if (isEdit) {
         // PUT for existing driver using driver_id
-        response = await fetch(`http://localhost:5000/api/driver/${existingDriver.driverId}`, {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/driver/${existingDriver.driverId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       } else {
         // POST for new driver
-        response = await fetch('http://localhost:5000/api/driver', {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/driver`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -248,7 +248,7 @@ export default function DriverManagement() {
     if (action === "delete") {
       if (window.confirm('Are you sure you want to delete this driver?')) {
         try {
-          const response = await fetch(`http://localhost:5000/api/driver/${row.driverId}`, {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/driver/${row.driverId}`, {
             method: 'DELETE'
           });
           
