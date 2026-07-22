@@ -1,7 +1,7 @@
 // src/pages/Signup.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TopBar from "../components/TopBar";
+import TopBar from "../components/Topbar";
 import logo from "../assets/logo-small.png";
 
 export default function Signup() {

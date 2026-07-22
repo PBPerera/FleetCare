@@ -1,6 +1,6 @@
 import React from "react";
 import DriverForm from "./DriverForm";
-import TopBarSlim from "../components/TopBar";
+import TopBarSlim from "../components/Topbar";
 
 export default function AddDriverPage() {
   const handleDriverSubmit = (data) => {
