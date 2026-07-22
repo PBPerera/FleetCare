@@ -178,7 +178,7 @@ export default function NotificationStaff() {
 
   // ✅ FETCH NOTIFICATIONS FROM BACKEND
   useEffect(() => {
-    fetch(`http://localhost:5000/api/notifications/staff/${staffId}`)
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/notifications/staff/${staffId}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("NOTIFICATIONS:", data); // 👈 DEBUG
@@ -205,7 +205,7 @@ export default function NotificationStaff() {
   // ✅ MARK AS READ (BACKEND + UI)
   const handleMarkAsRead = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/notifications/read/${id}`, {
+      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/notifications/read/${id}`, {
         method: "PUT",
       });
 

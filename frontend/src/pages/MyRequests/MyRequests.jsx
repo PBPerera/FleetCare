@@ -175,7 +175,7 @@ export default function MyRequests() {
     const fetchVehicleRequests = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/vehicleRequests",
+          `${import.meta.env.VITE_API_BASE_URL}/api/vehicleRequests`,
         );
 
         if (!response.ok) {
@@ -237,7 +237,7 @@ export default function MyRequests() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/vehicleRequests/${requestId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/vehicleRequests/${requestId}`,
         {
           method: "DELETE",
         },

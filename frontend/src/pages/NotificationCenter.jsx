@@ -479,7 +479,7 @@ export default function NotificationCenter() {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/notifications");
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/notifications`);
         const data = await res.json();
         
         setTableData(prev => {
@@ -586,7 +586,7 @@ export default function NotificationCenter() {
         cleanedNumber = "94" + cleanedNumber;
       }
 
-      const res = await fetch("http://localhost:5000/api/notifications/send", {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/notifications/send`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

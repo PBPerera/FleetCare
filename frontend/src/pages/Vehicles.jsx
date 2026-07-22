@@ -36,7 +36,7 @@ export default function Vehicles() {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/vehicle');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle`);
         const data = await response.json();
         console.log('Loaded vehicles:', data);
         
@@ -196,14 +196,14 @@ export default function Vehicles() {
       let response;
       if (isEdit) {
         // PUT for existing vehicle
-        response = await fetch(`http://localhost:5000/api/vehicle/${existingVehicle.vehicleId}`, {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle/${existingVehicle.vehicleId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       } else {
         // POST for new vehicle
-        response = await fetch('http://localhost:5000/api/vehicle', {
+        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -228,7 +228,7 @@ export default function Vehicles() {
     if (action === "delete") {
       if (window.confirm('Are you sure you want to delete this vehicle?')) {
         try {
-          const response = await fetch(`http://localhost:5000/api/vehicle/${row.vehicleId}`, {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle/${row.vehicleId}`, {
             method: 'DELETE'
           });
           
