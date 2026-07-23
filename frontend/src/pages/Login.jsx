@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import TopBar from "../components/TopBar";
+import TopBar from "../components/Topbar";
 import logo from "../assets/logo-small.png";
 
 export default function Login() {
@@ -18,7 +18,7 @@ export default function Login() {
     e.preventDefault();
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/loginauth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}api/loginauth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

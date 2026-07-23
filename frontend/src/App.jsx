@@ -1,7 +1,7 @@
 // src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { MaintenanceProvider } from "./context/MaintenanceContext";
+import { MaintenanceProvider } from "./Context/MaintenanceContext";
 
 import Onboard from "./pages/Onboard.jsx";
 import Login from "./pages/Login.jsx";
@@ -83,10 +83,10 @@ export default function App() {
         <Route path="/staff/my-requests" element={<MyRequests />} />
         {/* 
       {/* Staff area */}
-  <Route path="/staff/dashboard" element={<StaffDashboard />} />
-  <Route path="/staff/vehicle-request" element={<VehicleRequest />} />
-  <Route path="/staff/my-requests" element={<div>My Requests</div>} />
-  {/* 
+        <Route path="/staff/dashboard" element={<StaffDashboard />} />
+        <Route path="/staff/vehicle-request" element={<VehicleRequest />} />
+        <Route path="/staff/my-requests" element={<div>My Requests</div>} />
+        {/* 
   <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} /> */}
         <Route path="/staff/add-vehicle" element={<VehicleForm />} />
         <Route path="/staff/add-driver" element={<DriverForm />} />
@@ -111,8 +111,14 @@ export default function App() {
           element={<div>Driver Details</div>}
         />
         <Route path="/staff/my-requests" element={<div>My Requests</div>} />
-        <Route path="/staff/vehicle-details" element={<div>Vehicle Details</div>} />
-        <Route path="/staff/driver-details" element={<div>Driver Details</div>} />
+        <Route
+          path="/staff/vehicle-details"
+          element={<div>Vehicle Details</div>}
+        />
+        <Route
+          path="/staff/driver-details"
+          element={<div>Driver Details</div>}
+        />
         <Route path="/staff/reports" element={<div>Search & Reports</div>} />
         <Route path="/staff/notifications" element={<NotificationStaff />} />
 
