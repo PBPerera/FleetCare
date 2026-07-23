@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
+import { apiUrl } from "../lib/apiBase";
 import "./staff-dashboard.css";
 
 export default function UpdateVehicleForm({ onSubmit }) {
@@ -85,7 +86,7 @@ export default function UpdateVehicleForm({ onSubmit }) {
         status: existingVehicle.status || "Active"
       };
 
-      const response = await fetch(`http://localhost:5000/api/vehicle/${existingVehicle.vehicleId}`, {
+      const response = await fetch(apiUrl(`/vehicle/${existingVehicle.vehicleId}`), {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -92,7 +92,13 @@ import notifyRoutes from "./routes/notify.js";
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+].filter(Boolean);
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 connectDB();
@@ -127,11 +133,15 @@ app.get("/api/health", (req, res) => {
 });
 
 const PORT = parseInt(process.env.PORT, 10) || 5000;
-const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const server = app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`),
+);
 
 server.on("error", (error) => {
   if (error.code === "EADDRINUSE") {
-    console.error(`Port ${PORT} is already in use. Stop the process using that port or change PORT in .env.`);
+    console.error(
+      `Port ${PORT} is already in use. Stop the process using that port or change PORT in .env.`,
+    );
     process.exit(1);
   }
   console.error("Server error:", error);

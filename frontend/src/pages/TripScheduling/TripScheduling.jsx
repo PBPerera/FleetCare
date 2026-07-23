@@ -298,6 +298,7 @@ import {
   MdOutlineSettings,
 } from "react-icons/md";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { apiUrl } from "../../lib/apiBase";
 import "./TripScheduling.css";
 
 export default function TripScheduling() {
@@ -318,7 +319,7 @@ export default function TripScheduling() {
       setLoading(true);
       try {
         const response = await fetch(
-          "http://localhost:5000/api/vehicleRequests?status=Pending"
+          apiUrl("/vehicleRequests?status=Pending")
         );
         const data = await response.json();
         if (data.data) {
@@ -366,7 +367,7 @@ export default function TripScheduling() {
       };
 
       // Create trip in Trip collection
-      const tripResponse = await fetch("http://localhost:5000/api/trips", {
+      const tripResponse = await fetch(apiUrl("/trips"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -380,7 +381,7 @@ export default function TripScheduling() {
 
       // Update vehicle request status to Approved
       const updateResponse = await fetch(
-        `http://localhost:5000/api/vehicleRequests/${vehicleRequest._id}/approve`,
+        apiUrl(`/vehicleRequests/${vehicleRequest._id}/approve`),
         {
           method: "PATCH",
         }
@@ -419,7 +420,7 @@ export default function TripScheduling() {
       };
 
       // Create trip in Trip collection
-      const tripResponse = await fetch("http://localhost:5000/api/trips", {
+      const tripResponse = await fetch(apiUrl("/trips"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -433,7 +434,7 @@ export default function TripScheduling() {
 
       // Update vehicle request status to Rejected
       const updateResponse = await fetch(
-        `http://localhost:5000/api/vehicleRequests/${vehicleRequest._id}/reject`,
+        apiUrl(`/vehicleRequests/${vehicleRequest._id}/reject`),
         {
           method: "PATCH",
         }

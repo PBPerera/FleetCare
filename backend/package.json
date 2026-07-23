@@ -21,6 +21,7 @@
     "express": "^4.22.1",
     "https-proxy-agent": "^9.1.0",
     "jsonwebtoken": "^9.0.2",
+    "mongodb": "^7.5.0",
     "mongoose": "^7.8.9",
     "nodemailer": "^7.0.11"
   },

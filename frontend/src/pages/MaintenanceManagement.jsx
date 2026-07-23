@@ -7,28 +7,28 @@ import SearchBar from "../components/SearchBar/SearchBar.jsx";
 import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
 import ExportPdfBtn from "../components/ExportPdfBtn.jsx";
-import { MaintenanceContext } from "../context/MaintenanceContext.jsx";
+import { MaintenanceContext } from "../Context/MaintenanceContext.jsx";
 import "./Pages.css";
 
 function MaintenanceManagement() {
   const navigate = useNavigate();
-  const { 
-    state, 
-    setFilters, 
-    addService, 
-    addRepair, 
-    updateService, 
-    updateRepair, 
-    deleteService, 
+  const {
+    state,
+    setFilters,
+    addService,
+    addRepair,
+    updateService,
+    updateRepair,
+    deleteService,
     deleteRepair,
     approveRepair,
-    rejectRepair 
+    rejectRepair,
   } = useContext(MaintenanceContext);
 
   const [collapsed, setCollapsed] = useState(false);
 
   const routeMap = {
-    "Dashboard": "/admindashboard",
+    Dashboard: "/admindashboard",
     "User Management": "/user-management",
     "Vehicle Management": "/vehicles",
     "Driver Management": "/driver-management",
@@ -40,37 +40,39 @@ function MaintenanceManagement() {
     "Audit Log": "/audit-log",
   };
 
-  const dashboardCards = state.dashboardStats ? [
-    { 
-      title: "Total", 
-      count: state.dashboardStats.overview?.total || 0, 
-      subtitle: "All records", 
-      icon: "📊" 
-    },
-    { 
-      title: "Scheduled", 
-      count: state.dashboardStats.overview?.scheduled || 0, 
-      subtitle: "Upcoming", 
-      icon: "📅" 
-    },
-    { 
-      title: "In Progress", 
-      count: state.dashboardStats.overview?.inProgress || 0, 
-      subtitle: "Active Work", 
-      icon: "⚙️" 
-    },
-    { 
-      title: "Completed", 
-      count: state.dashboardStats.overview?.completedThisMonth || 0, 
-      subtitle: "This month", 
-      icon: "✅" 
-    },
-  ] : [
-    { title: "Total", count: 0, subtitle: "All records", icon: "📊" },
-    { title: "Scheduled", count: 0, subtitle: "Upcoming", icon: "📅" },
-    { title: "In Progress", count: 0, subtitle: "Active Work", icon: "⚙️" },
-    { title: "Completed", count: 0, subtitle: "This month", icon: "✅" },
-  ];
+  const dashboardCards = state.dashboardStats
+    ? [
+        {
+          title: "Total",
+          count: state.dashboardStats.overview?.total || 0,
+          subtitle: "All records",
+          icon: "📊",
+        },
+        {
+          title: "Scheduled",
+          count: state.dashboardStats.overview?.scheduled || 0,
+          subtitle: "Upcoming",
+          icon: "📅",
+        },
+        {
+          title: "In Progress",
+          count: state.dashboardStats.overview?.inProgress || 0,
+          subtitle: "Active Work",
+          icon: "⚙️",
+        },
+        {
+          title: "Completed",
+          count: state.dashboardStats.overview?.completedThisMonth || 0,
+          subtitle: "This month",
+          icon: "✅",
+        },
+      ]
+    : [
+        { title: "Total", count: 0, subtitle: "All records", icon: "📊" },
+        { title: "Scheduled", count: 0, subtitle: "Upcoming", icon: "📅" },
+        { title: "In Progress", count: 0, subtitle: "Active Work", icon: "⚙️" },
+        { title: "Completed", count: 0, subtitle: "This month", icon: "✅" },
+      ];
 
   const serviceColumns = [
     { key: "maintenanceId", label: "Maintain ID" },
@@ -96,19 +98,19 @@ function MaintenanceManagement() {
       label: "Approve / Reject",
       render: (row, onAction) => (
         <div className="action-buttons">
-          <button 
-            className="action-btn approve" 
+          <button
+            className="action-btn approve"
             onClick={() => onAction("approve", row)}
-            disabled={row.status === 'Approved' || row.status === 'Rejected'}
+            disabled={row.status === "Approved" || row.status === "Rejected"}
           >
-            {row.status === 'Approved' ? '✓ Approved' : 'Approve'}
+            {row.status === "Approved" ? "✓ Approved" : "Approve"}
           </button>
-          <button 
-            className="action-btn reject" 
+          <button
+            className="action-btn reject"
             onClick={() => onAction("reject", row)}
-            disabled={row.status === 'Approved' || row.status === 'Rejected'}
+            disabled={row.status === "Approved" || row.status === "Rejected"}
           >
-            {row.status === 'Rejected' ? '✗ Rejected' : 'Reject'}
+            {row.status === "Rejected" ? "✗ Rejected" : "Reject"}
           </button>
         </div>
       ),
@@ -127,31 +129,33 @@ function MaintenanceManagement() {
       const num = match ? parseInt(match[1], 10) : 0;
       return num > max ? num : max;
     }, 0);
-  
+
     // 2. Increment by 1 (This ensures even if you delete records, you move forward)
     const nextNumber = maxId + 1;
-  
+
     const newService = {
-      maintenanceId: `M${String(nextNumber).padStart(4, '0')}`, 
+      maintenanceId: `M${String(nextNumber).padStart(4, "0")}`,
       vehicleId: "",
       driverName: "",
       description: "",
       companyName: "",
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       shiftDate: "",
       completeDate: "",
       cost: 0,
-      status: "Scheduled"
+      status: "Scheduled",
     };
-    
+
     try {
       await addService(newService);
     } catch (error) {
       // Check if the error message from the backend contains "E11000"
       if (error.message.includes("E11000")) {
-        alert("Database Conflict: This ID already exists in the system index. Please refresh or contact admin.");
+        alert(
+          "Database Conflict: This ID already exists in the system index. Please refresh or contact admin.",
+        );
       } else {
-        alert('Error adding service: ' + error.message);
+        alert("Error adding service: " + error.message);
       }
     }
   };
@@ -162,7 +166,7 @@ function MaintenanceManagement() {
       driverName: "",
       description: "",
       companyName: "",
-      requestDate: new Date().toISOString().split('T')[0],
+      requestDate: new Date().toISOString().split("T")[0],
       shiftDate: "",
       completeDate: "",
       cost: 0,
@@ -174,11 +178,11 @@ function MaintenanceManagement() {
       tenderCall: "",
       procurementStage2: "",
     };
-    
+
     try {
       await addRepair(newRepair);
     } catch (error) {
-      alert('Error adding repair: ' + error.message);
+      alert("Error adding repair: " + error.message);
     }
   };
 
@@ -186,7 +190,7 @@ function MaintenanceManagement() {
     try {
       await updateService(id, updated);
     } catch (error) {
-      alert('Error updating service: ' + error.message);
+      alert("Error updating service: " + error.message);
     }
   };
 
@@ -194,7 +198,7 @@ function MaintenanceManagement() {
     try {
       await updateRepair(id, updated);
     } catch (error) {
-      alert('Error updating repair: ' + error.message);
+      alert("Error updating repair: " + error.message);
     }
   };
 
@@ -202,7 +206,7 @@ function MaintenanceManagement() {
     try {
       await deleteService(id);
     } catch (error) {
-      alert('Error deleting service: ' + error.message);
+      alert("Error deleting service: " + error.message);
     }
   };
 
@@ -210,7 +214,7 @@ function MaintenanceManagement() {
     try {
       await deleteRepair(id);
     } catch (error) {
-      alert('Error deleting repair: ' + error.message);
+      alert("Error deleting repair: " + error.message);
     }
   };
 
@@ -226,20 +230,20 @@ function MaintenanceManagement() {
           await updateRepair(row._id, row);
         }
         const comments = prompt("Enter approval comments (optional):");
-        await approveRepair(row._id, comments || '');
-        alert('Repair approved successfully!');
+        await approveRepair(row._id, comments || "");
+        alert("Repair approved successfully!");
       } catch (error) {
-        alert('Error approving repair: ' + error.message);
+        alert("Error approving repair: " + error.message);
       }
     } else if (action === "reject") {
       try {
         const reason = prompt("Enter rejection reason:");
         if (reason) {
           await rejectRepair(row._id, reason);
-          alert('Repair rejected successfully!');
+          alert("Repair rejected successfully!");
         }
       } catch (error) {
-        alert('Error rejecting repair: ' + error.message);
+        alert("Error rejecting repair: " + error.message);
       }
     }
   };
@@ -275,11 +279,19 @@ function MaintenanceManagement() {
           <Cards data={dashboardCards} />
 
           <h2 className="section-title">Maintenance Records for Service</h2>
-          <SearchBar onFilterChange={setFilters} filterLabel="Date of the Maintenance" />
+          <SearchBar
+            onFilterChange={setFilters}
+            filterLabel="Date of the Maintenance"
+          />
 
           <div className="action-bar">
-            <ExportPdfBtn data={state.services} filename="maintenance-services" />
-            <Button variant="primary" onClick={handleAddService}>+ Add Service</Button>
+            <ExportPdfBtn
+              data={state.services}
+              filename="maintenance-services"
+            />
+            <Button variant="primary" onClick={handleAddService}>
+              + Add Service
+            </Button>
           </div>
 
           <Table
@@ -296,8 +308,13 @@ function MaintenanceManagement() {
 
           <div className="action-bar">
             <ExportPdfBtn data={state.repairs} filename="maintenance-repairs" />
-            <Button variant="primary" onClick={handleAddRepair}>+ Add Repair</Button>
-            <Button variant="success" onClick={() => navigate("/repairs/approve")}>
+            <Button variant="primary" onClick={handleAddRepair}>
+              + Add Repair
+            </Button>
+            <Button
+              variant="success"
+              onClick={() => navigate("/repairs/approve")}
+            >
               ✓ Approve Maintain
             </Button>
           </div>
@@ -316,4 +333,4 @@ function MaintenanceManagement() {
   );
 }
 
-export default MaintenanceManagement;  // ✅ THIS MUST BE HERE!
+export default MaintenanceManagement; // ✅ THIS MUST BE HERE!

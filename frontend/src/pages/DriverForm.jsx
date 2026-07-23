@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
+import { addDriver } from "../api";
 import "./staff-dashboard.css"; // Use staff dashboard CSS for consistent styling
 
 export default function DriverForm({ onSubmit }) {
@@ -33,8 +34,6 @@ export default function DriverForm({ onSubmit }) {
     "Notifications": "/staff/notifications",
   };
 
-  const API_URL = import.meta.env.VITE_API_URL;
-
   const handleChange = (e) => {
     setDriverData({ ...driverData, [e.target.name]: e.target.value });
   };
@@ -58,17 +57,7 @@ export default function DriverForm({ onSubmit }) {
         status: "Active"
       };
 
-      const response = await fetch("http://localhost:5000/api/driver", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || result.msg || `HTTP error! status: ${response.status}`);
-      }
+      await addDriver(payload);
 
       alert("Driver added successfully!");
       setDriverData({

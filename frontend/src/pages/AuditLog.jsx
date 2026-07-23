@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Table from "../components/DataTable/Table.jsx";
-import { MaintenanceContext } from "../context/MaintenanceContext.jsx";
+import { MaintenanceContext } from "../Context/MaintenanceContext.jsx";
 import { auditApi } from "../api/maintenanceApi";
 import "./Pages.css";
 
@@ -26,7 +26,7 @@ export default function AuditLog() {
   });
 
   const routeMap = {
-    "Dashboard": "/admindashboard",
+    Dashboard: "/admindashboard",
     "User Management": "/user-management",
     "Vehicle Management": "/vehicles",
     "Driver Management": "/driver-management",
@@ -59,7 +59,7 @@ export default function AuditLog() {
       const response = await auditApi.getCompletedServices(params);
       setCompletedServices(response.data || []);
     } catch (error) {
-      console.error('Error fetching completed services:', error);
+      console.error("Error fetching completed services:", error);
     } finally {
       setLoading(false);
     }
@@ -75,7 +75,7 @@ export default function AuditLog() {
       const response = await auditApi.getCompletedRepairs(params);
       setCompletedRepairs(response.data || []);
     } catch (error) {
-      console.error('Error fetching completed repairs:', error);
+      console.error("Error fetching completed repairs:", error);
     } finally {
       setLoading(false);
     }
@@ -97,8 +97,12 @@ export default function AuditLog() {
   const handleServiceSearch = (filters) => setServiceFilters(filters);
   const handleRepairSearch = (filters) => setRepairFilters(filters);
 
-  const serviceCompanies = [...new Set(completedServices.map(s => s.companyName))].filter(Boolean);
-  const repairCompanies = [...new Set(completedRepairs.map(r => r.companyName))].filter(Boolean);
+  const serviceCompanies = [
+    ...new Set(completedServices.map((s) => s.companyName)),
+  ].filter(Boolean);
+  const repairCompanies = [
+    ...new Set(completedRepairs.map((r) => r.companyName)),
+  ].filter(Boolean);
 
   return (
     <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
@@ -128,7 +132,9 @@ export default function AuditLog() {
           {loading && <div className="loading">Loading...</div>}
 
           {/* SERVICES AUDIT */}
-          <h2 className="section-title">Audit Logs for Service ({completedServices.length})</h2>
+          <h2 className="section-title">
+            Audit Logs for Service ({completedServices.length})
+          </h2>
           <div className="searchbar-container">
             <div className="searchbar-input-wrapper">
               <input
@@ -172,7 +178,9 @@ export default function AuditLog() {
           />
 
           {/* REPAIRS AUDIT */}
-          <h2 className="section-title">Audit Logs for Repair ({completedRepairs.length})</h2>
+          <h2 className="section-title">
+            Audit Logs for Repair ({completedRepairs.length})
+          </h2>
           <div className="searchbar-container">
             <div className="searchbar-input-wrapper">
               <input

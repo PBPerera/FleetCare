@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
+import { addVehicle } from "../api";
 import "./staff-dashboard.css";
 
 export default function VehicleForm({ onSubmit }) {
@@ -64,19 +65,7 @@ export default function VehicleForm({ onSubmit }) {
         status: "Active"
       };
 
-      const response = await fetch("http://localhost:5000/api/vehicle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || result.msg || `HTTP error! status: ${response.status}`);
-      }
+      await addVehicle(payload);
 
       alert("Vehicle added successfully!");
       setVehicleData({

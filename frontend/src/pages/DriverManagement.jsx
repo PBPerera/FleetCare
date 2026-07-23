@@ -6,6 +6,7 @@ import SearchBar from "../components/SearchBar/SearchBar.jsx";
 import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
 import ExportPdfBtn from "../components/ExportPdfBtn.jsx";
+import { apiUrl } from "../lib/apiBase";
 import "./Pages.css";
 
 export default function DriverManagement() {
@@ -34,7 +35,7 @@ export default function DriverManagement() {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/driver');
+        const response = await fetch(apiUrl("/driver"));
         const data = await response.json();
         console.log('Raw API response:', data);
         console.log('Drivers array:', data.drivers);
@@ -216,14 +217,14 @@ export default function DriverManagement() {
       let response;
       if (isEdit) {
         // PUT for existing driver using driver_id
-        response = await fetch(`http://localhost:5000/api/driver/${existingDriver.driverId}`, {
+        response = await fetch(apiUrl(`/driver/${existingDriver.driverId}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       } else {
         // POST for new driver
-        response = await fetch('http://localhost:5000/api/driver', {
+          response = await fetch(apiUrl("/driver"), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -248,7 +249,7 @@ export default function DriverManagement() {
     if (action === "delete") {
       if (window.confirm('Are you sure you want to delete this driver?')) {
         try {
-          const response = await fetch(`http://localhost:5000/api/driver/${row.driverId}`, {
+          const response = await fetch(apiUrl(`/driver/${row.driverId}`), {
             method: 'DELETE'
           });
           
