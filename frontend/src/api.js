@@ -1,17 +1,35 @@
 import axios from "axios";
-import { getBackendBaseUrl } from "./lib/apiBase";
 
-const base = getBackendBaseUrl();
-if (!import.meta.env.VITE_API_BASE_URL) console.warn("VITE_API_BASE_URL not set; using fallback:", base);
-const API = axios.create({ baseURL: `${base}/api` });
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:5000";
 
-export const sendOtp = (email) => API.post("/auth/forgot-password", { email });
-export const verifyOtp = (email, otp) => API.post("/auth/verify-otp", { email, otp });
+const API = axios.create({
+  baseURL: `${API_BASE_URL.replace(/\/+$/, "")}/api`,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export const sendOtp = (email) =>
+  API.post("/auth/forgot-password", { email });
+
+export const verifyOtp = (email, otp) =>
+  API.post("/auth/verify-otp", { email, otp });
+
 export const resetPassword = (email, password) =>
-  API.post("/auth/reset-password", { email, newPassword: password });
-export const resendOtp = (email) => API.post("/auth/resend-otp", { email });
+  API.post("/auth/reset-password", {
+    email,
+    newPassword: password,
+  });
 
-export const addVehicle = (vehicleData) => API.post("/vehicle", vehicleData);
-export const addDriver = (driverData) => API.post("/driver", driverData); 
+export const resendOtp = (email) =>
+  API.post("/auth/resend-otp", { email });
+
+export const addVehicle = (vehicleData) =>
+  API.post("/vehicle", vehicleData);
+
+export const addDriver = (driverData) =>
+  API.post("/driver", driverData);
 
 export default API;
