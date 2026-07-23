@@ -18,7 +18,10 @@ export default function Login() {
     e.preventDefault();
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}api/loginauth/login`, {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL?.endsWith('/')
+        ? import.meta.env.VITE_API_BASE_URL
+        : `${import.meta.env.VITE_API_BASE_URL}/`;
+      const response = await fetch(`${baseUrl}api/loginauth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
