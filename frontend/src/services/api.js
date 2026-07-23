@@ -1,8 +1,7 @@
 import axios from "axios";
+import { getBackendBaseUrl } from "../lib/apiBase";
 
-const ENV_BACKEND = import.meta.env.VITE_API_BASE_URL;
-const FALLBACK = "http://localhost:5000";
-const base = (ENV_BACKEND && ENV_BACKEND.trim() !== "" ? ENV_BACKEND : FALLBACK).replace(/\/+$/, "");
+const base = getBackendBaseUrl();
 
 const API = axios.create({
   baseURL: base, // your backend URL
