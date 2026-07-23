@@ -7,6 +7,7 @@ import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
 import ExportPdfBtn from "../components/ExportPdfBtn.jsx";
 import { addVehicle } from "../api";
+import { apiUrl } from "../lib/apiBase";
 import "./Pages.css";
 
 export default function Vehicles() {
@@ -36,7 +37,7 @@ export default function Vehicles() {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle`);
+        const response = await fetch(apiUrl("/vehicle"));
         const data = await response.json();
         console.log('Loaded vehicles:', data);
         
@@ -196,14 +197,14 @@ export default function Vehicles() {
       let response;
       if (isEdit) {
         // PUT for existing vehicle
-        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle/${existingVehicle.vehicleId}`, {
+        response = await fetch(apiUrl(`/vehicle/${existingVehicle.vehicleId}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       } else {
         // POST for new vehicle
-        response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle`, {
+        response = await fetch(apiUrl("/vehicle"), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -228,7 +229,7 @@ export default function Vehicles() {
     if (action === "delete") {
       if (window.confirm('Are you sure you want to delete this vehicle?')) {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle/${row.vehicleId}`, {
+          const response = await fetch(apiUrl(`/vehicle/${row.vehicleId}`), {
             method: 'DELETE'
           });
           

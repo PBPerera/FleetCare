@@ -24,6 +24,7 @@ import {
 import { IoMdArrowDropdown } from "react-icons/io";
 import "./VehicleRequest.css";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../../lib/apiBase";
 
 export default function VehicleRequest() {
   // Sidebar + header state
@@ -68,7 +69,7 @@ export default function VehicleRequest() {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/driver`);
+        const response = await fetch(apiUrl("/driver"));
         const data = await response.json();
 
         const driversArray =
@@ -90,7 +91,7 @@ export default function VehicleRequest() {
 
     const fetchVehicles = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle`);
+        const response = await fetch(apiUrl("/vehicle"));
         const data = await response.json();
 
         const vehiclesArray =
@@ -119,7 +120,7 @@ export default function VehicleRequest() {
   useEffect(() => {
     const fetchLastRequestNumber = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicleRequests`);
+        const response = await fetch(apiUrl("/vehicleRequests"));
         if (!response.ok) {
           throw new Error("Failed to fetch vehicle requests");
         }
@@ -238,7 +239,7 @@ export default function VehicleRequest() {
       console.log("Request Payload:", requestPayload);
       // Send request to backend
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/vehicleRequests`,
+        apiUrl("/vehicleRequests"),
         {
           method: "POST",
           headers: {
@@ -304,7 +305,7 @@ export default function VehicleRequest() {
     // Re-fetch availables to reset the lists
     const fetchDrivers = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/driver`);
+        const response = await fetch(apiUrl("/driver"));
         const data = await response.json();
 
         const driversArray =
@@ -326,7 +327,7 @@ export default function VehicleRequest() {
 
     const fetchVehicles = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicle`);
+        const response = await fetch(apiUrl("/vehicle"));
         const data = await response.json();
 
         const vehiclesArray =

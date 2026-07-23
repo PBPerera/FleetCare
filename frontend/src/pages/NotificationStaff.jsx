@@ -153,6 +153,7 @@ import {
   MdInfoOutline,
 } from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
+import { apiUrl } from "../lib/apiBase";
 
 import StaffSidebar from "../components/StaffSidebar";
 
@@ -178,7 +179,7 @@ export default function NotificationStaff() {
 
   // ✅ FETCH NOTIFICATIONS FROM BACKEND
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/notifications/staff/${staffId}`)
+    fetch(apiUrl(`/notifications/staff/${staffId}`))
       .then((res) => res.json())
       .then((data) => {
         console.log("NOTIFICATIONS:", data); // 👈 DEBUG
@@ -205,7 +206,7 @@ export default function NotificationStaff() {
   // ✅ MARK AS READ (BACKEND + UI)
   const handleMarkAsRead = async (id) => {
     try {
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/notifications/read/${id}`, {
+      await fetch(apiUrl(`/notifications/read/${id}`), {
         method: "PUT",
       });
 

@@ -1,6 +1,6 @@
-const ENV_BACKEND = import.meta.env.VITE_API_BASE_URL;
-const FALLBACK = "http://localhost:5000";
-const base = (ENV_BACKEND && ENV_BACKEND.trim() !== "" ? ENV_BACKEND : FALLBACK).replace(/\/+$/, "");
+import { getBackendBaseUrl } from "../lib/apiBase";
+
+const base = getBackendBaseUrl();
 const API_BASE_URL = `${base}/api`;
 
 const fetchAPI = async (endpoint, options = {}) => {
