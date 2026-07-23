@@ -221,6 +221,10 @@ function MaintenanceManagement() {
   const handleRepairAction = async (action, row) => {
     if (action === "approve") {
       try {
+        // Auto-save the row if there are inline edits
+        if (row && row._id) {
+          await updateRepair(row._id, row);
+        }
         const comments = prompt("Enter approval comments (optional):");
         await approveRepair(row._id, comments || '');
         alert('Repair approved successfully!');

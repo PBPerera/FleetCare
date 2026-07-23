@@ -49,7 +49,7 @@ const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false
                 columns={columns}
                 isSelected={selectedRows.includes(idx)}
                 onSelect={() => toggleRowSelect(idx)}
-                onAction={(action) => onAction(action, row)}
+                onAction={(action, passedRow) => onAction(action, passedRow || row)}
                 showCheckbox={showCheckbox}
                 editable={editable}
                 onEdit={onEdit}

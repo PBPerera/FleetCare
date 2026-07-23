@@ -425,11 +425,28 @@ import {
   FaBell,
 } from "react-icons/fa";
 import { MdInfoOutline } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
 export default function NotificationCenter() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+  const navigate = useNavigate();
+  const [collapsed, setCollapsed] = useState(false);
+
+  const routeMap = {
+    "Dashboard": "/admindashboard",
+    "User Management": "/user-management",
+    "Vehicle Management": "/vehicles",
+    "Driver Management": "/driver-management",
+    "Trip Scheduling": "/trip-scheduling",
+    "Trip Allocation": "/trip-allocation",
+    "Maintenance Management": "/maintenance",
+    "Reporting & Analytics": "/reports",
+    "Notification Management": "/notification-management",
+    "Audit Log": "/audit-log",
+  };
 
   const handleUserClick = () => setIsMenuOpen(!isMenuOpen);
 
@@ -610,22 +627,37 @@ export default function NotificationCenter() {
   };
 
   return (
-    <div className="app-wrapper">
-      <div className={`app-container ${isMenuOpen ? "blurred" : ""}`}>
+    <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
+      <Sidebar
+        collapsed={collapsed}
+        active="Notification Center"
+        onNavigate={(label) => navigate(routeMap[label] || "/admindashboard")}
+        onLogout={() => (window.location.href = "/login")}
+      />
 
-        {/* MAIN AREA */}
-        <main className="main-content">
-          <header className="header">
-            <div className="header-left">
-              <FaBell />
-              <h3>Notification Management</h3>
-            </div>
-            <div className="fausercircle" onClick={handleUserClick}>
+      <main className="ad-main">
+        <header className="sd-header nm-header">
+          <button
+            className="sd-toggle"
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand" : "Collapse"}
+          >
+            <span className="sd-burger" />
+          </button>
+          
+          <div className="sd-header-title" style={{ display: 'flex', alignItems: 'center' }}>
+            <FaBell style={{marginRight: '8px'}} /> Notification Management
+          </div>
+          <div className="sd-header-right" style={{ marginLeft: 'auto' }}>
+            <div className="fausercircle" onClick={handleUserClick} style={{cursor: 'pointer'}}>
               <FaUserCircle size={26} />
             </div>
-          </header>
+          </div>
+        </header>
 
-          <div className="text">
+        <div className="ad-content">
+          <div className="text" style={{marginBottom: '20px'}}>
             <h1>Notification Center</h1>
             <p>Driver Alerts & Notifications</p>
           </div>
@@ -727,12 +759,12 @@ export default function NotificationCenter() {
               </div>
             ))}
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
 
       {/* USER MENU */}
       {isMenuOpen && (
-        <div className="user-menu">
+        <div className="user-menu" style={{position: 'absolute', top: '60px', right: '20px', zIndex: 1000}}>
           <div className="menu-item"><FaUserCircle /> View Profile</div>
           <div className="menu-item"><MdInfoOutline /> About Us</div>
           <div className="menu-item"><FaPhoneAlt /> Contact Us</div>
