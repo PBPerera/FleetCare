@@ -96,12 +96,22 @@ export const getAllNotifications = async (req, res) => {
   try {
     const now = new Date();
 
-    // 1. Trip schedule (approved trips)
-    const trips = await Trip.find({ status: "Approved" })
-      .sort({ createdAt: -1 })
+    // 1. Trip schedule (Show approved trips starting 3 days before trip date until the day ends)
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+    const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+    const approvedTrips = await Trip.find({ status: "Approved" })
+      .sort({ tripDate: 1 })
       .limit(100);
 
-    const tripSchedule = trips.map((trip) => ({
+    const filteredTrips = approvedTrips.filter((trip) => {
+      if (!trip.tripDate) return false;
+      const tDate = new Date(trip.tripDate);
+      if (isNaN(tDate.getTime())) return false;
+      return tDate >= todayStart && tDate <= maxExpiryDate;
+    });
+
+    const tripSchedule = filteredTrips.map((trip) => ({
       tripDate: trip.tripDate,
       tripTime: trip.tripTime,
       pickupDestination: trip.pickupDestination,
@@ -110,13 +120,26 @@ export const getAllNotifications = async (req, res) => {
       contactNo: trip.driverContact,
     }));
 
-    // 2. Maintenance alerts for repairs (use Repair model for Approved status)
-    const maintenanceRecords = await Repair.find({
-      status: "Approved",
-    }).sort({ requestDate: -1 }).limit(100);
+    // 2. Maintenance alerts for services and repairs (Show items starting 3 days before date until day ends)
+    const [serviceRecords, repairRecords] = await Promise.all([
+      Service.find().sort({ date: 1 }).limit(100),
+      Repair.find({ status: "Approved" }).sort({ requestDate: 1 }).limit(100),
+    ]);
+
+    const combinedMaintenance = [
+      ...serviceRecords.map((s) => ({ ...s.toObject(), maintenanceDate: s.date })),
+      ...repairRecords.map((r) => ({ ...r.toObject(), maintenanceDate: r.requestDate })),
+    ];
+
+    const filteredMaintenance = combinedMaintenance.filter((item) => {
+      if (!item.maintenanceDate) return false;
+      const mDate = new Date(item.maintenanceDate);
+      if (isNaN(mDate.getTime())) return false;
+      return mDate >= todayStart && mDate <= maxExpiryDate;
+    });
 
     const maintenanceAlerts = await Promise.all(
-      maintenanceRecords.map(async (item) => {
+      filteredMaintenance.map(async (item) => {
         let contactNo = "N/A";
         if (item.driverName) {
           const driver = await Driver.findOne({ name: item.driverName });
@@ -130,14 +153,22 @@ export const getAllNotifications = async (req, res) => {
           contactNo: contactNo,
           description: item.description || "No description",
           companyName: item.companyName || "N/A",
+          maintenanceDate: item.maintenanceDate,
         };
       })
     );
 
-    // 3. Expired vehicle insurance (Sorted by expiry date ascending - closest first)
-    const expiredInsuranceItems = await Vehicle.find()
+    // 3. Expired vehicle insurance (Show items starting 3 days before expiry date until the day ends)
+    const allVehicles = await Vehicle.find()
       .sort({ insurance_expiry: 1 })
       .limit(100);
+
+    const expiredInsuranceItems = allVehicles.filter((vehicle) => {
+      if (!vehicle.insurance_expiry) return false;
+      const expDate = new Date(vehicle.insurance_expiry);
+      if (isNaN(expDate.getTime())) return false;
+      return expDate >= todayStart && expDate <= maxExpiryDate;
+    });
 
     const expiredInsurance = await Promise.all(
       expiredInsuranceItems.map(async (vehicle) => {
@@ -170,10 +201,17 @@ export const getAllNotifications = async (req, res) => {
       })
     );
 
-    // 4. Expired driver license (Sorted by expiry date ascending)
-    const expiredDrivers = await Driver.find()
+    // 4. Expired driver license (Show items starting 3 days before expiry date until the day ends)
+    const allDrivers = await Driver.find()
       .sort({ licenseExpiryDate: 1 })
       .limit(100);
+
+    const expiredDrivers = allDrivers.filter((driver) => {
+      if (!driver.licenseExpiryDate) return false;
+      const expDate = new Date(driver.licenseExpiryDate);
+      if (isNaN(expDate.getTime())) return false;
+      return expDate >= todayStart && expDate <= maxExpiryDate;
+    });
 
     const expiredLicenses = expiredDrivers.map((driver) => ({
       driverId: driver.driver_id || driver._id,
