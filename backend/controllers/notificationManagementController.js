@@ -16,7 +16,11 @@ export const getTripSchedule = async (req, res) => {
     if (!trip.tripDate) return false;
     const tDate = new Date(trip.tripDate);
     if (isNaN(tDate.getTime())) return false;
-    return tDate >= todayStart && tDate <= maxExpiryDate;
+    if (tDate < todayStart || tDate > maxExpiryDate) return false;
+    const vId = (trip.vehicleId || "").trim();
+    const drv = (trip.driverName || "").trim();
+    if ((!vId || vId === "N/A") && (!drv || drv === "N/A")) return false;
+    return true;
   });
 
   res.json(filtered);
@@ -42,7 +46,18 @@ export const getMaintenanceAlerts = async (req, res) => {
     if (!item.maintenanceDate) return false;
     const mDate = new Date(item.maintenanceDate);
     if (isNaN(mDate.getTime())) return false;
-    return mDate >= todayStart && mDate <= maxExpiryDate;
+    if (mDate < todayStart || mDate > maxExpiryDate) return false;
+    const vId = (item.vehicleId || "").trim();
+    const drv = (item.driverName || "").trim();
+    const desc = (item.description || "").trim();
+    if (
+      (!vId || vId === "N/A") &&
+      (!drv || drv === "N/A") &&
+      (!desc || desc === "N/A" || desc === "No description")
+    ) {
+      return false;
+    }
+    return true;
   });
 
   res.json(filtered);
@@ -60,7 +75,10 @@ export const getExpiredInsurance = async (req, res) => {
     if (!expiry) return false;
     const expDate = new Date(expiry);
     if (isNaN(expDate.getTime())) return false;
-    return expDate >= todayStart && expDate <= maxExpiryDate;
+    if (expDate < todayStart || expDate > maxExpiryDate) return false;
+    const vId = String(vehicle.vehicle_id || vehicle.vehicleId || "").trim();
+    if (!vId || vId === "N/A") return false;
+    return true;
   });
 
   res.json(expired);
@@ -77,7 +95,11 @@ export const getExpiredLicenses = async (req, res) => {
     if (!driver.licenseExpiryDate) return false;
     const expDate = new Date(driver.licenseExpiryDate);
     if (isNaN(expDate.getTime())) return false;
-    return expDate >= todayStart && expDate <= maxExpiryDate;
+    if (expDate < todayStart || expDate > maxExpiryDate) return false;
+    const dId = String(driver.driver_id || driver._id || "").trim();
+    const dName = String(driver.name || "").trim();
+    if ((!dId || dId === "N/A") && (!dName || dName === "N/A" || dName === "Unknown")) return false;
+    return true;
   });
 
   res.json(expired);
