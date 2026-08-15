@@ -5,16 +5,19 @@ export const getDashboardStats = async (req, res) => {
   try {
     const totalServices = await Service.countDocuments();
     const scheduledServices = await Service.countDocuments({ status: 'Scheduled' });
+    const assignedServices = await Service.countDocuments({ status: 'Assigned' });
     const inProgressServices = await Service.countDocuments({ status: 'In Progress' });
     const completedServices = await Service.countDocuments({ status: 'Completed' });
 
     const totalRepairs = await Repair.countDocuments();
-    const pendingRepairs = await Repair.countDocuments({ status: 'Pending' });
-    const approvedRepairs = await Repair.countDocuments({ status: 'Approved' });
+    const pendingRepairs = await Repair.countDocuments({ approvalStatus: 'Pending' });
+    const approvedRepairs = await Repair.countDocuments({ approvalStatus: 'Approved' });
+    const assignedRepairs = await Repair.countDocuments({ status: 'Assigned' });
     const completedRepairs = await Repair.countDocuments({ status: 'Completed' });
 
     const totalRecords = totalServices + totalRepairs;
     const scheduled = scheduledServices + pendingRepairs;
+    const assigned = assignedServices + assignedRepairs;
     const inProgress = inProgressServices + approvedRepairs;
     
     const startOfMonth = new Date();
@@ -44,12 +47,14 @@ export const getDashboardStats = async (req, res) => {
         overview: {
           total: totalRecords,
           scheduled,
+          assigned,
           inProgress,
           completedThisMonth
         },
         services: {
           total: totalServices,
           scheduled: scheduledServices,
+          assigned: assignedServices,
           inProgress: inProgressServices,
           completed: completedServices
         },
@@ -57,6 +62,7 @@ export const getDashboardStats = async (req, res) => {
           total: totalRepairs,
           pending: pendingRepairs,
           approved: approvedRepairs,
+          assigned: assignedRepairs,
           completed: completedRepairs
         },
         costs: {

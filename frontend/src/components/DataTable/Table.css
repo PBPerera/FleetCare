@@ -93,6 +93,19 @@
   text-align: right;
 }
 
+/* Cost field: keep the numeric input but drop the browser's
+   increment/decrement spinner icons. */
+.cost-input::-webkit-outer-spin-button,
+.cost-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cost-input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* --- Specialized Cells --- */
 .checkbox-col {
   width: 50px;
@@ -174,6 +187,22 @@
 
 .action-btn.approve { background: #1e88e5; color: white; }
 .action-btn.reject { background: #e53935; color: white; }
+
+/* --- Approve/Reject result tick (read-only, decision already made) --- */
+.status-tick {
+  font-weight: 600;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.status-tick.approved { color: #1e88e5; }
+.status-tick.rejected { color: #e53935; }
+
+/* --- Locked cell (progressive fill / approval process not finished) --- */
+.locked-cell {
+  color: #aaa;
+  font-style: italic;
+  cursor: not-allowed;
+}
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
