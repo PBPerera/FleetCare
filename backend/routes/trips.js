@@ -7,6 +7,7 @@ import {
   getRejectedTrips,
   deleteTrip,
   completeTrip,
+  updateTripStatus,
 } from "../controllers/tripController.js";
 import { required as auth } from "../middleware/authMiddleware.js";
 
@@ -17,6 +18,7 @@ router.get("/approved", getApprovedTrips);
 router.get("/rejected", getRejectedTrips);
 router.get("/request/:requestId", getTripByRequestId);
 router.post("/", createTripFromApproval);
+router.patch("/:id/status", updateTripStatus);
 router.patch("/:id/complete", completeTrip);
 router.delete("/:id", deleteTrip);
 

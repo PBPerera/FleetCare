@@ -158,6 +158,39 @@ export const deleteTrip = async (req, res) => {
   }
 };
 
+// Update trip status (Approve/Reject)
+export const updateTripStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ message: "Status is required" });
+    }
+
+    if (!["Approved", "Rejected", "Completed", "Pending"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    const updatedTrip = await Trip.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedTrip) {
+      return res.status(404).json({ message: "Trip not found" });
+    }
+
+    res.status(200).json({
+      message: `Trip ${status.toLowerCase()} successfully`,
+      data: updatedTrip,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Complete trip and release vehicle/driver
 export const completeTrip = async (req, res) => {
   try {
