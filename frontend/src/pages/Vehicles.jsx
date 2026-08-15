@@ -7,6 +7,7 @@ import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
 import ExportPdfBtn from "../components/ExportPdfBtn.jsx";
 import { addVehicle } from "../api";
+import { apiUrl } from "../lib/apiBase";
 import "./Pages.css";
 
 export default function Vehicles() {
@@ -36,7 +37,7 @@ export default function Vehicles() {
   useEffect(() => {
     const fetchVehicles = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/vehicle');
+        const response = await fetch(apiUrl("/vehicle"));
         const data = await response.json();
         console.log('Loaded vehicles:', data);
         
@@ -53,7 +54,8 @@ export default function Vehicles() {
           registerdate: vehicle.register_date,
           insurancerenewaldate: vehicle.insurance_renewal_date,
           insuranceExpiry: vehicle.insurance_expiry,
-          status: vehicle.status || 'Available'
+          status: vehicle.status || 'Available',
+          displayStatus: vehicle.status === 'Active' ? 'Available' : vehicle.status === 'In Use' ? 'Assigned' : vehicle.status || 'Available'
         })) || [];
         
         setVehicles(mappedVehicles);
@@ -68,16 +70,17 @@ export default function Vehicles() {
   // ===== Cards / metrics (same style as Maintenance) =====
   const dashboardCards = useMemo(() => {
     const total = vehicles.length;
-    const available = vehicles.filter((v) => v.status === "Available").length;
-    const assigned = vehicles.filter((v) => v.status === "Assigned").length;
+    const available = vehicles.filter((v) => v.status === "Available" || v.status === "Active").length;
+    const assigned = vehicles.filter((v) => v.status === "In Use").length;
     const maintenance = vehicles.filter((v) => v.status === "Maintenance").length;
     return [
       { title: "Total", count: total, subtitle: "All vehicles", icon: "🚗" },
       { title: "Available", count: available, subtitle: "Free to assign", icon: "✅" },
-      { title: "Assigned", count: assigned, subtitle: "In use", icon: "📌" },
+      { title: "Assigned", count: assigned, subtitle: "Assigned trips", icon: "📌" },
       { title: "Maintenance", count: maintenance, subtitle: "In service", icon: "🛠️" },
     ];
   }, [vehicles]);
+
 
   // ===== Table columns (unique keys; with Actions like in repairs table) =====
   const columns = useMemo(
@@ -92,7 +95,7 @@ export default function Vehicles() {
       { key: "registerdate", label: "Register Date" },
       { key: "insurancerenewaldate", label: "Insurance Renewal Date" },
       { key: "insuranceExpiry", label: "Insurance Expiry" },
-      { key: "status", label: "Status" },
+      { key: "displayStatus", label: "Status" },
       {
         key: "actions",
         label: "Actions",
@@ -160,6 +163,7 @@ export default function Vehicles() {
       insurancerenewaldate: "",
       insuranceExpiry: "",
       status: "Available",
+      displayStatus: "Available",
     };
     setVehicles((prev) => [newRow, ...prev]);
   };
@@ -169,6 +173,9 @@ export default function Vehicles() {
       // Check if vehicle exists in current data (means it's an edit)
       const existingVehicle = vehicles.find(v => v.id === id);
       const isEdit = existingVehicle && existingVehicle.vehicleId;
+      
+      // Map displayStatus back to actual status
+      const actualStatus = updated.displayStatus === 'Available' ? 'Active' : updated.displayStatus === 'Assigned' ? 'In Use' : updated.displayStatus;
       
       // Map frontend fields to backend schema
       const payload = {
@@ -184,20 +191,20 @@ export default function Vehicles() {
         insurance_expiry: updated.insuranceExpiry,
         capacity: updated.capacity || '5',
         fuel_average: updated.fuel_average || '15',
-        status: updated.status || 'Available'
+        status: actualStatus || 'Available'
       };
       
       let response;
       if (isEdit) {
         // PUT for existing vehicle
-        response = await fetch(`http://localhost:5000/api/vehicle/${existingVehicle.vehicleId}`, {
+        response = await fetch(apiUrl(`/vehicle/${existingVehicle.vehicleId}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       } else {
         // POST for new vehicle
-        response = await fetch('http://localhost:5000/api/vehicle', {
+        response = await fetch(apiUrl("/vehicle"), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -222,7 +229,7 @@ export default function Vehicles() {
     if (action === "delete") {
       if (window.confirm('Are you sure you want to delete this vehicle?')) {
         try {
-          const response = await fetch(`http://localhost:5000/api/vehicle/${row.vehicleId}`, {
+          const response = await fetch(apiUrl(`/vehicle/${row.vehicleId}`), {
             method: 'DELETE'
           });
           
@@ -299,6 +306,9 @@ export default function Vehicles() {
             editable
             onEdit={handleEdit}
             onAction={handleAction}
+            fieldOptions={{
+              displayStatus: ['Available', 'Assigned', 'Maintenance']
+            }}
           />
         </div>
       </main>

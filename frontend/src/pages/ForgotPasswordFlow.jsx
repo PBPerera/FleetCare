@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TopBarSlim from "../components/TopBar";   // Add this
+import TopBarSlim from "../components/Topbar";   // Add this
 import ForgotPassword from "./ForgotPassword";
 import OtpVerification from "./OtpVerification";
 import ResetPassword from "./ResetPassword";

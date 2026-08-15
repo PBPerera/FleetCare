@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import TopBar from "../components/TopBar";
+import TopBar from "../components/Topbar";
 import logo from "../assets/logo-small.png";
 
 export default function Login() {
@@ -18,7 +18,10 @@ export default function Login() {
     e.preventDefault();
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/loginauth/login`, {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL?.endsWith('/')
+        ? import.meta.env.VITE_API_BASE_URL
+        : `${import.meta.env.VITE_API_BASE_URL}/`;
+      const response = await fetch(`${baseUrl}api/loginauth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +46,7 @@ export default function Login() {
           navigate("/admindashboard"); // fallback
         }
       } else {
-        alert(data.message || 'Login failed');
+        alert(data.message || data.error || 'Login failed');
       }
     } catch (error) {
       alert('Network error. Please try again.');

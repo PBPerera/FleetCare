@@ -1,7 +1,7 @@
 // src/pages/Signup.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TopBar from "../components/TopBar";
+import TopBar from "../components/Topbar";
 import logo from "../assets/logo-small.png";
 
 export default function Signup() {
@@ -54,7 +54,10 @@ export default function Signup() {
       };
       console.log('Payload:', payload);
       
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/loginauth/register`, {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL?.endsWith('/')
+        ? import.meta.env.VITE_API_BASE_URL
+        : `${import.meta.env.VITE_API_BASE_URL}/`;
+      const response = await fetch(`${baseUrl}api/loginauth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

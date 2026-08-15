@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
+import { apiUrl } from "../lib/apiBase";
 import "./staff-dashboard.css";
 
 export default function UpdateDriverForm({ onSubmit }) {
@@ -82,7 +83,7 @@ export default function UpdateDriverForm({ onSubmit }) {
         status: existingDriver.status || "Active"
       };
 
-      const response = await fetch(`http://localhost:5000/api/driver/${existingDriver.driverId}`, {
+      const response = await fetch(apiUrl(`/driver/${existingDriver.driverId}`), {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

@@ -144,7 +144,7 @@ export default function TripAllocation() {
     const fetchTrips = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/trips");
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/trips`);
         const data = await response.json();
         if (data.data) {
           setTrips(data.data);

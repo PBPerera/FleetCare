@@ -1,5 +1,7 @@
-// Update this to match your friend's backend port
-const API_BASE_URL = 'http://localhost:5000/api';
+import { getBackendBaseUrl } from "../lib/apiBase";
+
+const base = getBackendBaseUrl();
+const API_BASE_URL = `${base}/api`;
 
 const fetchAPI = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');

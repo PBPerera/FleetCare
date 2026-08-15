@@ -149,6 +149,7 @@ import {
 import { IoMdArrowDropdown } from "react-icons/io";
 import "./MyRequests.css";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../../lib/apiBase";
 
 export default function MyRequests() {
   // Sidebar + header state
@@ -175,7 +176,7 @@ export default function MyRequests() {
     const fetchVehicleRequests = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/vehicleRequests",
+          apiUrl("/vehicleRequests"),
         );
 
         if (!response.ok) {
@@ -237,7 +238,7 @@ export default function MyRequests() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/vehicleRequests/${requestId}`,
+        apiUrl(`/vehicleRequests/${requestId}`),
         {
           method: "DELETE",
         },

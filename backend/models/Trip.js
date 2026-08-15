@@ -45,7 +45,7 @@ const tripSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Approved", "Rejected"],
+      enum: ["Approved", "Rejected", "Completed"],
       required: true,
     },
     vehicleRequestId: {

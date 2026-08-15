@@ -1,6 +1,6 @@
 import React from "react";
 import VehicleForm from "./VehicleForm";
-import TopBarSlim from "../components/TopBar";
+import TopBarSlim from "../components/Topbar";
 
 export default function AddVehiclePage() {
   const handleVehicleSubmit = (data) => {

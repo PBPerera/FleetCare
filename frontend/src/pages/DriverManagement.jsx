@@ -6,6 +6,7 @@ import SearchBar from "../components/SearchBar/SearchBar.jsx";
 import Table from "../components/DataTable/Table.jsx";
 import Button from "../components/Buttons/Button.jsx";
 import ExportPdfBtn from "../components/ExportPdfBtn.jsx";
+import { apiUrl } from "../lib/apiBase";
 import "./Pages.css";
 
 export default function DriverManagement() {
@@ -34,7 +35,7 @@ export default function DriverManagement() {
   useEffect(() => {
     const fetchDrivers = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/driver');
+        const response = await fetch(apiUrl("/driver"));
         const data = await response.json();
         console.log('Raw API response:', data);
         console.log('Drivers array:', data.drivers);
@@ -68,7 +69,8 @@ export default function DriverManagement() {
             licenseRenewalDate: driver.licenseRenewalDate,
             licenseExpiry: driver.licenseExpiryDate,
             healthAssessment: driver.healthAssessment,
-            status: driver.status || 'Active'
+            status: driver.status || 'Active',
+            displayStatus: driver.status === 'Active' ? 'Available' : driver.status === 'In Use' ? 'Assigned' : driver.status || 'Available'
           };
         });
         
@@ -85,13 +87,13 @@ export default function DriverManagement() {
   // ===== Cards / metrics (same pattern as Vehicles/Maintenance) =====
   const dashboardCards = useMemo(() => {
     const total = drivers.length;
-    const available = drivers.filter((d) => d.status === "Available").length;
-    const onTrip = drivers.filter((d) => d.status === "On Trip").length;
+    const available = drivers.filter((d) => d.status === "Available" || d.status === "Active").length;
+    const inUse = drivers.filter((d) => d.status === "In Use").length;
     const offDuty = drivers.filter((d) => d.status === "Off Duty").length;
     return [
       { title: "Total", count: total, subtitle: "All drivers", icon: "🧑‍✈️" },
       { title: "Available", count: available, subtitle: "Free to assign", icon: "✅" },
-      { title: "On Trip", count: onTrip, subtitle: "Active trips", icon: "📍" },
+      { title: "On Trip", count: inUse, subtitle: "Active trips", icon: "📍" },
       { title: "Off Duty", count: offDuty, subtitle: "Resting", icon: "🌙" },
     ];
   }, [drivers]);
@@ -109,7 +111,7 @@ export default function DriverManagement() {
       { key: "licenseRenewalDate", label: "License Renewal Date" },
       { key: "licenseExpiry", label: "License Expiry Date" },
       { key: "healthAssessment", label: "Health Assessment" },
-      { key: "status", label: "Status" },
+      { key: "displayStatus", label: "Status" },
       {
         key: "actions",
         label: "Actions",
@@ -182,6 +184,7 @@ export default function DriverManagement() {
       licenseExpiry: "",
       healthAssessment: "",
       status: "Available",
+      displayStatus: "Available",
     };
     setDrivers((prev) => [newRow, ...prev]);
   };
@@ -191,6 +194,9 @@ export default function DriverManagement() {
       // Check if driver exists in current data (means it's an edit)
       const existingDriver = drivers.find(d => d.id === id);
       const isEdit = existingDriver && existingDriver.driverId;
+      
+      // Map displayStatus back to actual status
+      const actualStatus = updated.displayStatus === 'Available' ? 'Active' : updated.displayStatus === 'Assigned' ? 'In Use' : updated.displayStatus;
       
       // Map frontend fields to backend schema
       const payload = {
@@ -205,20 +211,20 @@ export default function DriverManagement() {
         licenseRenewalDate: updated.licenseRenewalDate,
         licenseExpiryDate: updated.licenseExpiry,
         healthAssessment: updated.healthAssessment || 'Pending',
-        status: updated.status || 'Active'
+        status: actualStatus || 'Active'
       };
       
       let response;
       if (isEdit) {
         // PUT for existing driver using driver_id
-        response = await fetch(`http://localhost:5000/api/driver/${existingDriver.driverId}`, {
+        response = await fetch(apiUrl(`/driver/${existingDriver.driverId}`), {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
       } else {
         // POST for new driver
-        response = await fetch('http://localhost:5000/api/driver', {
+          response = await fetch(apiUrl("/driver"), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -243,7 +249,7 @@ export default function DriverManagement() {
     if (action === "delete") {
       if (window.confirm('Are you sure you want to delete this driver?')) {
         try {
-          const response = await fetch(`http://localhost:5000/api/driver/${row.driverId}`, {
+          const response = await fetch(apiUrl(`/driver/${row.driverId}`), {
             method: 'DELETE'
           });
           
@@ -323,6 +329,9 @@ export default function DriverManagement() {
             editable
             onEdit={handleEdit}
             onAction={handleAction}
+            fieldOptions={{
+              displayStatus: ['Available', 'Assigned']
+            }}
           />
         </div>
       </main>
