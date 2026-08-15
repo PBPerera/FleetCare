@@ -504,7 +504,18 @@ export default function NotificationCenter() {
           const newTables = prev.map(t => ({ ...t }));
           
           if (data.tripSchedule) {
-            newTables[0].data = data.tripSchedule.map(item => ({
+            const now = new Date();
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+            const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+            const filtered = data.tripSchedule.filter((item) => {
+              if (!item.tripDate) return false;
+              const tDate = new Date(item.tripDate);
+              if (isNaN(tDate.getTime())) return false;
+              return tDate >= todayStart && tDate <= maxExpiryDate;
+            });
+
+            newTables[0].data = filtered.map(item => ({
               name: item.driverName || item.driver || "N/A",
               contact: item.contactNo || item.contact || item.driverContact || "N/A",
               message: "",
@@ -513,7 +524,19 @@ export default function NotificationCenter() {
           }
 
           if (data.maintenanceAlerts) {
-            newTables[1].data = data.maintenanceAlerts.map(item => ({
+            const now = new Date();
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+            const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+            const filtered = data.maintenanceAlerts.filter((item) => {
+              const mDateVal = item.maintenanceDate || item.date || item.requestDate;
+              if (!mDateVal) return true;
+              const mDate = new Date(mDateVal);
+              if (isNaN(mDate.getTime())) return true;
+              return mDate >= todayStart && mDate <= maxExpiryDate;
+            });
+
+            newTables[1].data = filtered.map(item => ({
               name: item.driverName || item.driver || "N/A",
               contact: item.contactNo || item.contact || "N/A",
               message: "",
@@ -522,7 +545,18 @@ export default function NotificationCenter() {
           }
 
           if (data.expiredInsurance) {
-            newTables[2].data = data.expiredInsurance.map(item => ({
+            const now = new Date();
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+            const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+            const filtered = data.expiredInsurance.filter((item) => {
+              if (!item.expiryDate) return false;
+              const expDate = new Date(item.expiryDate);
+              if (isNaN(expDate.getTime())) return false;
+              return expDate >= todayStart && expDate <= maxExpiryDate;
+            });
+
+            newTables[2].data = filtered.map(item => ({
               name: item.driverName || item.driver || "N/A",
               contact: item.contactNo || item.contact || "N/A",
               message: "",
@@ -531,7 +565,19 @@ export default function NotificationCenter() {
           }
 
           if (data.expiredLicenses) {
-            newTables[3].data = data.expiredLicenses.map(item => ({
+            const now = new Date();
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+            const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+            const filtered = data.expiredLicenses.filter((item) => {
+              const expiry = item.licenceExpiryDate || item.expiryDate;
+              if (!expiry) return false;
+              const expDate = new Date(expiry);
+              if (isNaN(expDate.getTime())) return false;
+              return expDate >= todayStart && expDate <= maxExpiryDate;
+            });
+
+            newTables[3].data = filtered.map(item => ({
               name: item.driverName || item.driver || "N/A",
               contact: item.contactNo || item.contact || "N/A",
               message: "",
@@ -541,22 +587,50 @@ export default function NotificationCenter() {
 
           // If the API returned an old-style flat array (just to be absolutely safe)
           if (Array.isArray(data) && data.length > 0 && !data.tripSchedule) {
-            newTables[0].data = data.filter(i => i.type === "trip").map(item => ({
+            const now = new Date();
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+            const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+            newTables[0].data = data.filter(i => {
+              if (i.type !== "trip" || !i.tripDate) return false;
+              const tDate = new Date(i.tripDate);
+              if (isNaN(tDate.getTime())) return false;
+              return tDate >= todayStart && tDate <= maxExpiryDate;
+            }).map(item => ({
               name: item.driver || item.driverName || "N/A",
               contact: item.contact || item.driverContact || "N/A",
               message: "", phoneInput: ""
             }));
-            newTables[1].data = data.filter(i => i.type === "maintenance").map(item => ({
+            newTables[1].data = data.filter(i => {
+              if (i.type !== "maintenance") return false;
+              const mDateVal = i.maintenanceDate || i.date || i.requestDate;
+              if (!mDateVal) return true;
+              const mDate = new Date(mDateVal);
+              if (isNaN(mDate.getTime())) return true;
+              return mDate >= todayStart && mDate <= maxExpiryDate;
+            }).map(item => ({
               name: item.driver || item.driverName || "N/A",
               contact: item.contact || item.contactNo || "N/A",
               message: "", phoneInput: ""
             }));
-            newTables[2].data = data.filter(i => i.type === "insurance").map(item => ({
+            newTables[2].data = data.filter(i => {
+              if (i.type !== "insurance" || !i.expiryDate) return false;
+              const expDate = new Date(i.expiryDate);
+              if (isNaN(expDate.getTime())) return false;
+              return expDate >= todayStart && expDate <= maxExpiryDate;
+            }).map(item => ({
               name: item.driver || item.driverName || "N/A",
               contact: item.contact || item.contactNo || "N/A",
               message: "", phoneInput: ""
             }));
-            newTables[3].data = data.filter(i => i.type === "license").map(item => ({
+            newTables[3].data = data.filter(i => {
+              if (i.type !== "license") return false;
+              const expiry = i.licenceExpiryDate || i.expiryDate;
+              if (!expiry) return false;
+              const expDate = new Date(expiry);
+              if (isNaN(expDate.getTime())) return false;
+              return expDate >= todayStart && expDate <= maxExpiryDate;
+            }).map(item => ({
               name: item.driver || item.driverName || "N/A",
               contact: item.contact || item.contactNo || "N/A",
               message: "", phoneInput: ""

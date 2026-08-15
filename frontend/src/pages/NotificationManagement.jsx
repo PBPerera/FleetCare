@@ -291,8 +291,19 @@ export default function NotificationManagement() {
         const data = await res.json();
 
         if (data.tripSchedule) {
+          const now = new Date();
+          const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+          const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+          const filtered = data.tripSchedule.filter((item) => {
+            if (!item.tripDate) return false;
+            const tDate = new Date(item.tripDate);
+            if (isNaN(tDate.getTime())) return false;
+            return tDate >= todayStart && tDate <= maxExpiryDate;
+          });
+
           setTripSchedule(
-            data.tripSchedule.map((item) => ({
+            filtered.map((item) => ({
               date: item.tripDate ? new Date(item.tripDate).toLocaleDateString() : "N/A",
               time: item.tripTime || "N/A",
               destination: item.pickupDestination || item.destination || "N/A",
@@ -304,8 +315,20 @@ export default function NotificationManagement() {
         }
 
         if (data.maintenanceAlerts) {
+          const now = new Date();
+          const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+          const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+          const filtered = data.maintenanceAlerts.filter((item) => {
+            const mDateVal = item.maintenanceDate || item.date || item.requestDate;
+            if (!mDateVal) return true;
+            const mDate = new Date(mDateVal);
+            if (isNaN(mDate.getTime())) return true;
+            return mDate >= todayStart && mDate <= maxExpiryDate;
+          });
+
           setMaintenanceAlerts(
-            data.maintenanceAlerts.map((item) => ({
+            filtered.map((item) => ({
               vehicleId: item.vehicleId || "N/A",
               driver: item.driverName || item.driver || "N/A",
               contact: item.contactNo || item.contact || "N/A",
@@ -316,8 +339,19 @@ export default function NotificationManagement() {
         }
 
         if (data.expiredInsurance) {
+          const now = new Date();
+          const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+          const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+          const filtered = data.expiredInsurance.filter((item) => {
+            if (!item.expiryDate) return false;
+            const expDate = new Date(item.expiryDate);
+            if (isNaN(expDate.getTime())) return false;
+            return expDate >= todayStart && expDate <= maxExpiryDate;
+          });
+
           setExpiredInsurance(
-            data.expiredInsurance.map((item) => ({
+            filtered.map((item) => ({
               vehicleId: item.vehicleId || "N/A",
               vehicleType: item.vehicleType || "N/A",
               expiryDate: item.expiryDate
@@ -330,8 +364,20 @@ export default function NotificationManagement() {
         }
 
         if (data.expiredLicenses) {
+          const now = new Date();
+          const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+          const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
+          const filtered = data.expiredLicenses.filter((item) => {
+            const expiry = item.licenceExpiryDate || item.expiryDate;
+            if (!expiry) return false;
+            const expDate = new Date(expiry);
+            if (isNaN(expDate.getTime())) return false;
+            return expDate >= todayStart && expDate <= maxExpiryDate;
+          });
+
           setExpiredLicenses(
-            data.expiredLicenses.map((item) => ({
+            filtered.map((item) => ({
               driverId: item.driverId || "N/A",
               driver: item.driverName || item.driver || "N/A",
               expiryDate: item.licenceExpiryDate || item.expiryDate
@@ -344,9 +390,18 @@ export default function NotificationManagement() {
 
         // if API returns old-style flat array, then also parse by type
         if (Array.isArray(data) && data.length > 0 && !data.tripSchedule) {
+          const now = new Date();
+          const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+          const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
+
           setTripSchedule(
             data
-              .filter((item) => item.type === "trip")
+              .filter((item) => {
+                if (item.type !== "trip" || !item.tripDate) return false;
+                const tDate = new Date(item.tripDate);
+                if (isNaN(tDate.getTime())) return false;
+                return tDate >= todayStart && tDate <= maxExpiryDate;
+              })
               .map((item) => ({
                 date: item.tripDate ? new Date(item.tripDate).toLocaleDateString() : "N/A",
                 time: item.tripTime || "N/A",
@@ -359,7 +414,14 @@ export default function NotificationManagement() {
 
           setMaintenanceAlerts(
             data
-              .filter((item) => item.type === "maintenance")
+              .filter((item) => {
+                if (item.type !== "maintenance") return false;
+                const mDateVal = item.maintenanceDate || item.date || item.requestDate;
+                if (!mDateVal) return true;
+                const mDate = new Date(mDateVal);
+                if (isNaN(mDate.getTime())) return true;
+                return mDate >= todayStart && mDate <= maxExpiryDate;
+              })
               .map((item) => ({
                 vehicleId: item.vehicleId || "N/A",
                 driver: item.driver || item.driverName || "N/A",
@@ -371,7 +433,12 @@ export default function NotificationManagement() {
 
           setExpiredInsurance(
             data
-              .filter((item) => item.type === "insurance")
+              .filter((item) => {
+                if (item.type !== "insurance" || !item.expiryDate) return false;
+                const expDate = new Date(item.expiryDate);
+                if (isNaN(expDate.getTime())) return false;
+                return expDate >= todayStart && expDate <= maxExpiryDate;
+              })
               .map((item) => ({
                 vehicleId: item.vehicleId || "N/A",
                 vehicleType: item.vehicleType || "N/A",
@@ -385,7 +452,14 @@ export default function NotificationManagement() {
 
           setExpiredLicenses(
             data
-              .filter((item) => item.type === "license")
+              .filter((item) => {
+                if (item.type !== "license") return false;
+                const expiry = item.licenceExpiryDate || item.expiryDate;
+                if (!expiry) return false;
+                const expDate = new Date(expiry);
+                if (isNaN(expDate.getTime())) return false;
+                return expDate >= todayStart && expDate <= maxExpiryDate;
+              })
               .map((item) => ({
                 driverId: item.driverId || "N/A",
                 driver: item.driver || item.driverName || "N/A",
