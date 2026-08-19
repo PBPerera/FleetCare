@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import TableRow from './TableRow.jsx'
 
-const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false, onEdit, onDelete, showActions = true, fieldOptions = {} }) => {
+const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false, onEdit, onDelete, showActions = true, fieldOptions = {}, progressiveFill = false, columnLock = null }) => {
   const [selectedRows, setSelectedRows] = useState([])
 
   const toggleSelectAll = () => {
@@ -44,7 +44,7 @@ const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false
           {rows.length > 0 ? (
             rows.map((row, idx) => (
               <TableRow
-                key={row.id || idx}
+                key={row._id || row.id || idx}
                 row={row}
                 columns={columns}
                 isSelected={selectedRows.includes(idx)}
@@ -56,6 +56,8 @@ const Table = ({ columns, rows, onAction, showCheckbox = false, editable = false
                 onDelete={onDelete}
                 showActions={showActions}
                 fieldOptions={fieldOptions}
+                progressiveFill={progressiveFill}
+                columnLock={columnLock}
               />
             ))
           ) : (

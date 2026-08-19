@@ -72,7 +72,7 @@ export const getAllRepairs = async (req, res) => {
 // @access  Public
 export const getPendingRepairs = async (req, res) => {
   try {
-    const repairs = await Repair.find({ status: 'Pending' })
+    const repairs = await Repair.find({ approvalStatus: 'Pending' })
       .sort({ requestDate: -1 });
 
     res.status(200).json({
@@ -158,10 +158,25 @@ export const updateRepair = async (req, res) => {
       });
     }
 
+    const updateData = { ...req.body };
+
+    // Once a Shift Date is entered for an Approved repair that hasn't
+    // finished its approval process yet, treat the approval process as
+    // complete. This is what unlocks Company Name / Shift Date /
+    // Complete Date / Cost / Status on the main Repair table, while the
+    // record itself stays in the approval-process table.
+    if (
+      updateData.shiftDate &&
+      repair.approvalStatus === 'Approved' &&
+      !repair.processCompleted
+    ) {
+      updateData.processCompleted = true;
+    }
+
     repair = await Repair.findByIdAndUpdate(
       req.params.id,
       {
-        ...req.body,
+        ...updateData,
         updatedBy: req.user?._id
       },
       {
@@ -337,14 +352,14 @@ export const deleteRepair = async (req, res) => {
 export const getRepairStats = async (req, res) => {
   try {
     const totalRepairs = await Repair.countDocuments();
-    const pending = await Repair.countDocuments({ status: 'Pending' });
-    const approved = await Repair.countDocuments({ status: 'Approved' });
-    const rejected = await Repair.countDocuments({ status: 'Rejected' });
-    const inProgress = await Repair.countDocuments({ status: 'In Progress' });
+    const pending = await Repair.countDocuments({ approvalStatus: 'Pending' });
+    const approved = await Repair.countDocuments({ approvalStatus: 'Approved' });
+    const rejected = await Repair.countDocuments({ approvalStatus: 'Rejected' });
+    const inProgress = await Repair.countDocuments({ approvalStatus: 'Approved', processCompleted: false });
     const completed = await Repair.countDocuments({ status: 'Completed' });
 
-    const critical = await Repair.countDocuments({ priority: 'Critical', status: 'Pending' });
-    const high = await Repair.countDocuments({ priority: 'High', status: 'Pending' });
+    const critical = await Repair.countDocuments({ priority: 'Critical', approvalStatus: 'Pending' });
+    const high = await Repair.countDocuments({ priority: 'High', approvalStatus: 'Pending' });
 
     const costAggregation = await Repair.aggregate([
       { $group: { _id: null, totalCost: { $sum: '$cost' } } }

@@ -47,10 +47,12 @@ const serviceSchema = new mongoose.Schema({
     default: 0,
     min: [0, 'Cost cannot be negative']
   },
+  // Only "Assigned" and "Completed" are selectable in the Status column,
+  // so those are the only real values here (plus '' for "not set yet").
   status: {
     type: String,
-    enum: ['Scheduled', 'In Progress', 'Completed', 'Cancelled'],
-    default: 'Scheduled'
+    enum: ['', 'Assigned', 'Completed'],
+    default: ''
   },
   notes: {
     type: String,

@@ -16,23 +16,25 @@ export default function RepairApprove() {
     deleteRepair 
   } = useContext(MaintenanceContext);
 
+  // Priority, Complete Date, Cost, and Status are set later on the main
+  // Repair table (once this approval process is finished) - they don't
+  // belong on the approval-process table itself.
   const approvalColumns = [
     { key: 'maintenanceId', label: 'Maintain ID' },
     { key: 'vehicleId', label: 'Vehicle ID' },
     { key: 'driverName', label: 'Driver Name' },
     { key: 'description', label: 'Description' },
     { key: 'companyName', label: 'Company Name' },
-    { key: 'priority', label: 'Priority' },
     { key: 'developmentOfficer', label: 'Development Officer' },
     { key: 'procurementStage1', label: 'Procurement Stage 1' },
     { key: 'tenderCall', label: 'Tender Call' },
     { key: 'engineer', label: 'Engineer' },
     { key: 'engineerDate', label: 'Engineer Date' },
     { key: 'procurementStage2', label: 'Procurement Stage 2' },
+    // Shift Date is last on purpose: with progressiveFill enabled it only
+    // becomes fillable once every column before it has a value, which is
+    // exactly what marks this approval process as complete.
     { key: 'shiftDate', label: 'Shift Date' },
-    { key: 'completeDate', label: 'Complete Date' },
-    { key: 'cost', label: 'Cost ($)' },
-    { key: 'status', label: 'Status' }
   ];
 
   const handleAddApproval = async () => {
@@ -45,7 +47,12 @@ export default function RepairApprove() {
       shiftDate: '',
       completeDate: '',
       cost: 0,
-      status: 'Pending',
+      // Records added directly on this page are already in the approval
+      // process, so they should show up here immediately. status stays
+      // unset (it's the later Assigned/Completed work status, not part
+      // of the approval workflow).
+      status: '',
+      approvalStatus: 'Approved',
       priority: 'Medium',
       procurementStage1: '',
       tenderCall: '',
@@ -93,8 +100,10 @@ export default function RepairApprove() {
     console.log('Approval action:', action, row);
   };
 
-  // Filter for pending repairs
-  const pendingRepairs = state.repairs.filter(r => r.status === 'Pending');
+  // Repairs that have been approved go through this table's approval
+  // process. They stay listed here even after the process is finished
+  // (Shift Date filled in) - the record is never removed from this table.
+  const pendingRepairs = state.repairs.filter(r => r.approvalStatus === 'Approved');
 
   return (
     <Layout title="Maintenance Management > Maintenance Repair Approve">
@@ -122,6 +131,7 @@ export default function RepairApprove() {
           editable={true}
           onEdit={handleApprovalEdit}
           onDelete={handleApprovalDelete}
+          progressiveFill={true}
         />
       </div>
     </Layout>

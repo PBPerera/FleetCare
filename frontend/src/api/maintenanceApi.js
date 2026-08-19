@@ -58,7 +58,7 @@ export const servicesApi = {
       shiftDate: data.shiftDate ? new Date(data.shiftDate).toISOString() : undefined,
       completeDate: data.completeDate ? new Date(data.completeDate).toISOString() : undefined,
       cost: data.cost || 0,
-      status: data.status || 'Scheduled',
+      status: data.status || '',
     };
     
     const cleanedData = cleanData(formattedData);
@@ -123,7 +123,8 @@ export const repairsApi = {
       completeDate: data.completeDate ? new Date(data.completeDate).toISOString() : undefined,
       engineerDate: data.engineerDate ? new Date(data.engineerDate).toISOString() : undefined,
       cost: data.cost || 0,
-      status: data.status || 'Pending',
+      status: data.status || '',
+      approvalStatus: data.approvalStatus || 'Pending',
       priority: data.priority || 'Medium',
       developmentOfficer: data.developmentOfficer || '',
       engineer: data.engineer || '',
