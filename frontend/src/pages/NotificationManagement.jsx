@@ -284,6 +284,38 @@ export default function NotificationManagement() {
   const [expiredLicenses, setExpiredLicenses] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const isRowEmpty = (row) => {
+    if (!row) return true;
+    const values = Object.values(row);
+    const isAllPlaceholder = values.every((val) => {
+      if (val === null || val === undefined) return true;
+      const str = String(val).trim();
+      return (
+        str === "" ||
+        str === "N/A" ||
+        str === "No description" ||
+        str === "—" ||
+        str === "Unknown" ||
+        str === "Unassigned" ||
+        str === "Location" ||
+        str === "Name" ||
+        str === "Number" ||
+        str === "Type" ||
+        str === "Company"
+      );
+    });
+
+    if (isAllPlaceholder) return true;
+
+    const vehicleId = (row.vehicleId || row.vehicle_id || "").toString().trim();
+    const driver = (row.driver || row.driverName || row.driverId || "").toString().trim();
+    if ((!vehicleId || vehicleId === "N/A") && (!driver || driver === "N/A")) {
+      return true;
+    }
+
+    return false;
+  };
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -303,14 +335,16 @@ export default function NotificationManagement() {
           });
 
           setTripSchedule(
-            filtered.map((item) => ({
-              date: item.tripDate ? new Date(item.tripDate).toLocaleDateString() : "N/A",
-              time: item.tripTime || "N/A",
-              destination: item.pickupDestination || item.destination || "N/A",
-              vehicleId: item.vehicleId || "N/A",
-              driver: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || item.driverContact || "N/A",
-            }))
+            filtered
+              .map((item) => ({
+                date: item.tripDate ? new Date(item.tripDate).toLocaleDateString() : "N/A",
+                time: item.tripTime || "N/A",
+                destination: item.pickupDestination || item.destination || "N/A",
+                vehicleId: item.vehicleId || "N/A",
+                driver: item.driverName || item.driver || "N/A",
+                contact: item.contactNo || item.contact || item.driverContact || "N/A",
+              }))
+              .filter((row) => !isRowEmpty(row))
           );
         }
 
@@ -328,13 +362,15 @@ export default function NotificationManagement() {
           });
 
           setMaintenanceAlerts(
-            filtered.map((item) => ({
-              vehicleId: item.vehicleId || "N/A",
-              driver: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-              description: item.description || "N/A",
-              company: item.companyName || item.company || "N/A",
-            }))
+            filtered
+              .map((item) => ({
+                vehicleId: item.vehicleId || "N/A",
+                driver: item.driverName || item.driver || "N/A",
+                contact: item.contactNo || item.contact || "N/A",
+                description: item.description || "N/A",
+                company: item.companyName || item.company || "N/A",
+              }))
+              .filter((row) => !isRowEmpty(row))
           );
         }
 
@@ -351,15 +387,17 @@ export default function NotificationManagement() {
           });
 
           setExpiredInsurance(
-            filtered.map((item) => ({
-              vehicleId: item.vehicleId || "N/A",
-              vehicleType: item.vehicleType || "N/A",
-              expiryDate: item.expiryDate
-                ? new Date(item.expiryDate).toLocaleDateString()
-                : "N/A",
-              driver: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-            }))
+            filtered
+              .map((item) => ({
+                vehicleId: item.vehicleId || "N/A",
+                vehicleType: item.vehicleType || "N/A",
+                expiryDate: item.expiryDate
+                  ? new Date(item.expiryDate).toLocaleDateString()
+                  : "N/A",
+                driver: item.driverName || item.driver || "N/A",
+                contact: item.contactNo || item.contact || "N/A",
+              }))
+              .filter((row) => !isRowEmpty(row))
           );
         }
 
@@ -377,14 +415,16 @@ export default function NotificationManagement() {
           });
 
           setExpiredLicenses(
-            filtered.map((item) => ({
-              driverId: item.driverId || "N/A",
-              driver: item.driverName || item.driver || "N/A",
-              expiryDate: item.licenceExpiryDate || item.expiryDate
-                ? new Date(item.licenceExpiryDate || item.expiryDate).toLocaleDateString()
-                : "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-            }))
+            filtered
+              .map((item) => ({
+                driverId: item.driverId || "N/A",
+                driver: item.driverName || item.driver || "N/A",
+                expiryDate: item.licenceExpiryDate || item.expiryDate
+                  ? new Date(item.licenceExpiryDate || item.expiryDate).toLocaleDateString()
+                  : "N/A",
+                contact: item.contactNo || item.contact || "N/A",
+              }))
+              .filter((row) => !isRowEmpty(row))
           );
         }
 
@@ -410,6 +450,7 @@ export default function NotificationManagement() {
                 driver: item.driver || item.driverName || "N/A",
                 contact: item.contact || item.driverContact || "N/A",
               }))
+              .filter((row) => !isRowEmpty(row))
           );
 
           setMaintenanceAlerts(
@@ -429,6 +470,7 @@ export default function NotificationManagement() {
                 description: item.description || item.message || "N/A",
                 company: item.company || item.companyName || "N/A",
               }))
+              .filter((row) => !isRowEmpty(row))
           );
 
           setExpiredInsurance(
@@ -448,6 +490,7 @@ export default function NotificationManagement() {
                 driver: item.driver || item.driverName || "N/A",
                 contact: item.contact || item.contactNo || "N/A",
               }))
+              .filter((row) => !isRowEmpty(row))
           );
 
           setExpiredLicenses(
@@ -468,6 +511,7 @@ export default function NotificationManagement() {
                   : "N/A",
                 contact: item.contact || item.contactNo || "N/A",
               }))
+              .filter((row) => !isRowEmpty(row))
           );
         }
       } catch (err) {
@@ -577,6 +621,7 @@ export default function NotificationManagement() {
           <div className="trip-section">
             {tableData.map((table, index) => {
               const filtered = table.data.filter((item) => {
+                if (isRowEmpty(item)) return false;
                 const searchValue = searches[index].toLowerCase();
                 return Object.values(item).some((val) =>
                   String(val).toLowerCase().includes(searchValue)
