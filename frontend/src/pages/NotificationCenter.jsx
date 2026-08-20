@@ -515,12 +515,14 @@ export default function NotificationCenter() {
               return tDate >= todayStart && tDate <= maxExpiryDate;
             });
 
-            newTables[0].data = filtered.map(item => ({
-              name: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || item.driverContact || "N/A",
-              message: "",
-              phoneInput: ""
-            }));
+            newTables[0].data = filtered
+              .map(item => ({
+                name: item.driverName || item.driver || "N/A",
+                contact: item.contactNo || item.contact || item.driverContact || "N/A",
+                message: "",
+                phoneInput: ""
+              }))
+              .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           if (data.maintenanceAlerts) {
@@ -536,12 +538,14 @@ export default function NotificationCenter() {
               return mDate >= todayStart && mDate <= maxExpiryDate;
             });
 
-            newTables[1].data = filtered.map(item => ({
-              name: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-              message: "",
-              phoneInput: ""
-            }));
+            newTables[1].data = filtered
+              .map(item => ({
+                name: item.driverName || item.driver || "N/A",
+                contact: item.contactNo || item.contact || "N/A",
+                message: "",
+                phoneInput: ""
+              }))
+              .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           if (data.expiredInsurance) {
@@ -556,12 +560,14 @@ export default function NotificationCenter() {
               return expDate >= todayStart && expDate <= maxExpiryDate;
             });
 
-            newTables[2].data = filtered.map(item => ({
-              name: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-              message: "",
-              phoneInput: ""
-            }));
+            newTables[2].data = filtered
+              .map(item => ({
+                name: item.driverName || item.driver || "N/A",
+                contact: item.contactNo || item.contact || "N/A",
+                message: "",
+                phoneInput: ""
+              }))
+              .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           if (data.expiredLicenses) {
@@ -577,12 +583,14 @@ export default function NotificationCenter() {
               return expDate >= todayStart && expDate <= maxExpiryDate;
             });
 
-            newTables[3].data = filtered.map(item => ({
-              name: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-              message: "",
-              phoneInput: ""
-            }));
+            newTables[3].data = filtered
+              .map(item => ({
+                name: item.driverName || item.driver || "N/A",
+                contact: item.contactNo || item.contact || "N/A",
+                message: "",
+                phoneInput: ""
+              }))
+              .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           // If the API returned an old-style flat array (just to be absolutely safe)
@@ -600,7 +608,8 @@ export default function NotificationCenter() {
               name: item.driver || item.driverName || "N/A",
               contact: item.contact || item.driverContact || "N/A",
               message: "", phoneInput: ""
-            }));
+            })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
+
             newTables[1].data = data.filter(i => {
               if (i.type !== "maintenance") return false;
               const mDateVal = i.maintenanceDate || i.date || i.requestDate;
@@ -612,7 +621,8 @@ export default function NotificationCenter() {
               name: item.driver || item.driverName || "N/A",
               contact: item.contact || item.contactNo || "N/A",
               message: "", phoneInput: ""
-            }));
+            })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
+
             newTables[2].data = data.filter(i => {
               if (i.type !== "insurance" || !i.expiryDate) return false;
               const expDate = new Date(i.expiryDate);
@@ -622,7 +632,8 @@ export default function NotificationCenter() {
               name: item.driver || item.driverName || "N/A",
               contact: item.contact || item.contactNo || "N/A",
               message: "", phoneInput: ""
-            }));
+            })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
+
             newTables[3].data = data.filter(i => {
               if (i.type !== "license") return false;
               const expiry = i.licenceExpiryDate || i.expiryDate;
@@ -634,7 +645,7 @@ export default function NotificationCenter() {
               name: item.driver || item.driverName || "N/A",
               contact: item.contact || item.contactNo || "N/A",
               message: "", phoneInput: ""
-            }));
+            })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           return newTables;
