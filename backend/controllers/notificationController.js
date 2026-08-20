@@ -127,12 +127,12 @@ export const getAllNotifications = async (req, res) => {
     // 2. Maintenance alerts for services and repairs (Show items starting 3 days before date until day ends)
     const [serviceRecords, repairRecords] = await Promise.all([
       Service.find().sort({ date: 1 }).limit(100),
-      Repair.find({ status: "Approved" }).sort({ requestDate: 1 }).limit(100),
+      Repair.find({ approvalStatus: { $ne: "Rejected" } }).sort({ requestDate: 1 }).limit(100),
     ]);
 
     const combinedMaintenance = [
-      ...serviceRecords.map((s) => ({ ...s.toObject(), maintenanceDate: s.date })),
-      ...repairRecords.map((r) => ({ ...r.toObject(), maintenanceDate: r.requestDate })),
+      ...serviceRecords.map((s) => ({ ...s.toObject(), maintenanceDate: s.shiftDate || s.date })),
+      ...repairRecords.map((r) => ({ ...r.toObject(), maintenanceDate: r.shiftDate || r.requestDate })),
     ];
 
     const filteredMaintenance = combinedMaintenance.filter((item) => {
@@ -155,9 +155,11 @@ export const getAllNotifications = async (req, res) => {
 
     const maintenanceAlerts = await Promise.all(
       filteredMaintenance.map(async (item) => {
-        let contactNo = "N/A";
-        if (item.driverName) {
-          const driver = await Driver.findOne({ name: item.driverName });
+        let contactNo = item.contactNo || item.contact || "N/A";
+        if (contactNo === "N/A" && item.driverName && item.driverName !== "N/A") {
+          const driver = await Driver.findOne({
+            name: { $regex: new RegExp(`^${item.driverName.trim().replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") }
+          });
           if (driver && driver.phone_no) {
             contactNo = driver.phone_no;
           }
