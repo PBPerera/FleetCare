@@ -354,7 +354,7 @@ export default function NotificationManagement() {
           const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
 
           const filtered = data.maintenanceAlerts.filter((item) => {
-            const mDateVal = item.maintenanceDate || item.date || item.requestDate;
+            const mDateVal = item.shiftDate || item.maintenanceDate || item.date || item.requestDate;
             if (!mDateVal) return true;
             const mDate = new Date(mDateVal);
             if (isNaN(mDate.getTime())) return true;

@@ -476,13 +476,6 @@ export default function NotificationCenter() {
       ],
     },
     {
-      title: "Vehicle Insurance Expiry Notifications for Drivers",
-      data: [
-        { name: "Saman Kumara", contact: "0763435761", message: "", phoneInput: "" },
-        { name: "Nimal Perera", contact: "0712345678", message: "", phoneInput: "" },
-      ],
-    },
-    {
       title: "Driver License Expiry Notifications for Drivers",
       data: [
         { name: "Saman Kumara", contact: "0763435761", message: "", phoneInput: "" },
@@ -531,7 +524,7 @@ export default function NotificationCenter() {
             const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
 
             const filtered = data.maintenanceAlerts.filter((item) => {
-              const mDateVal = item.maintenanceDate || item.date || item.requestDate;
+              const mDateVal = item.shiftDate || item.maintenanceDate || item.date || item.requestDate;
               if (!mDateVal) return true;
               const mDate = new Date(mDateVal);
               if (isNaN(mDate.getTime())) return true;
@@ -539,28 +532,6 @@ export default function NotificationCenter() {
             });
 
             newTables[1].data = filtered
-              .map(item => ({
-                name: item.driverName || item.driver || "N/A",
-                contact: item.contactNo || item.contact || "N/A",
-                message: "",
-                phoneInput: ""
-              }))
-              .filter(r => r.name !== "N/A" || r.contact !== "N/A");
-          }
-
-          if (data.expiredInsurance) {
-            const now = new Date();
-            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-            const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
-
-            const filtered = data.expiredInsurance.filter((item) => {
-              if (!item.expiryDate) return false;
-              const expDate = new Date(item.expiryDate);
-              if (isNaN(expDate.getTime())) return false;
-              return expDate >= todayStart && expDate <= maxExpiryDate;
-            });
-
-            newTables[2].data = filtered
               .map(item => ({
                 name: item.driverName || item.driver || "N/A",
                 contact: item.contactNo || item.contact || "N/A",
@@ -583,7 +554,7 @@ export default function NotificationCenter() {
               return expDate >= todayStart && expDate <= maxExpiryDate;
             });
 
-            newTables[3].data = filtered
+            newTables[2].data = filtered
               .map(item => ({
                 name: item.driverName || item.driver || "N/A",
                 contact: item.contactNo || item.contact || "N/A",
@@ -612,7 +583,7 @@ export default function NotificationCenter() {
 
             newTables[1].data = data.filter(i => {
               if (i.type !== "maintenance") return false;
-              const mDateVal = i.maintenanceDate || i.date || i.requestDate;
+              const mDateVal = i.shiftDate || i.maintenanceDate || i.date || i.requestDate;
               if (!mDateVal) return true;
               const mDate = new Date(mDateVal);
               if (isNaN(mDate.getTime())) return true;
@@ -624,17 +595,6 @@ export default function NotificationCenter() {
             })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
 
             newTables[2].data = data.filter(i => {
-              if (i.type !== "insurance" || !i.expiryDate) return false;
-              const expDate = new Date(i.expiryDate);
-              if (isNaN(expDate.getTime())) return false;
-              return expDate >= todayStart && expDate <= maxExpiryDate;
-            }).map(item => ({
-              name: item.driver || item.driverName || "N/A",
-              contact: item.contact || item.contactNo || "N/A",
-              message: "", phoneInput: ""
-            })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
-
-            newTables[3].data = data.filter(i => {
               if (i.type !== "license") return false;
               const expiry = i.licenceExpiryDate || i.expiryDate;
               if (!expiry) return false;

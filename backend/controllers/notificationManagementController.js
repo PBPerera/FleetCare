@@ -34,12 +34,12 @@ export const getMaintenanceAlerts = async (req, res) => {
 
   const [services, repairs] = await Promise.all([
     Service.find().sort({ date: 1 }),
-    Repair.find({ status: "Approved" }).sort({ requestDate: 1 }),
+    Repair.find({ approvalStatus: { $ne: "Rejected" } }).sort({ requestDate: 1 }),
   ]);
 
   const combined = [
-    ...services.map((s) => ({ ...s.toObject(), maintenanceDate: s.date })),
-    ...repairs.map((r) => ({ ...r.toObject(), maintenanceDate: r.requestDate })),
+    ...services.map((s) => ({ ...s.toObject(), maintenanceDate: s.shiftDate || s.date })),
+    ...repairs.map((r) => ({ ...r.toObject(), maintenanceDate: r.shiftDate || r.requestDate })),
   ];
 
   const filtered = combined.filter((item) => {
