@@ -135,62 +135,101 @@ export default function TripAllocation() {
   const [collapsed, setCollapsed] = useState(false);
   const [q, setQ] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [trips, setTrips] = useState([]);
+  const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [updatingRequestId, setUpdatingRequestId] = useState(null);
 
-  // Fetch trips on mount
+  // Fetch requests on mount
   useEffect(() => {
-    const fetchTrips = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/trips`);
-        const data = await response.json();
-        if (data.data) {
-          setTrips(data.data);
-        }
-      } catch (err) {
-        setError("Failed to fetch trip allocations");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchTrips();
+    fetchRequests();
   }, []);
 
-  // Filter trips based on vehicle ID search and status
-  const filteredTrips = useMemo(() => {
-    return trips.filter((trip) => {
-      const matchesVehicleId = trip.vehicleId
+  const fetchRequests = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/vehicleRequests`);
+      const data = await response.json();
+      if (data.data) {
+        setRequests(data.data);
+      }
+    } catch (err) {
+      setError("Failed to fetch trip allocations");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter requests based on vehicle ID search and status
+  const filteredRequests = useMemo(() => {
+    return requests.filter((request) => {
+      const matchesVehicleId = request.vehicleId
         .toLowerCase()
         .includes(q.toLowerCase());
       const matchesStatus =
-        statusFilter === "All" ? true : trip.status === statusFilter;
+        statusFilter === "All" ? true : request.status === statusFilter;
       return matchesVehicleId && matchesStatus;
     });
-  }, [q, statusFilter, trips]);
+  }, [q, statusFilter, requests]);
 
-  const exportToPDF = () => {
-    if (filteredTrips.length === 0) {
+  const handleRequestStatusChange = async (requestId, newStatus) => {
+    setUpdatingRequestId(requestId);
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/vehicleRequests/${requestId}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
+      if (response.ok) {
+        const result = await response.json();
+        setSuccessMessage(`Request ${newStatus.toLowerCase()} successfully!`);
+        
+        // Update the requests list
+        setRequests(requests.map((req) =>
+          req._id === requestId ? { ...req, status: newStatus } : req
+        ));
+
+        // Clear success message after 3 seconds
+        setTimeout(() => setSuccessMessage(""), 3000);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to update request status");
+      }
+    } catch (err) {
+      setError("Network error: Failed to update request status");
+      console.error(err);
+    } finally {
+      setUpdatingRequestId(null);
+    }
+  };
+
+  const exportToExcel = () => {
+    if (filteredRequests.length === 0) {
       alert("No records to export");
       return;
     }
 
     // Prepare data for Excel
-    const excelData = filteredTrips.map((trip) => ({
-      "Request ID": trip.requestId,
-      "Vehicle ID": trip.vehicleId,
-      "Driver Name": trip.driverName,
-      "Driver Contact Number": trip.driverContact,
-      "Pickup & Destination": trip.pickupDestination,
-      "Trip Date": new Date(trip.tripDate).toISOString().split("T")[0],
-      "Trip Time": trip.tripTime,
-      "Purpose": trip.purpose,
-      "Vehicle Type": trip.vehicleType,
-      "No. of Passengers": trip.noOfPassengers,
-      Status: trip.status,
+    const excelData = filteredRequests.map((request) => ({
+      "Request ID": request.requestId,
+      "Vehicle ID": request.vehicleId,
+      "Driver Name": request.driverName,
+      "Driver Contact Number": request.driverContact,
+      "Pickup & Destination": request.pickupDestination,
+      "Trip Date": new Date(request.tripDate).toISOString().split("T")[0],
+      "Trip Time": request.tripTime,
+      "Purpose": request.purpose,
+      "Vehicle Type": request.vehicleType,
+      "No. of Passengers": request.noOfPassengers,
+      Status: request.status,
     }));
 
     // Create workbook and worksheet
@@ -220,7 +259,10 @@ export default function TripAllocation() {
   };
 
   const getStatusBadgeClass = (status) => {
-    return status === "Approved" ? "Approved-btn" : "Rejected-btn";
+    if (status === "Approved") return "status-approved";
+    if (status === "Rejected") return "status-rejected";
+    if (status === "Completed") return "status-completed";
+    return "status-pending";
   };
 
   return (
@@ -270,6 +312,7 @@ export default function TripAllocation() {
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
                 <option>All</option>
+                <option>Pending</option>
                 <option>Approved</option>
                 <option>Rejected</option>
               </select>
@@ -279,12 +322,13 @@ export default function TripAllocation() {
           {/* Loading/Error Messages */}
           {loading && <div className="info-message">Loading trip allocations...</div>}
           {error && <div className="error-message">{error}</div>}
+          {successMessage && <div className="success-message">{successMessage}</div>}
 
           {/* Table */}
           <section className="ta-table-container">
-            <h3 className="ta-title">Trip Allocation - Approved or Rejected</h3>
+            <h3 className="ta-title">Trip Allocation - Status Management</h3>
             <div className="table-header">
-              <button className="custom-btn btn-primary" onClick={exportToPDF}>
+              <button className="custom-btn btn-primary" onClick={exportToExcel}>
                 📄 Export Excel
               </button>
             </div>
@@ -310,35 +354,58 @@ export default function TripAllocation() {
                     <th>Vehicle Type</th>
                     <th>No. of Passengers</th>
                     <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredTrips.length > 0 ? (
-                    filteredTrips.map((trip, index) => (
-                      <tr key={index}>
-                        <td>{trip.requestId}</td>
-                        <td>{trip.vehicleId}</td>
-                        <td>{trip.driverName}</td>
-                        <td>{trip.driverContact}</td>
-                        <td>{trip.pickupDestination}</td>
+                  {filteredRequests.length > 0 ? (
+                    filteredRequests.map((request, index) => (
+                      <tr key={request._id || index}>
+                        <td>{request.requestId}</td>
+                        <td>{request.vehicleId}</td>
+                        <td>{request.driverName}</td>
+                        <td>{request.driverContact}</td>
+                        <td>{request.pickupDestination}</td>
                         <td>
                           <FaCalendarAlt className="calendar-icon" />{" "}
-                          {new Date(trip.tripDate).toISOString().split("T")[0]}
+                          {new Date(request.tripDate).toISOString().split("T")[0]}
                         </td>
-                        <td>{trip.tripTime}</td>
-                        <td>{trip.purpose}</td>
-                        <td>{trip.vehicleType}</td>
-                        <td>{trip.noOfPassengers}</td>
+                        <td>{request.tripTime}</td>
+                        <td>{request.purpose}</td>
+                        <td>{request.vehicleType}</td>
+                        <td>{request.noOfPassengers}</td>
                         <td>
-                          <button className={getStatusBadgeClass(trip.status)}>
-                            {trip.status}
+                          <span className={`status-badge ${getStatusBadgeClass(request.status)}`}>
+                            {request.status}
+                          </span>
+                        </td>
+                        <td className="ta-actions">
+                          <button
+                            className="btn-approve"
+                            onClick={() => handleRequestStatusChange(request._id, "Approved")}
+                            disabled={
+                              request.status === "Approved" || updatingRequestId === request._id
+                            }
+                            title="Approve this request"
+                          >
+                            {updatingRequestId === request._id ? "..." : "✓ Approve"}
+                          </button>
+                          <button
+                            className="btn-reject"
+                            onClick={() => handleRequestStatusChange(request._id, "Rejected")}
+                            disabled={
+                              request.status === "Rejected" || updatingRequestId === request._id
+                            }
+                            title="Reject this request"
+                          >
+                            {updatingRequestId === request._id ? "..." : "✗ Reject"}
                           </button>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="11" style={{ textAlign: "center" }}>
+                      <td colSpan="12" style={{ textAlign: "center" }}>
                         No trip allocations found
                       </td>
                     </tr>
