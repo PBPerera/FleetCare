@@ -111,4 +111,9 @@ const NotificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Automatically delete notifications 30 days after they were created
+// (MongoDB's TTL monitor sweeps expired documents in the background,
+// so nothing in the app needs to poll or clean these up manually).
+NotificationSchema.index({ createdAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
+
 export default mongoose.model("Notification", NotificationSchema);

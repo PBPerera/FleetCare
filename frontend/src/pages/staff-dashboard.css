@@ -91,7 +91,7 @@
 /* Metric cards */
 .sd-metrics{
   display:grid; gap:14px;
-  grid-template-columns: repeat(4, minmax(220px,1fr));
+  grid-template-columns: repeat(3, minmax(220px,1fr));
 }
 @media (max-width: 1024px){ .sd-metrics{ grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 520px){ .sd-metrics{ grid-template-columns: 1fr; } }
@@ -118,8 +118,20 @@
   display:grid; gap:14px;
   grid-template-columns: repeat(3, minmax(260px,1fr));
 }
+.sd-req-grid-4{ grid-template-columns: repeat(4, minmax(220px,1fr)); }
+@media (max-width: 1200px){ .sd-req-grid-4{ grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 1024px){ .sd-req-grid{ grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 600px){ .sd-req-grid{ grid-template-columns: 1fr; } }
+
+.sd-req-empty{
+  grid-column: 1 / -1;
+  background: var(--sd-panel);
+  border: 1px dashed var(--sd-outline);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  color: var(--sd-muted);
+}
 
 .sd-req-head{ display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
 .sd-req-title{ display:flex; align-items:center; gap:10px; }

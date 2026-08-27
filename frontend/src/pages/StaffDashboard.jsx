@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
 import UserProfileMenu from "../components/UserProfileMenu";
+import { apiUrl } from "../lib/apiBase";
 import "./staff-dashboard.css";
 
 export default function StaffDashboard() {
@@ -20,6 +21,65 @@ export default function StaffDashboard() {
     "Search and Reports": "/staff/reports",
     "Notifications": "/notification-staff",
   };
+
+  // Real counts (by status) and the 4 most recent vehicle requests,
+  // sourced from the Vehicle Request records.
+  const [requestStats, setRequestStats] = useState({ pending: 0, approved: 0 });
+  const [recentRequests, setRecentRequests] = useState([]);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+
+  // Same demo staff id the Notification Staff page uses to fetch its list,
+  // so this card's count matches what that page actually shows.
+  const staffId = "6961093b585ed584551b0864";
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/vehicleRequests/stats"));
+        const json = await res.json();
+        if (!cancelled && res.ok) {
+          const counts = { pending: 0, approved: 0 };
+          (json.data || []).forEach((s) => {
+            if (s._id === "Pending") counts.pending = s.count;
+            if (s._id === "Approved") counts.approved = s.count;
+          });
+          setRequestStats(counts);
+        }
+      } catch (e) {
+        // keep the metrics at 0 rather than breaking the dashboard
+      }
+    })();
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/vehicleRequests"));
+        const json = await res.json();
+        if (!cancelled && res.ok) {
+          setRecentRequests((json.data || []).slice(0, 4));
+        }
+      } catch (e) {
+        // keep the widget empty rather than breaking the dashboard
+      }
+    })();
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl(`/notifications/staff/${staffId}`));
+        const json = await res.json();
+        if (!cancelled && res.ok) {
+          setUnreadNotifications((json || []).length);
+        }
+      } catch (e) {
+        // keep the metric at 0 rather than breaking the dashboard
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className={`sd-shell ${collapsed ? "is-collapsed" : ""}`}>
@@ -57,22 +117,32 @@ export default function StaffDashboard() {
 
           {/* Metric cards */}
           <section className="sd-metrics">
-            <MetricCard title="Pending Requests" value="3" change="+1 today" icon="🕒" trend="up" />
-            <MetricCard title="Approved" value="12" change="This month" icon="✅" trend="neutral" />
-            <MetricCard title="Vehicles In Use" value="7" change="Now" icon="🚚" trend="neutral" />
-            <MetricCard title="Notifications" value="5" change="2 unread" icon="🔔" trend="down" />
+            <MetricCard title="Pending Requests" value={requestStats.pending} icon="🕒" />
+            <MetricCard title="Approved" value={requestStats.approved} icon="✅" />
+            <MetricCard title="Notifications" value={unreadNotifications} change="Unread" icon="🔔" />
           </section>
 
           {/* Recent items */}
           <section className="sd-section">
             <div className="sd-section-head">
-              <h2>Recent Requests</h2>
+              <h2>Recent Vehicle Requests</h2>
             </div>
 
-            <div className="sd-req-grid">
-              <RequestCard id="REQ-1021" purpose="Clinic supply run" status="Approved" date="2025-11-03" />
-              <RequestCard id="REQ-1020" purpose="Lab samples transfer" status="Pending" date="2025-11-02" />
-              <RequestCard id="REQ-1019" purpose="Outreach visit" status="Rejected" date="2025-11-01" />
+            <div className="sd-req-grid sd-req-grid-4">
+              {recentRequests.length ? (
+                recentRequests.map((r) => (
+                  <RequestCard
+                    key={r._id}
+                    vehicleId={r.vehicleId}
+                    purpose={r.purpose}
+                    status={r.status}
+                    dateTime={`${formatDate(r.tripDate)} • ${r.tripTime}`}
+                    destination={r.pickupDestination}
+                  />
+                ))
+              ) : (
+                <div className="sd-req-empty">No recent vehicle requests.</div>
+              )}
             </div>
           </section>
         </div>
@@ -103,7 +173,7 @@ function MetricCard({ title, value, change, icon, trend = "neutral" }) {
   );
 }
 
-function RequestCard({ id, purpose, status, date }) {
+function RequestCard({ vehicleId, purpose, status, dateTime, destination }) {
   const tone =
     status === "Approved" ? "green" :
     status === "Pending" ? "amber" : "gray";
@@ -112,9 +182,9 @@ function RequestCard({ id, purpose, status, date }) {
     <div className="sd-card sd-req">
       <div className="sd-req-head">
         <div className="sd-req-title">
-          <div className="sd-req-icon">📄</div>
+          <div className="sd-req-icon">🚐</div>
           <div>
-            <div className="sd-req-id">{id}</div>
+            <div className="sd-req-id">{vehicleId}</div>
             <div className="sd-req-purpose">{purpose}</div>
           </div>
         </div>
@@ -122,16 +192,18 @@ function RequestCard({ id, purpose, status, date }) {
       </div>
 
       <div className="sd-req-info">
-        <Row icon="📅" label={date} />
-        <Row icon="📍" label="Head Office → Regional Clinic" />
-      </div>
-
-      <div className="sd-req-actions">
-        <button className="sd-btn-outline">View</button>
-        <button className="sd-btn-solid">Track</button>
+        <Row icon="📅" label={dateTime} />
+        <Row icon="📍" label={destination} />
       </div>
     </div>
   );
+}
+
+function formatDate(iso) {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (isNaN(d)) return String(iso);
+  return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
 
 function Row({ icon, label }) {
