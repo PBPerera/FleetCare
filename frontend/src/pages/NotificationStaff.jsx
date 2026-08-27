@@ -144,21 +144,13 @@
 import React, { useState, useEffect } from "react";
 import "./NotificationStaff.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
-import {
-  MdDashboard,
-  MdDirectionsCar,
-  MdNotifications,
-  MdAssignment,
-  MdInfoOutline,
-} from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { apiUrl } from "../lib/apiBase";
 
 import StaffSidebar from "../components/StaffSidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 
 export default function NotificationStaff() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -189,10 +181,6 @@ export default function NotificationStaff() {
         console.error("Error fetching notifications:", err);
       });
   }, [staffId]);
-
-  const handleUserClick = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   const formatRelativeTime = (timestamp) => {
     if (!timestamp) return "";
@@ -247,8 +235,8 @@ export default function NotificationStaff() {
             <span className="sd-burger" />
           </button>
           <div className="sd-header-title">Notifications</div>
-          <div className="sd-header-right">
-             <FaUserCircle size={26} onClick={handleUserClick} style={{cursor: "pointer"}}/>
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
           </div>
         </header>
 
@@ -319,21 +307,6 @@ export default function NotificationStaff() {
           </div>
         </div>
       </main>
-
-      {/* USER MENU */}
-      {isMenuOpen && (
-        <div className="user-menu">
-          <div className="menu-item">
-            <FaUserCircle /> View Profile
-          </div>
-          <div className="menu-item">
-            <MdInfoOutline /> About Us
-          </div>
-          <div className="menu-item">
-            <FaPhoneAlt /> Contact Us
-          </div>
-        </div>
-      )}
     </div>
   );
 }
