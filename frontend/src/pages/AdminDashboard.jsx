@@ -1,12 +1,122 @@
-import React, { useState } from "react";
-import "./admin-dashboard.css"; 
+import React, { useEffect, useState } from "react";
+import "./admin-dashboard.css";
 import Sidebar from "../components/Sidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
+import { apiUrl } from "../lib/apiBase";
 
 export default function AdminDashboard() {
   const [collapsed, setCollapsed] = useState(false);
   const [active, setActive] = useState("Dashboard");
 
-  
+  // Recent vehicle schedules (from Trip Scheduling) and recent maintenance
+  // (Service + Repair) records for the dashboard summary widgets.
+  const [recentTrips, setRecentTrips] = useState([]);
+  const [recentMaintenance, setRecentMaintenance] = useState([]);
+
+  // Top metric cards: real counts from the vehicle, driver and
+  // maintenance (service + repair) collections.
+  const [vehicleStats, setVehicleStats] = useState({ total: 0, active: 0 });
+  const [driverStats, setDriverStats] = useState({ total: 0, active: 0 });
+  const [maintenanceStats, setMaintenanceStats] = useState({ total: 0, completedThisMonth: 0 });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/trips"));
+        const json = await res.json();
+        if (!cancelled && res.ok) {
+          setRecentTrips((json.data || []).slice(0, 4));
+        }
+      } catch (e) {
+        // keep the widget empty rather than breaking the dashboard
+      }
+    })();
+
+    (async () => {
+      try {
+        const [serviceRes, repairRes] = await Promise.all([
+          fetch(apiUrl("/services?limit=4&sortBy=date&sortOrder=desc")),
+          fetch(apiUrl("/repairs?limit=4&sortBy=requestDate&sortOrder=desc")),
+        ]);
+        const serviceJson = await serviceRes.json();
+        const repairJson = await repairRes.json();
+
+        const services = (serviceJson.data || []).map((s) => ({
+          id: s._id,
+          vehicleId: s.vehicleId,
+          type: "Service",
+          date: s.date,
+        }));
+        const repairs = (repairJson.data || []).map((r) => ({
+          id: r._id,
+          vehicleId: r.vehicleId,
+          type: "Repair",
+          date: r.requestDate,
+        }));
+
+        const merged = [...services, ...repairs]
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 4);
+
+        if (!cancelled) setRecentMaintenance(merged);
+      } catch (e) {
+        // keep the widget empty rather than breaking the dashboard
+      }
+    })();
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/vehicle"));
+        const json = await res.json();
+        if (!cancelled && res.ok) {
+          const vehicles = json.vehicles || [];
+          setVehicleStats({
+            total: vehicles.length,
+            active: vehicles.filter((v) => v.status === "Active").length,
+          });
+        }
+      } catch (e) {
+        // keep the metric at 0 rather than breaking the dashboard
+      }
+    })();
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/driver"));
+        const json = await res.json();
+        if (!cancelled && res.ok) {
+          const drivers = json.Drivers || [];
+          setDriverStats({
+            total: drivers.length,
+            active: drivers.filter((d) => d.status === "Active").length,
+          });
+        }
+      } catch (e) {
+        // keep the metric at 0 rather than breaking the dashboard
+      }
+    })();
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/maintenance/dashboard/stats"));
+        const json = await res.json();
+        if (!cancelled && res.ok && json.success) {
+          setMaintenanceStats({
+            total: json.data.overview.total,
+            completedThisMonth: json.data.overview.completedThisMonth,
+          });
+        }
+      } catch (e) {
+        // keep the metric at 0 rather than breaking the dashboard
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className={`ad-shell ${collapsed ? "is-collapsed" : ""}`}>
@@ -30,7 +140,9 @@ export default function AdminDashboard() {
           </button>
 
           <div className="sd-header-title">Dashboard</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
         
 
@@ -41,48 +153,96 @@ export default function AdminDashboard() {
           </section>
 
           <section className="ad-metrics">
-            <MetricCard title="Total Vehicles" value="24" change="+2 this month" icon="🚛" trend="up" />
-            <MetricCard title="Active Vehicles" value="18" change="75% operational" icon="📈" trend="up" />
-            <MetricCard title="In Maintenance" value="3" change="2 scheduled" icon="🔧" trend="neutral" />
-            <MetricCard title="Alerts" value="5" change="2 critical" icon="⚠️" trend="down" />
+            <MetricCard
+              title="Total Vehicles"
+              value={vehicleStats.total}
+              change={`${vehicleStats.active} active`}
+              icon="🚛"
+            />
+            <MetricCard
+              title="Total Drivers"
+              value={driverStats.total}
+              change={`${driverStats.active} active`}
+              icon="🧑‍✈️"
+            />
+            <MetricCard
+              title="Total Maintenance"
+              value={maintenanceStats.total}
+              change={`${maintenanceStats.completedThisMonth} completed this month`}
+              icon="🔧"
+            />
           </section>
 
           <section className="ad-section">
             <div className="ad-section-head">
-              <h2>Recent Vehicles</h2>
+              <h2>Recent Vehicle Schedules</h2>
             </div>
 
-            <div className="ad-vehicle-grid">
-              <VehicleCard
-                name="Fleet-001"
-                type="Delivery Van"
-                status="Active"
-                statusTone="green"
-                location="Downtown Depot"
-                fuel={85}
-                lastService="5 days ago"
-                mileage="45,320 km"
-              />
-              <VehicleCard
-                name="Fleet-002"
-                type="Box Truck"
-                status="Maintenance"
-                statusTone="amber"
-                location="Service Center"
-                fuel={40}
-                lastService="2 days ago"
-                mileage="78,450 km"
-              />
-              <VehicleCard
-                name="Fleet-003"
-                type="Cargo Van"
-                status="Active"
-                statusTone="green"
-                location="North Station"
-                fuel={92}
-                lastService="1 week ago"
-                mileage="32,100 km"
-              />
+            <div className="ad-mini-grid">
+              {recentTrips.length ? (
+                recentTrips.map((t) => (
+                  <div className="ad-card ad-schedule-card" key={t._id}>
+                    <div className="ad-mini-card-top">
+                      <span className="ad-mini-ico ad-mini-ico-schedule" aria-hidden>
+                        🚐
+                      </span>
+                      <span className="ad-mini-vehicle">{t.vehicleId}</span>
+                      <span className="ad-badge ad-badge-blue ad-mini-pass">
+                        {t.noOfPassengers} {t.noOfPassengers === 1 ? "passenger" : "passengers"}
+                      </span>
+                    </div>
+                    <div className="ad-mini-card-body">
+                      <div className="ad-mini-row">
+                        <span className="ad-mini-row-ico" aria-hidden>👤</span>
+                        <span>{t.driverName}</span>
+                      </div>
+                      <div className="ad-mini-row">
+                        <span className="ad-mini-row-ico" aria-hidden>🎯</span>
+                        <span>{t.purpose}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="ad-mini-empty-card">No recent vehicle schedules.</div>
+              )}
+            </div>
+          </section>
+
+          <section className="ad-section">
+            <div className="ad-section-head">
+              <h2>Recent Vehicle Maintenance</h2>
+            </div>
+
+            <div className="ad-mini-grid">
+              {recentMaintenance.length ? (
+                recentMaintenance.map((m) => (
+                  <div
+                    className={`ad-card ad-maint-card ${
+                      m.type === "Service" ? "is-service" : "is-repair"
+                    }`}
+                    key={m.id}
+                  >
+                    <div className="ad-mini-card-top">
+                      <span className="ad-mini-ico ad-mini-ico-maint" aria-hidden>
+                        {m.type === "Service" ? "🛠️" : "🔧"}
+                      </span>
+                      <span className="ad-mini-vehicle">{m.vehicleId}</span>
+                    </div>
+                    <div className="ad-mini-card-body">
+                      <span
+                        className={`ad-badge ${
+                          m.type === "Service" ? "ad-badge-green" : "ad-badge-amber"
+                        }`}
+                      >
+                        {m.type}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="ad-mini-empty-card">No recent maintenance records.</div>
+              )}
             </div>
           </section>
         </div>
@@ -109,70 +269,3 @@ function MetricCard({ title, value, change, icon, trend = "neutral" }) {
   );
 }
 
-function VehicleCard({
-  name,
-  type,
-  status,
-  statusTone = "green",
-  location,
-  fuel,
-  lastService,
-  mileage,
-}) {
-  return (
-    <div className="ad-card ad-vehicle">
-      <div className="ad-vehicle-head">
-        <div className="ad-vehicle-title">
-          <div className="ad-vehicle-icon">🚛</div>
-          <div>
-            <div className="ad-v-name">{name}</div>
-            <div className="ad-v-type">{type}</div>
-          </div>
-        </div>
-        <span className={`ad-badge ${badgeTone(statusTone)}`}>{status}</span>
-      </div>
-
-      <div className="ad-vehicle-info">
-        <Row icon="📍" label={location} />
-        <FuelRow fuel={fuel} />
-        <Row icon="⏱️" label={`Last service: ${lastService}`} />
-        <div className="ad-v-mileage">{mileage}</div>
-      </div>
-
-      <div className="ad-vehicle-actions">
-        <button className="ad-btn-outline">View Details</button>
-        <button className="ad-btn-solid">Schedule Service</button>
-      </div>
-    </div>
-  );
-}
-
-function Row({ icon, label }) {
-  return (
-    <div className="ad-row">
-      <span className="ad-row-ico">{icon}</span>
-      <span className="ad-row-txt">{label}</span>
-    </div>
-  );
-}
-
-function FuelRow({ fuel }) {
-  return (
-    <div className="ad-row">
-      <span className="ad-row-ico">⛽</span>
-      <span className="ad-row-txt">Fuel: {fuel}%</span>
-      <div className="ad-fuelbar">
-        <div
-          className={`ad-fuelbar-fill ${fuel > 50 ? "ad-green" : fuel > 20 ? "ad-amber" : "ad-red"}`}
-          style={{ width: `${fuel}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function badgeTone(tone) {
-  if (tone === "green") return "ad-badge-green";
-  if (tone === "amber") return "ad-badge-amber";
-  return "ad-badge-gray";
-}

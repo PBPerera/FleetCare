@@ -2,6 +2,7 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import Cards from "../components/DashboardCards/Cards.jsx";
 import SearchBar from "../components/SearchBar/SearchBar.jsx";
 import Table from "../components/DataTable/Table.jsx";
@@ -273,7 +274,9 @@ function MaintenanceManagement() {
           </button>
 
           <div className="sd-header-title">Maintenance Management</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         <div className="ad-content">

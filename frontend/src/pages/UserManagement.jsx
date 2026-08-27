@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import { Search } from "lucide-react";
 import "./UserManagement.css";
 
@@ -24,44 +25,37 @@ export default function UserManagement() {
     "Audit Log": "/audit-log",
   };
 
-  // ----- Sample data -----
-  const users = useMemo(
-    () => [
-      {
-        username: "Sarath",
-        fullName: "K. Sarath Perera",
-        role: "Admin",
-        email: "mapsarath@fleetcare.lk",
-        lastLoginDate: "2025-09-25",
-        lastLoginTime: "07:54 am",
-      },
-      {
-        username: "Piyal",
-        fullName: "G. Piyal Silva",
-        role: "Staff",
-        email: "wagpiyal@fleetcare.lk",
-        lastLoginDate: "2025-09-27",
-        lastLoginTime: "08:54 am",
-      },
-      {
-        username: "Sunil",
-        fullName: "P. Sunil Perera",
-        role: "Staff",
-        email: "gtasunil@fleetcare.lk",
-        lastLoginDate: "2025-09-29",
-        lastLoginTime: "03:54 pm",
-      },
-      {
-        username: "Anura",
-        fullName: "Anura Gunarathne",
-        role: "Admin",
-        email: "jvpanura@fleetcare.lk",
-        lastLoginDate: "2025-09-30",
-        lastLoginTime: "09:54 am",
-      },
-    ],
-    []
-  );
+  // ----- Users & last login, loaded from signup + login records -----
+  const [users, setUsers] = useState([]);
+  const [loadError, setLoadError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const baseUrl = import.meta.env.VITE_API_BASE_URL?.endsWith('/')
+          ? import.meta.env.VITE_API_BASE_URL
+          : `${import.meta.env.VITE_API_BASE_URL}/`;
+        const response = await fetch(`${baseUrl}api/loginauth/users`);
+        const data = await response.json();
+
+        if (!cancelled) {
+          if (response.ok && data.success) {
+            setUsers(data.data);
+          } else {
+            setLoadError(data.message || data.error || "Failed to load users.");
+          }
+        }
+      } catch (error) {
+        if (!cancelled) setLoadError("Network error while loading users.");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // controls
   const [q, setQ] = useState("");
@@ -124,7 +118,9 @@ export default function UserManagement() {
           </button>
 
           <div className="sd-header-title">User Management</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         
@@ -196,13 +192,13 @@ export default function UserManagement() {
                       </td>
                       <td>{u.email}</td>
                       <td>{formatDate(u.lastLoginDate)}</td>
-                      <td>{u.lastLoginTime}</td>
+                      <td>{u.lastLoginTime || "—"}</td>
                     </tr>
                   ))}
                   {!filtered.length && (
                     <tr>
                       <td colSpan={6} className="um-empty">
-                        No users match your filters.
+                        {loadError || "No users match your filters."}
                       </td>
                     </tr>
                   )}
@@ -219,6 +215,7 @@ export default function UserManagement() {
 }
 
 function formatDate(iso) {
+  if (!iso) return "—";
   const d = new Date(iso);
   if (isNaN(d)) return iso;
   const mm = `${d.getMonth() + 1}`.padStart(2, "0");

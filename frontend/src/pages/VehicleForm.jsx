@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import { addVehicle } from "../api";
 import "./staff-dashboard.css";
 
@@ -113,7 +114,9 @@ export default function VehicleForm({ onSubmit }) {
 
           {/* Header title */}
           <div className="sd-header-title">Vehicle Details</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         {/* Content area - replaces dashboard content with vehicle form */}

@@ -2,15 +2,24 @@ import Notification from "../models/Notification.js";
 
 /**
  * GET staff notifications
+ *
+ * Unread notifications are always shown, however old they are. Read
+ * notifications drop out of this list once they're older than 30 days.
+ * Nothing is ever deleted from the database either way.
  */
 export const getStaffNotifications = async (req, res) => {
   try {
     const { userId } = req.params;
 
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+
     const notifications = await Notification.find({
       userId,
       role: "staff",
-      isRead: false,
+      $or: [
+        { isRead: false },
+        { isRead: true, createdAt: { $gte: thirtyDaysAgo } },
+      ],
     }).sort({ createdAt: -1 });
 
     res.status(200).json(notifications);

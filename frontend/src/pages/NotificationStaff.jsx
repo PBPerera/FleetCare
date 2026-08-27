@@ -144,21 +144,13 @@
 import React, { useState, useEffect } from "react";
 import "./NotificationStaff.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
-import {
-  MdDashboard,
-  MdDirectionsCar,
-  MdNotifications,
-  MdAssignment,
-  MdInfoOutline,
-} from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { apiUrl } from "../lib/apiBase";
 
 import StaffSidebar from "../components/StaffSidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 
 export default function NotificationStaff() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -190,10 +182,6 @@ export default function NotificationStaff() {
       });
   }, [staffId]);
 
-  const handleUserClick = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   const formatRelativeTime = (timestamp) => {
     if (!timestamp) return "";
     const diff = Date.now() - new Date(timestamp).getTime();
@@ -204,13 +192,17 @@ export default function NotificationStaff() {
   };
 
   // ✅ MARK AS READ (BACKEND + UI)
+  // Keeps the notification in the list (just styled as read) instead of
+  // removing it, so staff can still see what they've already dealt with.
   const handleMarkAsRead = async (id) => {
     try {
       await fetch(apiUrl(`/notifications/read/${id}`), {
         method: "PUT",
       });
 
-      setNotifications((prev) => prev.filter((n) => n._id !== id));
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+      );
     } catch (error) {
       console.error("Mark as read error:", error);
     }
@@ -243,8 +235,8 @@ export default function NotificationStaff() {
             <span className="sd-burger" />
           </button>
           <div className="sd-header-title">Notifications</div>
-          <div className="sd-header-right">
-             <FaUserCircle size={26} onClick={handleUserClick} style={{cursor: "pointer"}}/>
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
           </div>
         </header>
 
@@ -258,12 +250,16 @@ export default function NotificationStaff() {
                   const timeLabel = note.time || formatRelativeTime(note.createdAt);
                   const isApproved = note.type === "approved";
                   const statusClass = note.type === "approved" ? "approved" : note.type === "rejected" ? "rejected" : "info";
+                  const readClass = note.isRead ? "is-read" : "is-unread";
 
                   return (
-                    <div key={note._id} className={`notification-card ${statusClass}`}>
+                    <div key={note._id} className={`notification-card ${statusClass} ${readClass}`}>
                       <div className="notification-card__content">
                         <div className="notification-card__header">
                           <h4>{note.title}</h4>
+                          <span className={`read-badge ${readClass}`}>
+                            {note.isRead ? "Read" : "New"}
+                          </span>
                         </div>
                         <div className="notification-card__body">
                           {isApproved ? (
@@ -292,14 +288,16 @@ export default function NotificationStaff() {
                             </>
                           )}
                         </div>
-                        <div className="notification-card__footer">
-                          <button
-                            className="mark-read-btn"
-                            onClick={() => handleMarkAsRead(note._id)}
-                          >
-                            Mark as Read
-                          </button>
-                        </div>
+                        {!note.isRead && (
+                          <div className="notification-card__footer">
+                            <button
+                              className="mark-read-btn"
+                              onClick={() => handleMarkAsRead(note._id)}
+                            >
+                              Mark as Read
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -309,21 +307,6 @@ export default function NotificationStaff() {
           </div>
         </div>
       </main>
-
-      {/* USER MENU */}
-      {isMenuOpen && (
-        <div className="user-menu">
-          <div className="menu-item">
-            <FaUserCircle /> View Profile
-          </div>
-          <div className="menu-item">
-            <MdInfoOutline /> About Us
-          </div>
-          <div className="menu-item">
-            <FaPhoneAlt /> Contact Us
-          </div>
-        </div>
-      )}
     </div>
   );
 }
