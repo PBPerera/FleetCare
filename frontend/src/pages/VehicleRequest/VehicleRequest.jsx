@@ -263,9 +263,14 @@ export default function VehicleRequest() {
 
   // Handle vehicle selection
   const handleVehicleSelect = (vehicleId) => {
+    const selectedVehicle = availableVehicles.find(
+      (vehicle) => (vehicle.vehicle_id ?? vehicle.vehicleId) === vehicleId
+    );
+
     setFormData((prev) => ({
       ...prev,
       vehicleId: vehicleId,
+      vehicleType: selectedVehicle?.type || prev.vehicleType,
     }));
 
     // Remove from available lists
@@ -537,6 +542,8 @@ export default function VehicleRequest() {
                     <option>Van</option>
                     <option>Bus</option>
                     <option>SUV</option>
+                    <option>Truck</option>
+                    <option>Motorbike</option>
                   </select>
                   <span className="vr-arrow-down">▾</span>
                 </div>
