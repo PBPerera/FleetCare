@@ -212,13 +212,70 @@
   flex:1; padding:10px 12px; border-radius:10px; border:0; background: linear-gradient(90deg, #5f2bff, #2f7bff); color:#fff; font-weight:800; cursor:pointer;
 }
 
+/* Recent schedules / maintenance grids */
+.ad-mini-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.ad-schedule-card, .ad-maint-card{
+  position: relative;
+  overflow: hidden;
+  padding: 18px;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.ad-schedule-card::before, .ad-maint-card::before{
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+}
+.ad-schedule-card::before{ background: linear-gradient(90deg, #5f2bff, #2f7bff); }
+.ad-maint-card.is-service::before{ background: linear-gradient(90deg, #059669, #34d399); }
+.ad-maint-card.is-repair::before{ background: linear-gradient(90deg, #f59e0b, #f97316); }
+
+.ad-schedule-card:hover, .ad-maint-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 18px 34px rgba(15, 23, 42, .14);
+}
+
+.ad-mini-card-top{
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.ad-mini-ico{
+  width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+  display: grid; place-items: center; font-size: 19px;
+}
+.ad-mini-ico-schedule{ background: linear-gradient(135deg, #e6ecff, #dbeafe); }
+.ad-mini-ico-maint{ background: linear-gradient(135deg, #eafaf3, #fff4e5); }
+
+.ad-mini-vehicle{ font-weight: 800; font-size: 16px; color: var(--ink); }
+.ad-mini-pass{ margin-left: auto; white-space: nowrap; }
+.ad-badge-blue{ background: #eef2ff; color: #4338ca; }
+
+.ad-mini-card-body{ display: grid; gap: 10px; }
+.ad-mini-row{ display: flex; align-items: center; gap: 8px; color: #475569; font-size: 14px; }
+.ad-mini-row-ico{ width: 20px; display: grid; place-items: center; }
+
+.ad-mini-empty-card{
+  grid-column: 1 / -1;
+  background: var(--panel);
+  border: 1px dashed var(--cardBorder);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+}
+
 /* Responsive */
 @media (max-width: 1200px){
   .ad-metrics{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+  .ad-mini-grid{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }
 }
 @media (max-width: 860px){
   .ad-vehicle-grid{ grid-template-columns: 1fr; }
 }
 @media (max-width: 640px){
   .ad-shell{ grid-template-columns: var(--aside-collapsed) 1fr; }
+  .ad-mini-grid{ grid-template-columns: 1fr; }
 }
