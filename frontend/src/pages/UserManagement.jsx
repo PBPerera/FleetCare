@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import { Search } from "lucide-react";
 import "./UserManagement.css";
 
@@ -117,7 +118,9 @@ export default function UserManagement() {
           </button>
 
           <div className="sd-header-title">User Management</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         

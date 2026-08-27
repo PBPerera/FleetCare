@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import "./staff-dashboard.css";
 
 export default function StaffDashboard() {
@@ -42,7 +43,9 @@ export default function StaffDashboard() {
           </button>
 
           <div className="sd-header-title">Dashboard</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         {/* Content */}

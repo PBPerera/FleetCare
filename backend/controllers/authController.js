@@ -120,8 +120,13 @@ export async function loginUser(req, res) {
       user: {
         id: user._id,
         fullName: user.FullName,
-        emailAddress: user.EmailAddress,
+        emailAddress: user.emailaddress,
+        phoneNumber: user.PhoneNumber,
+        nic: user.NIC,
+        department: user.DepartmentORUnit,
         role: user.Role,
+        employeeId: user.EmployeeID,
+        designation: user.Designation,
         userName: user.UserName
       }
     });

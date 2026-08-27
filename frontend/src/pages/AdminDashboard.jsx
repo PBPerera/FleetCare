@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./admin-dashboard.css"; 
 import Sidebar from "../components/Sidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 
 export default function AdminDashboard() {
   const [collapsed, setCollapsed] = useState(false);
@@ -30,7 +31,9 @@ export default function AdminDashboard() {
           </button>
 
           <div className="sd-header-title">Dashboard</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
         
 

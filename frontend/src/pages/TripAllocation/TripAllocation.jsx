@@ -119,6 +119,7 @@
 
 import React, { useRef, useState, useEffect, useMemo } from "react";
 import Sidebar from "../../components/Sidebar";
+import UserProfileMenu from "../../components/UserProfileMenu";
 import { Search } from "lucide-react";
 import {
   FaSearch,
@@ -288,6 +289,9 @@ export default function TripAllocation() {
           </button>
 
           <div className="ta-header-title">Trip Allocation</div>
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         {/* Content area */}

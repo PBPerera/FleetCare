@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import { addDriver } from "../api";
 import "./staff-dashboard.css"; // Use staff dashboard CSS for consistent styling
 
@@ -104,7 +105,9 @@ export default function DriverForm({ onSubmit }) {
 
           {/* Header title */}
           <div className="sd-header-title">Driver Details</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         {/* Content area - replaces dashboard content with driver form */}

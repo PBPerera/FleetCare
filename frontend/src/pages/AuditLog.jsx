@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import Table from "../components/DataTable/Table.jsx";
 import { MaintenanceContext } from "../Context/MaintenanceContext.jsx";
 import { auditApi } from "../api/maintenanceApi";
@@ -125,7 +126,9 @@ export default function AuditLog() {
           </button>
 
           <div className="sd-header-title">Audit Log</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         <div className="ad-content">

@@ -133,6 +133,7 @@
 
 import { React, useState, useRef, useEffect } from "react";
 import StaffSidebar from "../../components/StaffSidebar";
+import UserProfileMenu from "../../components/UserProfileMenu";
 import { Search } from "lucide-react";
 import {
   FaSearch,
@@ -631,6 +632,9 @@ export default function MyRequests() {
           </button>
 
           <div className="mr-header-title">My Requests</div>
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         {/* Content area */}

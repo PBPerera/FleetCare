@@ -37,6 +37,11 @@ export default function Login() {
       
       if (response.ok) {
         document.cookie = `token=${data.token}; path=/; max-age=86400; secure; samesite=strict`;
+        try {
+          localStorage.setItem("fleetcare_user", JSON.stringify(data.user));
+        } catch (storageError) {
+          console.error("Could not store user profile:", storageError);
+        }
         const role = data.user.role;
         if (role === 'Admin') {
           navigate("/admindashboard");

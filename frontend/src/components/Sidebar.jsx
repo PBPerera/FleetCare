@@ -71,7 +71,12 @@ export default function Sidebar({
       <button
         className="sd-logout"
         title="Log out"
-        onClick={onLogout}
+        onClick={() => {
+          try {
+            localStorage.removeItem("fleetcare_user");
+          } catch (e) {}
+          onLogout?.();
+        }}
         aria-label="Log out"
       >
         <span className="sd-ico" aria-hidden>

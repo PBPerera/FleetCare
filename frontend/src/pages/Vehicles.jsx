@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import Cards from "../components/DashboardCards/Cards.jsx";
 import SearchBar from "../components/SearchBar/SearchBar.jsx";
 import Table from "../components/DataTable/Table.jsx";
@@ -278,7 +279,9 @@ export default function Vehicles() {
           </button>
 
         <div className="sd-header-title">Vehicle Management</div>
-        <div className="sd-header-right" />
+        <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+          <UserProfileMenu />
+        </div>
         </header>
 
         {/* Page content */}
