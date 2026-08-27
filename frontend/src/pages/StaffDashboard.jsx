@@ -24,7 +24,7 @@ export default function StaffDashboard() {
 
   // Real counts (by status) and the 4 most recent vehicle requests,
   // sourced from the Vehicle Request records.
-  const [requestStats, setRequestStats] = useState({ pending: 0, approved: 0 });
+  const [requestStats, setRequestStats] = useState({ pending: 0, approved: 0, rejected: 0 });
   const [recentRequests, setRecentRequests] = useState([]);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
 
@@ -40,10 +40,11 @@ export default function StaffDashboard() {
         const res = await fetch(apiUrl("/vehicleRequests/stats"));
         const json = await res.json();
         if (!cancelled && res.ok) {
-          const counts = { pending: 0, approved: 0 };
+          const counts = { pending: 0, approved: 0, rejected: 0 };
           (json.data || []).forEach((s) => {
             if (s._id === "Pending") counts.pending = s.count;
             if (s._id === "Approved") counts.approved = s.count;
+            if (s._id === "Rejected") counts.rejected = s.count;
           });
           setRequestStats(counts);
         }
@@ -127,7 +128,10 @@ export default function StaffDashboard() {
           {/* Metric cards */}
           <section className="sd-metrics">
             <MetricCard title="Pending Requests" value={requestStats.pending} icon="🕒" />
-            <MetricCard title="Approved" value={requestStats.approved} icon="✅" />
+            <SplitMetricCard
+              left={{ label: "Approved", value: requestStats.approved, icon: "✅", tone: "green" }}
+              right={{ label: "Rejected", value: requestStats.rejected, icon: "❌", tone: "red" }}
+            />
             <MetricCard title="Notifications" value={unreadNotifications} change="Unread" icon="🔔" />
           </section>
 
@@ -177,6 +181,35 @@ function MetricCard({ title, value, change, icon, trend = "neutral" }) {
         <p className="sd-metric-title">{title}</p>
         <p className="sd-metric-value">{value}</p>
         {change && <p className={`sd-metric-change ${trendClass}`}>{change}</p>}
+      </div>
+    </div>
+  );
+}
+
+// One card, divided into two halves - Approved on the left, Rejected on
+// the right - so both request outcomes live in the same "Approved" slot
+// instead of needing a separate card.
+function SplitMetricCard({ left, right }) {
+  return (
+    <div className="sd-card sd-metric sd-metric-split">
+      <div className="sd-metric-split-half">
+        <div className="sd-metric-top">
+          <div className="sd-metric-icon">{left.icon}</div>
+        </div>
+        <div className="sd-metric-body">
+          <p className="sd-metric-title">{left.label}</p>
+          <p className={`sd-metric-value sd-metric-value-${left.tone}`}>{left.value}</p>
+        </div>
+      </div>
+      <div className="sd-metric-split-divider" />
+      <div className="sd-metric-split-half">
+        <div className="sd-metric-top">
+          <div className="sd-metric-icon">{right.icon}</div>
+        </div>
+        <div className="sd-metric-body">
+          <p className="sd-metric-title">{right.label}</p>
+          <p className={`sd-metric-value sd-metric-value-${right.tone}`}>{right.value}</p>
+        </div>
       </div>
     </div>
   );

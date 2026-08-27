@@ -111,6 +111,13 @@
 .sd-metric-change{ font-size:13px; font-weight:700; margin-top:2px; }
 .sd-trend-up{ color:#16a34a; } .sd-trend-down{ color:#ef4444; } .sd-trend-neutral{ color:#64748b; }
 
+/* Approved / Rejected split card */
+.sd-metric-split{ display:flex; align-items:stretch; gap:0; padding:16px 0; }
+.sd-metric-split-half{ flex:1; padding:0 16px; min-width:0; }
+.sd-metric-split-divider{ width:1px; background:var(--sd-border); flex-shrink:0; }
+.sd-metric-value-green{ color:#16a34a; }
+.sd-metric-value-red{ color:#ef4444; }
+
 /* Requests grid */
 .sd-section{ display:flex; flex-direction:column; gap:12px; }
 .sd-section-head h2{ margin:0; }
