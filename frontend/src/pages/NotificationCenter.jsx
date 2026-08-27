@@ -428,6 +428,20 @@ import { MdInfoOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
+// A ready-to-send WhatsApp reminder for an upcoming (within 3 days) trip,
+// pre-filled from the trip's own scheduled date/time/route so staff don't
+// have to type the details themselves - they can still edit it before
+// sending.
+function buildTripReminderMessage(driverName, trip) {
+  const dateStr = trip.tripDate
+    ? new Date(trip.tripDate).toLocaleDateString()
+    : "the scheduled date";
+  const timeStr = trip.tripTime || "the scheduled time";
+  const route = trip.pickupDestination || trip.destination || "the scheduled route";
+
+  return `Hi ${driverName}, reminder: you have a trip scheduled on ${dateStr} at ${timeStr} for ${route}. Please be ready.`;
+}
+
 export default function NotificationCenter() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -509,12 +523,16 @@ export default function NotificationCenter() {
             });
 
             newTables[0].data = filtered
-              .map(item => ({
-                name: item.driverName || item.driver || "N/A",
-                contact: item.contactNo || item.contact || item.driverContact || "N/A",
-                message: "",
-                phoneInput: ""
-              }))
+              .map(item => {
+                const name = item.driverName || item.driver || "N/A";
+                const contact = item.contactNo || item.contact || item.driverContact || "N/A";
+                return {
+                  name,
+                  contact,
+                  message: buildTripReminderMessage(name, item),
+                  phoneInput: contact !== "N/A" ? contact : ""
+                };
+              })
               .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
@@ -575,11 +593,16 @@ export default function NotificationCenter() {
               const tDate = new Date(i.tripDate);
               if (isNaN(tDate.getTime())) return false;
               return tDate >= todayStart && tDate <= maxExpiryDate;
-            }).map(item => ({
-              name: item.driver || item.driverName || "N/A",
-              contact: item.contact || item.driverContact || "N/A",
-              message: "", phoneInput: ""
-            })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
+            }).map(item => {
+              const name = item.driver || item.driverName || "N/A";
+              const contact = item.contact || item.driverContact || "N/A";
+              return {
+                name,
+                contact,
+                message: buildTripReminderMessage(name, item),
+                phoneInput: contact !== "N/A" ? contact : ""
+              };
+            }).filter(r => r.name !== "N/A" || r.contact !== "N/A");
 
             newTables[1].data = data.filter(i => {
               if (i.type !== "maintenance") return false;
