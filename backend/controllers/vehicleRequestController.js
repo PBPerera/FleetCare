@@ -178,6 +178,28 @@ export const updateVehicleRequestStatus = async (req, res) => {
       );
     }
 
+    if (status === "Approved") {
+      await Vehicle.findOneAndUpdate(
+        { vehicle_id: vehicleRequest.vehicleId },
+        {
+          status: "In Use",
+          tripStatus: "Assigned",
+          tripDate: vehicleRequest.tripDate,
+          tripTime: vehicleRequest.tripTime,
+        }
+      );
+
+      await Driver.findOneAndUpdate(
+        { name: vehicleRequest.driverName },
+        {
+          status: "In Use",
+          tripStatus: "Assigned",
+          tripDate: vehicleRequest.tripDate,
+          tripTime: vehicleRequest.tripTime,
+        }
+      );
+    }
+
     if (["Approved", "Rejected"].includes(status)) {
       await syncTripStatusForRequest(vehicleRequest, status);
     }
@@ -216,13 +238,23 @@ export const approveVehicleRequest = async (req, res) => {
     // Update vehicle status to "In Use"
     await Vehicle.findOneAndUpdate(
       { vehicle_id: vehicleRequest.vehicleId },
-      { status: "In Use" }
+      {
+        status: "In Use",
+        tripStatus: "Assigned",
+        tripDate: vehicleRequest.tripDate,
+        tripTime: vehicleRequest.tripTime,
+      }
     );
 
     // Update driver status to "In Use"
     await Driver.findOneAndUpdate(
       { name: vehicleRequest.driverName },
-      { status: "In Use" }
+      {
+        status: "In Use",
+        tripStatus: "Assigned",
+        tripDate: vehicleRequest.tripDate,
+        tripTime: vehicleRequest.tripTime,
+      }
     );
 
     await syncTripStatusForRequest(vehicleRequest, "Approved");

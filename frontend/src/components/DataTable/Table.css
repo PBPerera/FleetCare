@@ -85,6 +85,13 @@
   color: #999;
 }
 
+/* Wider variant for selects whose options are longer words/phrases
+   (e.g. "Available for Trip") that would otherwise get clipped by the
+   column's auto-sized width. */
+.editable-select.wide-select {
+  min-width: 180px;
+}
+
 .editable-input[type="date"] {
   padding: 7px 8px;
 }

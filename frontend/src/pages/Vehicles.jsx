@@ -56,7 +56,9 @@ export default function Vehicles() {
           insurancerenewaldate: vehicle.insurance_renewal_date,
           insuranceExpiry: vehicle.insurance_expiry,
           status: vehicle.status || 'Available',
-          displayStatus: vehicle.status === 'Active' ? 'Available' : vehicle.status === 'In Use' ? 'Assigned' : vehicle.status || 'Available'
+          tripStatus: vehicle.tripStatus || 'Available for Trip',
+          tripDate: vehicle.tripDate || null,
+          tripTime: vehicle.tripTime || ''
         })) || [];
         
         setVehicles(mappedVehicles);
@@ -83,6 +85,46 @@ export default function Vehicles() {
   }, [vehicles]);
 
 
+  // Trip Status is picked straight from the table (no need to enter row
+  // edit mode) - selecting it saves immediately. Picking "Available for
+  // Trip" also clears the trip date/time it was holding.
+  const handleTripStatusChange = async (row, newStatus) => {
+    const isAvailableForTrip = newStatus === 'Available for Trip';
+    try {
+      const response = await fetch(apiUrl(`/vehicle/${row.vehicleId}`), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tripStatus: newStatus,
+          tripDate: isAvailableForTrip ? null : row.tripDate,
+          tripTime: isAvailableForTrip ? '' : row.tripTime,
+        }),
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        alert('Error updating status: ' + (result.error || result.msg || 'Failed to save'));
+        return;
+      }
+
+      setVehicles((prev) =>
+        prev.map((v) =>
+          v.id === row.id
+            ? {
+                ...v,
+                tripStatus: newStatus,
+                tripDate: isAvailableForTrip ? null : v.tripDate,
+                tripTime: isAvailableForTrip ? '' : v.tripTime,
+              }
+            : v
+        )
+      );
+    } catch (error) {
+      console.error('Error updating trip status:', error);
+      alert('Error updating trip status: ' + error.message);
+    }
+  };
+
   // ===== Table columns (unique keys; with Actions like in repairs table) =====
   const columns = useMemo(
     () => [
@@ -96,22 +138,25 @@ export default function Vehicles() {
       { key: "registerdate", label: "Register Date" },
       { key: "insurancerenewaldate", label: "Insurance Renewal Date" },
       { key: "insuranceExpiry", label: "Insurance Expiry" },
-      { key: "displayStatus", label: "Status" },
       {
-        key: "actions",
-        label: "Actions",
-        render: (row, onAction) => (
-          <div className="action-buttons">
-            <button className="action-btn approve" onClick={() => onAction("details", row)}>
-              Details
-            </button>
-            <button className="action-btn" onClick={() => onAction("service", row)}>
-              Service
-            </button>
-            <button className="action-btn reject" onClick={() => onAction("delete", row)}>
-              Delete
-            </button>
-          </div>
+        key: "tripStatus",
+        label: "Status",
+        render: (row) => (
+          <select
+            className="editable-select wide-select"
+            value={row.tripStatus || 'Available for Trip'}
+            onChange={(e) => handleTripStatusChange(row, e.target.value)}
+          >
+            <option>Available for Trip</option>
+            <option>Assigned</option>
+          </select>
+        ),
+      },
+      {
+        key: "tripDateTime",
+        label: "Trip Date & Time",
+        render: (row) => (
+          <span className="cell-content">{formatTripDateTime(row)}</span>
         ),
       },
     ],
@@ -164,7 +209,7 @@ export default function Vehicles() {
       insurancerenewaldate: "",
       insuranceExpiry: "",
       status: "Available",
-      displayStatus: "Available",
+      tripStatus: "Available for Trip",
     };
     setVehicles((prev) => [newRow, ...prev]);
   };
@@ -174,10 +219,12 @@ export default function Vehicles() {
       // Check if vehicle exists in current data (means it's an edit)
       const existingVehicle = vehicles.find(v => v.id === id);
       const isEdit = existingVehicle && existingVehicle.vehicleId;
-      
-      // Map displayStatus back to actual status
-      const actualStatus = updated.displayStatus === 'Available' ? 'Active' : updated.displayStatus === 'Assigned' ? 'In Use' : updated.displayStatus;
-      
+
+      // Manually marking a vehicle "Available for Trip" again also clears
+      // the trip date/time it was holding - it's no longer tied to that trip.
+      const tripStatus = updated.tripStatus || 'Available for Trip';
+      const isAvailableForTrip = tripStatus === 'Available for Trip';
+
       // Map frontend fields to backend schema
       const payload = {
         vehicle_id: updated.vehicleId,
@@ -192,7 +239,9 @@ export default function Vehicles() {
         insurance_expiry: updated.insuranceExpiry,
         capacity: updated.capacity || '5',
         fuel_average: updated.fuel_average || '15',
-        status: actualStatus || 'Available'
+        tripStatus,
+        tripDate: isAvailableForTrip ? null : (updated.tripDate || null),
+        tripTime: isAvailableForTrip ? '' : (updated.tripTime || '')
       };
       
       let response;
@@ -309,12 +358,20 @@ export default function Vehicles() {
             editable
             onEdit={handleEdit}
             onAction={handleAction}
-            fieldOptions={{
-              displayStatus: ['Available', 'Assigned', 'Maintenance']
-            }}
           />
         </div>
       </main>
     </div>
   );
+}
+
+// Shows the trip date + time a vehicle is currently held for, or a dash
+// once it's back to "Available for Trip".
+function formatTripDateTime(row) {
+  if (row.tripStatus !== 'Assigned' || !row.tripDate) return '-';
+  const d = new Date(row.tripDate);
+  const dateStr = isNaN(d)
+    ? row.tripDate
+    : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  return row.tripTime ? `${dateStr} • ${row.tripTime}` : dateStr;
 }

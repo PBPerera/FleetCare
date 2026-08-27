@@ -71,7 +71,9 @@ export default function DriverManagement() {
             licenseExpiry: driver.licenseExpiryDate,
             healthAssessment: driver.healthAssessment,
             status: driver.status || 'Active',
-            displayStatus: driver.status === 'Active' ? 'Available' : driver.status === 'In Use' ? 'Assigned' : driver.status || 'Available'
+            tripStatus: driver.tripStatus || 'Available for Trip',
+            tripDate: driver.tripDate || null,
+            tripTime: driver.tripTime || ''
           };
         });
         
@@ -99,6 +101,46 @@ export default function DriverManagement() {
     ];
   }, [drivers]);
 
+  // Trip Status is picked straight from the table (no need to enter row
+  // edit mode) - selecting it saves immediately. Picking "Available for
+  // Trip" also clears the trip date/time they were held for.
+  const handleTripStatusChange = async (row, newStatus) => {
+    const isAvailableForTrip = newStatus === 'Available for Trip';
+    try {
+      const response = await fetch(apiUrl(`/driver/${row.driverId}`), {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tripStatus: newStatus,
+          tripDate: isAvailableForTrip ? null : row.tripDate,
+          tripTime: isAvailableForTrip ? '' : row.tripTime,
+        }),
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        alert('Error updating status: ' + (result.error || result.msg || 'Failed to save'));
+        return;
+      }
+
+      setDrivers((prev) =>
+        prev.map((d) =>
+          d.id === row.id
+            ? {
+                ...d,
+                tripStatus: newStatus,
+                tripDate: isAvailableForTrip ? null : d.tripDate,
+                tripTime: isAvailableForTrip ? '' : d.tripTime,
+              }
+            : d
+        )
+      );
+    } catch (error) {
+      console.error('Error updating trip status:', error);
+      alert('Error updating trip status: ' + error.message);
+    }
+  };
+
   // ===== Table columns (matching database model) =====
   const columns = useMemo(
     () => [
@@ -112,22 +154,25 @@ export default function DriverManagement() {
       { key: "licenseRenewalDate", label: "License Renewal Date" },
       { key: "licenseExpiry", label: "License Expiry Date" },
       { key: "healthAssessment", label: "Health Assessment" },
-      { key: "displayStatus", label: "Status" },
       {
-        key: "actions",
-        label: "Actions",
-        render: (row, onAction) => (
-          <div className="action-buttons">
-            <button className="action-btn approve" onClick={() => onAction("details", row)}>
-              Details
-            </button>
-            <button className="action-btn" onClick={() => onAction("assign", row)}>
-              Assign
-            </button>
-            <button className="action-btn reject" onClick={() => onAction("delete", row)}>
-              Delete
-            </button>
-          </div>
+        key: "tripStatus",
+        label: "Status",
+        render: (row) => (
+          <select
+            className="editable-select wide-select"
+            value={row.tripStatus || 'Available for Trip'}
+            onChange={(e) => handleTripStatusChange(row, e.target.value)}
+          >
+            <option>Available for Trip</option>
+            <option>Assigned</option>
+          </select>
+        ),
+      },
+      {
+        key: "tripDateTime",
+        label: "Trip Date & Time",
+        render: (row) => (
+          <span className="cell-content">{formatTripDateTime(row)}</span>
         ),
       },
     ],
@@ -185,7 +230,7 @@ export default function DriverManagement() {
       licenseExpiry: "",
       healthAssessment: "",
       status: "Available",
-      displayStatus: "Available",
+      tripStatus: "Available for Trip",
     };
     setDrivers((prev) => [newRow, ...prev]);
   };
@@ -195,10 +240,12 @@ export default function DriverManagement() {
       // Check if driver exists in current data (means it's an edit)
       const existingDriver = drivers.find(d => d.id === id);
       const isEdit = existingDriver && existingDriver.driverId;
-      
-      // Map displayStatus back to actual status
-      const actualStatus = updated.displayStatus === 'Available' ? 'Active' : updated.displayStatus === 'Assigned' ? 'In Use' : updated.displayStatus;
-      
+
+      // Manually marking a driver "Available for Trip" again also clears
+      // the trip date/time they were held for - no longer tied to that trip.
+      const tripStatus = updated.tripStatus || 'Available for Trip';
+      const isAvailableForTrip = tripStatus === 'Available for Trip';
+
       // Map frontend fields to backend schema
       const payload = {
         driver_id: updated.nic, // Use nic as driver_id
@@ -212,7 +259,9 @@ export default function DriverManagement() {
         licenseRenewalDate: updated.licenseRenewalDate,
         licenseExpiryDate: updated.licenseExpiry,
         healthAssessment: updated.healthAssessment || 'Pending',
-        status: actualStatus || 'Active'
+        tripStatus,
+        tripDate: isAvailableForTrip ? null : (updated.tripDate || null),
+        tripTime: isAvailableForTrip ? '' : (updated.tripTime || '')
       };
       
       let response;
@@ -332,12 +381,20 @@ export default function DriverManagement() {
             editable
             onEdit={handleEdit}
             onAction={handleAction}
-            fieldOptions={{
-              displayStatus: ['Available', 'Assigned']
-            }}
           />
         </div>
       </main>
     </div>
   );
+}
+
+// Shows the trip date + time a driver is currently held for, or a dash
+// once they're back to "Available for Trip".
+function formatTripDateTime(row) {
+  if (row.tripStatus !== 'Assigned' || !row.tripDate) return '-';
+  const d = new Date(row.tripDate);
+  const dateStr = isNaN(d)
+    ? row.tripDate
+    : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  return row.tripTime ? `${dateStr} • ${row.tripTime}` : dateStr;
 }
