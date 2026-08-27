@@ -66,10 +66,18 @@ export default function StaffDashboard() {
 
     (async () => {
       try {
+        // Hit the general notifications endpoint first - as a side effect
+        // it upserts a Notification for every vehicle whose insurance is
+        // expiring within 3 days, so this count includes those alerts too,
+        // not just approved-request ones.
+        await fetch(apiUrl("/notifications"));
+
         const res = await fetch(apiUrl(`/notifications/staff/${staffId}`));
         const json = await res.json();
         if (!cancelled && res.ok) {
-          // the endpoint now returns read + unread, so count only the unread ones
+          // covers both Request Approved and Vehicle Insurance Expiry
+          // notifications - the endpoint returns read + unread of both
+          // types, so count only the unread ones
           setUnreadNotifications((json || []).filter((n) => !n.isRead).length);
         }
       } catch (e) {
