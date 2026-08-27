@@ -91,6 +91,11 @@ import Service from "../models/Service.js";
 import Vehicle from "../models/Vehicle.js";
 import Driver from "../models/Driver.js";
 import Repair from "../models/Repair.js";
+import Notification from "../models/Notification.js";
+
+// Standard staff id used across the app for staff-facing notifications
+// (same one Vehicle Request approval/rejection notifications use).
+const STAFF_ID = "6961093b585ed584551b0864";
 
 export const getAllNotifications = async (req, res) => {
   try {
@@ -219,6 +224,35 @@ export const getAllNotifications = async (req, res) => {
           contactNo: contactNo,
         };
       })
+    );
+
+    // Mirror each expiring-insurance alert into a real staff Notification
+    // document, the same way an approved/rejected request creates one -
+    // so it can be marked read/unread through the same endpoint. Upserted
+    // by vehicle so re-running this never spawns duplicates, and only the
+    // first insert sets isRead - a later run never un-reads an alert the
+    // staff already dismissed.
+    await Promise.all(
+      expiredInsurance.map((item) =>
+        Notification.findOneAndUpdate(
+          { type: "insurance", vehicleNumber: String(item.vehicleId) },
+          {
+            $set: {
+              userId: STAFF_ID,
+              role: "staff",
+              title: "Insurance Expiring Soon",
+              message: `Vehicle ${item.vehicleId} (${item.vehicleType})'s insurance expires on ${
+                item.expiryDate ? new Date(item.expiryDate).toLocaleDateString() : "N/A"
+              }.`,
+              driverName: item.driverName,
+              contactNumber: item.contactNo,
+              vehicleNumber: String(item.vehicleId),
+            },
+            $setOnInsert: { isRead: false, type: "insurance" },
+          },
+          { upsert: true }
+        )
+      )
     );
 
     // 4. Expired driver license (Show items starting 3 days before expiry date until the day ends)
