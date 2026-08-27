@@ -75,12 +75,10 @@ export default function Vehicles() {
     const total = vehicles.length;
     const available = vehicles.filter((v) => v.status === "Available" || v.status === "Active").length;
     const assigned = vehicles.filter((v) => v.status === "In Use").length;
-    const maintenance = vehicles.filter((v) => v.status === "Maintenance").length;
     return [
       { title: "Total", count: total, subtitle: "All vehicles", icon: "🚗" },
       { title: "Available", count: available, subtitle: "Free to assign", icon: "✅" },
       { title: "Assigned", count: assigned, subtitle: "Assigned trips", icon: "📌" },
-      { title: "Maintenance", count: maintenance, subtitle: "In service", icon: "🛠️" },
     ];
   }, [vehicles]);
 
@@ -167,6 +165,7 @@ export default function Vehicles() {
   const [keyword, setKeyword] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
+  const [insuranceExpiryFilter, setInsuranceExpiryFilter] = useState("");
 
   const filtered = useMemo(() => {
     const q = keyword.trim().toLowerCase();
@@ -189,10 +188,12 @@ export default function Vehicles() {
 
       const byStatus = statusFilter === "All" ? true : v.status === statusFilter;
       const byType = typeFilter === "All" ? true : v.type === typeFilter;
+      const byInsuranceExpiry =
+        !insuranceExpiryFilter || isSameCalendarDate(v.insuranceExpiry, insuranceExpiryFilter);
 
-      return inQuery && byStatus && byType;
+      return inQuery && byStatus && byType && byInsuranceExpiry;
     });
-  }, [vehicles, keyword, statusFilter, typeFilter]);
+  }, [vehicles, keyword, statusFilter, typeFilter, insuranceExpiryFilter]);
 
   // ===== CRUD handlers (compatible with your TableRow onEdit(row.id, updated)) =====
   const handleAddVehicle = () => {
@@ -341,8 +342,15 @@ export default function Vehicles() {
           {/* Vehicles section (mirrors Maintenance section structure) */}
           <h2 className="section-title">Vehicles</h2>
 
-          {/* Helper bar (kept for visual parity; you can wire date logic later) */}
-          <SearchBar onFilterChange={() => {}} filterLabel="Insurance Expiry" />
+          {/* Search by Vehicle ID + filter by Insurance Expiry date */}
+          <SearchBar
+            onFilterChange={(f) => {
+              setKeyword(f.vehicleId);
+              setInsuranceExpiryFilter(f.filterValue);
+            }}
+            filterLabel="Insurance Expiry"
+            searchPlaceholder="Search by Vehicle ID"
+          />
 
           {/* Action bar: export + add button (same layout as Maintenance) */}
           {/* <div className="action-bar">
@@ -374,4 +382,14 @@ function formatTripDateTime(row) {
     ? row.tripDate
     : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   return row.tripTime ? `${dateStr} • ${row.tripTime}` : dateStr;
+}
+
+// Same calendar day? (ignores time-of-day, tolerates either side being a
+// Date, an ISO string, or an "YYYY-MM-DD" <input type="date"> value.)
+function isSameCalendarDate(a, b) {
+  if (!a || !b) return false;
+  const da = new Date(a);
+  const db = new Date(b);
+  if (isNaN(da) || isNaN(db)) return false;
+  return da.toISOString().slice(0, 10) === db.toISOString().slice(0, 10);
 }

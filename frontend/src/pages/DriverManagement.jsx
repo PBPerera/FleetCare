@@ -91,13 +91,14 @@ export default function DriverManagement() {
   const dashboardCards = useMemo(() => {
     const total = drivers.length;
     const available = drivers.filter((d) => d.status === "Available" || d.status === "Active").length;
-    const inUse = drivers.filter((d) => d.status === "In Use").length;
-    const offDuty = drivers.filter((d) => d.status === "Off Duty").length;
+    // Driven by the Trip Status column (tripStatus), the same field the
+    // table's Status dropdown edits - not the legacy status field, which
+    // never reliably tracks trip assignment.
+    const assigned = drivers.filter((d) => d.tripStatus === "Assigned").length;
     return [
       { title: "Total", count: total, subtitle: "All drivers", icon: "🧑‍✈️" },
       { title: "Available", count: available, subtitle: "Free to assign", icon: "✅" },
-      { title: "On Trip", count: inUse, subtitle: "Active trips", icon: "📍" },
-      { title: "Off Duty", count: offDuty, subtitle: "Resting", icon: "🌙" },
+      { title: "Assigned", count: assigned, subtitle: "Currently on a trip", icon: "📌" },
     ];
   }, [drivers]);
 
@@ -183,6 +184,7 @@ export default function DriverManagement() {
   const [keyword, setKeyword] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [licenseFilter, setLicenseFilter] = useState("Any"); // Any | Expiring Soon | Expired
+  const [licenseExpiryDateFilter, setLicenseExpiryDateFilter] = useState("");
 
   const filtered = useMemo(() => {
     const now = new Date();
@@ -210,9 +212,12 @@ export default function DriverManagement() {
               return true;
             })();
 
-      return inQuery && byStatus && byLicense;
+      const byLicenseExpiryDate =
+        !licenseExpiryDateFilter || isSameCalendarDate(d.licenseExpiry, licenseExpiryDateFilter);
+
+      return inQuery && byStatus && byLicense && byLicenseExpiryDate;
     });
-  }, [drivers, keyword, statusFilter, licenseFilter]);
+  }, [drivers, keyword, statusFilter, licenseFilter, licenseExpiryDateFilter]);
 
   // ===== CRUD handlers (compatible with your TableRow onEdit signature) =====
   const handleAddDriver = () => {
@@ -364,8 +369,15 @@ export default function DriverManagement() {
           {/* Section title */}
           <h2 className="section-title">Drivers</h2>
 
-          {/* (Optional) helper bar for parity with other pages */}
-          <SearchBar onFilterChange={() => {}} filterLabel="License Expiry" />
+          {/* Search by Driver Name + filter by License Expiry date */}
+          <SearchBar
+            onFilterChange={(f) => {
+              setKeyword(f.vehicleId);
+              setLicenseExpiryDateFilter(f.filterValue);
+            }}
+            filterLabel="License Expiry"
+            searchPlaceholder="Search by Driver Name"
+          />
 
           {/* Action bar: export + add button (same layout as Maintenance/Vehicles) */}
           {/* <div className="action-bar">
@@ -397,4 +409,14 @@ function formatTripDateTime(row) {
     ? row.tripDate
     : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   return row.tripTime ? `${dateStr} • ${row.tripTime}` : dateStr;
+}
+
+// Same calendar day? (ignores time-of-day, tolerates either side being a
+// Date, an ISO string, or an "YYYY-MM-DD" <input type="date"> value.)
+function isSameCalendarDate(a, b) {
+  if (!a || !b) return false;
+  const da = new Date(a);
+  const db = new Date(b);
+  if (isNaN(da) || isNaN(db)) return false;
+  return da.toISOString().slice(0, 10) === db.toISOString().slice(0, 10);
 }
