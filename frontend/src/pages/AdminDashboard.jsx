@@ -13,6 +13,12 @@ export default function AdminDashboard() {
   const [recentTrips, setRecentTrips] = useState([]);
   const [recentMaintenance, setRecentMaintenance] = useState([]);
 
+  // Top metric cards: real counts from the vehicle, driver and
+  // maintenance (service + repair) collections.
+  const [vehicleStats, setVehicleStats] = useState({ total: 0, active: 0 });
+  const [driverStats, setDriverStats] = useState({ total: 0, active: 0 });
+  const [maintenanceStats, setMaintenanceStats] = useState({ total: 0, completedThisMonth: 0 });
+
   useEffect(() => {
     let cancelled = false;
 
@@ -60,6 +66,53 @@ export default function AdminDashboard() {
       }
     })();
 
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/vehicle"));
+        const json = await res.json();
+        if (!cancelled && res.ok) {
+          const vehicles = json.vehicles || [];
+          setVehicleStats({
+            total: vehicles.length,
+            active: vehicles.filter((v) => v.status === "Active").length,
+          });
+        }
+      } catch (e) {
+        // keep the metric at 0 rather than breaking the dashboard
+      }
+    })();
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/driver"));
+        const json = await res.json();
+        if (!cancelled && res.ok) {
+          const drivers = json.Drivers || [];
+          setDriverStats({
+            total: drivers.length,
+            active: drivers.filter((d) => d.status === "Active").length,
+          });
+        }
+      } catch (e) {
+        // keep the metric at 0 rather than breaking the dashboard
+      }
+    })();
+
+    (async () => {
+      try {
+        const res = await fetch(apiUrl("/maintenance/dashboard/stats"));
+        const json = await res.json();
+        if (!cancelled && res.ok && json.success) {
+          setMaintenanceStats({
+            total: json.data.overview.total,
+            completedThisMonth: json.data.overview.completedThisMonth,
+          });
+        }
+      } catch (e) {
+        // keep the metric at 0 rather than breaking the dashboard
+      }
+    })();
+
     return () => {
       cancelled = true;
     };
@@ -100,10 +153,24 @@ export default function AdminDashboard() {
           </section>
 
           <section className="ad-metrics">
-            <MetricCard title="Total Vehicles" value="24" change="+2 this month" icon="🚛" trend="up" />
-            <MetricCard title="Active Vehicles" value="18" change="75% operational" icon="📈" trend="up" />
-            <MetricCard title="In Maintenance" value="3" change="2 scheduled" icon="🔧" trend="neutral" />
-            <MetricCard title="Alerts" value="5" change="2 critical" icon="⚠️" trend="down" />
+            <MetricCard
+              title="Total Vehicles"
+              value={vehicleStats.total}
+              change={`${vehicleStats.active} active`}
+              icon="🚛"
+            />
+            <MetricCard
+              title="Total Drivers"
+              value={driverStats.total}
+              change={`${driverStats.active} active`}
+              icon="🧑‍✈️"
+            />
+            <MetricCard
+              title="Total Maintenance"
+              value={maintenanceStats.total}
+              change={`${maintenanceStats.completedThisMonth} completed this month`}
+              icon="🔧"
+            />
           </section>
 
           <section className="ad-section">
