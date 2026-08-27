@@ -442,6 +442,33 @@ function buildTripReminderMessage(driverName, trip) {
   return `Hi ${driverName}, reminder: you have a trip scheduled on ${dateStr} at ${timeStr} for ${route}. Please be ready.`;
 }
 
+// Ready-to-send reminder for an upcoming (within 3 days) vehicle
+// maintenance appointment, pre-filled from the actual service/repair
+// record.
+function buildMaintenanceReminderMessage(driverName, item) {
+  const dateStr = item.maintenanceDate
+    ? new Date(item.maintenanceDate).toLocaleDateString()
+    : "the scheduled date";
+  const vehicle = item.vehicleId && item.vehicleId !== "N/A" ? item.vehicleId : "your vehicle";
+  const desc =
+    item.description && item.description !== "N/A" && item.description !== "No description"
+      ? item.description
+      : "scheduled maintenance";
+  const company =
+    item.companyName && item.companyName !== "N/A" ? ` at ${item.companyName}` : "";
+
+  return `Hi ${driverName}, reminder: vehicle ${vehicle} has ${desc} scheduled on ${dateStr}${company}. Please plan accordingly.`;
+}
+
+// Ready-to-send reminder for a driver's license expiring within 3 days.
+function buildLicenseReminderMessage(driverName, item) {
+  const dateStr = item.licenceExpiryDate
+    ? new Date(item.licenceExpiryDate).toLocaleDateString()
+    : "soon";
+
+  return `Hi ${driverName}, reminder: your driving license expires on ${dateStr}. Please renew it as soon as possible.`;
+}
+
 export default function NotificationCenter() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -550,12 +577,16 @@ export default function NotificationCenter() {
             });
 
             newTables[1].data = filtered
-              .map(item => ({
-                name: item.driverName || item.driver || "N/A",
-                contact: item.contactNo || item.contact || "N/A",
-                message: "",
-                phoneInput: ""
-              }))
+              .map(item => {
+                const name = item.driverName || item.driver || "N/A";
+                const contact = item.contactNo || item.contact || "N/A";
+                return {
+                  name,
+                  contact,
+                  message: buildMaintenanceReminderMessage(name, item),
+                  phoneInput: contact !== "N/A" ? contact : ""
+                };
+              })
               .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
@@ -573,12 +604,16 @@ export default function NotificationCenter() {
             });
 
             newTables[2].data = filtered
-              .map(item => ({
-                name: item.driverName || item.driver || "N/A",
-                contact: item.contactNo || item.contact || "N/A",
-                message: "",
-                phoneInput: ""
-              }))
+              .map(item => {
+                const name = item.driverName || item.driver || "N/A";
+                const contact = item.contactNo || item.contact || "N/A";
+                return {
+                  name,
+                  contact,
+                  message: buildLicenseReminderMessage(name, item),
+                  phoneInput: contact !== "N/A" ? contact : ""
+                };
+              })
               .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
@@ -611,11 +646,17 @@ export default function NotificationCenter() {
               const mDate = new Date(mDateVal);
               if (isNaN(mDate.getTime())) return true;
               return mDate >= todayStart && mDate <= maxExpiryDate;
-            }).map(item => ({
-              name: item.driver || item.driverName || "N/A",
-              contact: item.contact || item.contactNo || "N/A",
-              message: "", phoneInput: ""
-            })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
+            }).map(item => {
+              const name = item.driver || item.driverName || "N/A";
+              const contact = item.contact || item.contactNo || "N/A";
+              const maintenanceDate = item.shiftDate || item.maintenanceDate || item.date || item.requestDate;
+              return {
+                name,
+                contact,
+                message: buildMaintenanceReminderMessage(name, { ...item, maintenanceDate }),
+                phoneInput: contact !== "N/A" ? contact : ""
+              };
+            }).filter(r => r.name !== "N/A" || r.contact !== "N/A");
 
             newTables[2].data = data.filter(i => {
               if (i.type !== "license") return false;
@@ -624,11 +665,17 @@ export default function NotificationCenter() {
               const expDate = new Date(expiry);
               if (isNaN(expDate.getTime())) return false;
               return expDate >= todayStart && expDate <= maxExpiryDate;
-            }).map(item => ({
-              name: item.driver || item.driverName || "N/A",
-              contact: item.contact || item.contactNo || "N/A",
-              message: "", phoneInput: ""
-            })).filter(r => r.name !== "N/A" || r.contact !== "N/A");
+            }).map(item => {
+              const name = item.driver || item.driverName || "N/A";
+              const contact = item.contact || item.contactNo || "N/A";
+              const licenceExpiryDate = item.licenceExpiryDate || item.expiryDate;
+              return {
+                name,
+                contact,
+                message: buildLicenseReminderMessage(name, { ...item, licenceExpiryDate }),
+                phoneInput: contact !== "N/A" ? contact : ""
+              };
+            }).filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           return newTables;
