@@ -252,11 +252,70 @@ html, body, #root {
   gap: 18px;
 }
 
+.notification-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .notification-card__header h4 {
   margin: 0;
   font-size: 1.1rem;
   letter-spacing: 0.01em;
   color: #1f2a52;
+}
+
+/* Read vs unread state */
+.notification-card.is-unread {
+  position: relative;
+}
+.notification-card.is-unread::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #4d5bff;
+  box-shadow: 0 0 0 3px rgba(77, 91, 255, 0.18);
+}
+
+.notification-card.is-read {
+  background: #f4f5f9;
+  box-shadow: 0 10px 22px rgba(15, 32, 78, 0.05);
+  opacity: 0.85;
+}
+.notification-card.is-read::before {
+  background: #c7cbdb !important;
+}
+.notification-card.is-read .notification-card__header h4 {
+  color: #6b7280;
+  font-weight: 600;
+}
+.notification-card.is-read .notification-message,
+.notification-card.is-read .notification-meta {
+  color: #7d8296;
+}
+
+.read-badge {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+.read-badge.is-unread {
+  background: #e8eaff;
+  color: #4d5bff;
+}
+.read-badge.is-read {
+  background: #e5e7eb;
+  color: #6b7280;
 }
 
 .notification-card__body {

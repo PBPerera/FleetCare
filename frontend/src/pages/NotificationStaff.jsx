@@ -204,13 +204,17 @@ export default function NotificationStaff() {
   };
 
   // ✅ MARK AS READ (BACKEND + UI)
+  // Keeps the notification in the list (just styled as read) instead of
+  // removing it, so staff can still see what they've already dealt with.
   const handleMarkAsRead = async (id) => {
     try {
       await fetch(apiUrl(`/notifications/read/${id}`), {
         method: "PUT",
       });
 
-      setNotifications((prev) => prev.filter((n) => n._id !== id));
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+      );
     } catch (error) {
       console.error("Mark as read error:", error);
     }
@@ -258,12 +262,16 @@ export default function NotificationStaff() {
                   const timeLabel = note.time || formatRelativeTime(note.createdAt);
                   const isApproved = note.type === "approved";
                   const statusClass = note.type === "approved" ? "approved" : note.type === "rejected" ? "rejected" : "info";
+                  const readClass = note.isRead ? "is-read" : "is-unread";
 
                   return (
-                    <div key={note._id} className={`notification-card ${statusClass}`}>
+                    <div key={note._id} className={`notification-card ${statusClass} ${readClass}`}>
                       <div className="notification-card__content">
                         <div className="notification-card__header">
                           <h4>{note.title}</h4>
+                          <span className={`read-badge ${readClass}`}>
+                            {note.isRead ? "Read" : "New"}
+                          </span>
                         </div>
                         <div className="notification-card__body">
                           {isApproved ? (
@@ -292,14 +300,16 @@ export default function NotificationStaff() {
                             </>
                           )}
                         </div>
-                        <div className="notification-card__footer">
-                          <button
-                            className="mark-read-btn"
-                            onClick={() => handleMarkAsRead(note._id)}
-                          >
-                            Mark as Read
-                          </button>
-                        </div>
+                        {!note.isRead && (
+                          <div className="notification-card__footer">
+                            <button
+                              className="mark-read-btn"
+                              onClick={() => handleMarkAsRead(note._id)}
+                            >
+                              Mark as Read
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );

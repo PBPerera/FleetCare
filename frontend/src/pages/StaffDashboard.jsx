@@ -69,7 +69,8 @@ export default function StaffDashboard() {
         const res = await fetch(apiUrl(`/notifications/staff/${staffId}`));
         const json = await res.json();
         if (!cancelled && res.ok) {
-          setUnreadNotifications((json || []).length);
+          // the endpoint now returns read + unread, so count only the unread ones
+          setUnreadNotifications((json || []).filter((n) => !n.isRead).length);
         }
       } catch (e) {
         // keep the metric at 0 rather than breaking the dashboard
