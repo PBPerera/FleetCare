@@ -14,6 +14,54 @@ export async function getLoginLogs(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+
+// Registered users (from Signup) merged with each user's most recent login,
+// used to populate the User Management table.
+export async function getAllUsers(req, res) {
+  try {
+    const [regUsers, logs] = await Promise.all([
+      RegUser.find().select("-Password").sort({ createdAt: -1 }),
+      LoginLog.find().sort({ loginTime: -1 })
+    ]);
+
+    // logs are sorted newest first, so the first entry seen per username is the latest login
+    const lastLoginByUsername = new Map();
+    for (const log of logs) {
+      if (!lastLoginByUsername.has(log.username)) {
+        lastLoginByUsername.set(log.username, log.loginTime);
+      }
+    }
+
+    const users = regUsers.map((user) => {
+      const loginTime = lastLoginByUsername.get(user.UserName) || null;
+      let lastLoginDate = null;
+      let lastLoginTime = null;
+
+      if (loginTime) {
+        const d = new Date(loginTime);
+        lastLoginDate = d.toISOString().slice(0, 10);
+        let hours = d.getHours();
+        const minutes = `${d.getMinutes()}`.padStart(2, "0");
+        const ampm = hours >= 12 ? "pm" : "am";
+        hours = hours % 12 || 12;
+        lastLoginTime = `${hours}:${minutes} ${ampm}`;
+      }
+
+      return {
+        username: user.UserName,
+        fullName: user.FullName,
+        role: user.Role,
+        email: user.emailaddress,
+        lastLoginDate,
+        lastLoginTime
+      };
+    });
+
+    res.status(200).json({ success: true, data: users });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
 export async function registerUser(req, res) {
   try {
     const hashedPassword = await bcrypt.hash(req.body.Password, 10);
