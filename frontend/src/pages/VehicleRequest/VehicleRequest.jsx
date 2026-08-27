@@ -67,53 +67,129 @@ export default function VehicleRequest() {
   const [availableDrivers, setAvailableDrivers] = useState([]);
   const [availableVehicles, setAvailableVehicles] = useState([]);
 
+  // Full driver/vehicle lists as last fetched from the backend, plus every
+  // currently-active (Approved, not yet completed/rejected) trip. A vehicle
+  // or driver can be booked again for a *different* date even while it's
+  // still holding an earlier trip - a single vehicle/driver can have many
+  // separate approved trips at once, each on its own date, without any of
+  // the earlier ones needing to be "finished" first. So availability is
+  // checked against every one of those trips, not just a single cached
+  // "current trip" value.
+  const [rawDrivers, setRawDrivers] = useState([]);
+  const [rawVehicles, setRawVehicles] = useState([]);
+
+  // Same calendar day? (ignores time-of-day, and tolerates either side
+  // being a Date, an ISO string, or an "YYYY-MM-DD" input value.)
+  const isSameDate = (a, b) => {
+    if (!a || !b) return false;
+    const da = new Date(a);
+    const db = new Date(b);
+    if (isNaN(da) || isNaN(db)) return false;
+    return da.toISOString().slice(0, 10) === db.toISOString().slice(0, 10);
+  };
+
+  // Available for this date = it doesn't already have an active trip
+  // booked on this exact date. This is driven entirely by the real Trip
+  // records - the same source the Trip Status column on Vehicle/Driver
+  // Management is built from - not the vehicle/driver's own legacy
+  // status field (which never reliably tracks trip assignment and was
+  // wrongly excluding vehicles/drivers that were actually free).
+  // Being assigned to a trip on a *different* date is not a conflict.
+  const isFreeForDate = (dateStr, trips, matchKey, idValue) => {
+    if (!dateStr || !idValue) return true;
+    return !trips.some(
+      (trip) => String(trip[matchKey]) === String(idValue) && isSameDate(trip.tripDate, dateStr),
+    );
+  };
+
+  const fetchDrivers = async () => {
+    try {
+      const response = await fetch(apiUrl("/driver"));
+      const data = await response.json();
+
+      const driversArray =
+        data.Drivers || data.drivers || data.data ||
+        (Array.isArray(data) ? data : []);
+
+      setRawDrivers(driversArray || []);
+      return driversArray || [];
+    } catch (error) {
+      console.error("Error fetching drivers:", error);
+      return [];
+    }
+  };
+
+  const fetchVehicles = async () => {
+    try {
+      const response = await fetch(apiUrl("/vehicle"));
+      const data = await response.json();
+
+      const vehiclesArray =
+        data.vehicles || data.Vehicles || data.data ||
+        (Array.isArray(data) ? data : []);
+
+      setRawVehicles(vehiclesArray || []);
+      return vehiclesArray || [];
+    } catch (error) {
+      console.error("Error fetching vehicles:", error);
+      return [];
+    }
+  };
+
+  // Every currently-active trip (Approved, not yet Completed/Rejected) -
+  // this is the real record of who/what is booked on which date, across
+  // however many separate trips a vehicle or driver is currently holding.
+  const fetchActiveTrips = async () => {
+    try {
+      const response = await fetch(apiUrl("/trips?status=Approved"));
+      const data = await response.json();
+      const trips = data.data || (Array.isArray(data) ? data : []);
+      return trips;
+    } catch (error) {
+      console.error("Error fetching active trips:", error);
+      return [];
+    }
+  };
+
+  // Recompute the two "available" lists for the given trip date from
+  // whatever driver/vehicle/trip data is currently held.
+  const refreshAvailability = (driversArray, vehiclesArray, tripsArray, dateStr) => {
+    const availableDriversList = (driversArray || []).filter((driver) =>
+      isFreeForDate(dateStr, tripsArray || [], "driverName", driver.name),
+    );
+    setAvailableDrivers(availableDriversList);
+    setDriverNames(
+      availableDriversList
+        .map((driver) => driver.name || `${driver.firstName || ""} ${driver.lastName || ""}`.trim())
+        .filter(Boolean),
+    );
+
+    const availableVehiclesList = (vehiclesArray || []).filter((vehicle) =>
+      isFreeForDate(
+        dateStr,
+        tripsArray || [],
+        "vehicleId",
+        vehicle.vehicle_id ?? vehicle.vehicleId,
+      ),
+    );
+    setAvailableVehicles(availableVehiclesList);
+    setVehicleIds(
+      availableVehiclesList
+        .map((vehicle) => vehicle.vehicle_id || vehicle.vehicleId)
+        .filter(Boolean),
+    );
+  };
+
   useEffect(() => {
-    const fetchDrivers = async () => {
-      try {
-        const response = await fetch(apiUrl("/driver"));
-        const data = await response.json();
-
-        const driversArray =
-          data.Drivers || data.drivers || data.data ||
-          (Array.isArray(data) ? data : []);
-
-        const availableDriversList = (driversArray || [])
-          .filter(
-            (driver) =>
-              driver.status === "Available" || driver.status === "Active",
-          );
-
-        setAvailableDrivers(availableDriversList);
-        setDriverNames(availableDriversList.map((driver) => driver.name || `${driver.firstName || ""} ${driver.lastName || ""}`.trim()).filter(Boolean));
-      } catch (error) {
-        console.error("Error fetching drivers:", error);
-      }
-    };
-
-    const fetchVehicles = async () => {
-      try {
-        const response = await fetch(apiUrl("/vehicle"));
-        const data = await response.json();
-
-        const vehiclesArray =
-          data.vehicles || data.Vehicles || data.data ||
-          (Array.isArray(data) ? data : []);
-
-        const availableVehiclesList = (vehiclesArray || [])
-          .filter(
-            (vehicle) =>
-              vehicle.status === "Available" || vehicle.status === "Active",
-          );
-
-        setAvailableVehicles(availableVehiclesList);
-        setVehicleIds(availableVehiclesList.map((vehicle) => vehicle.vehicle_id || vehicle.vehicleId).filter(Boolean));
-      } catch (error) {
-        console.error("Error fetching vehicles:", error);
-      }
-    };
-
-    fetchDrivers();
-    fetchVehicles();
+    (async () => {
+      const [drivers, vehicles, trips] = await Promise.all([
+        fetchDrivers(),
+        fetchVehicles(),
+        fetchActiveTrips(),
+      ]);
+      refreshAvailability(drivers, vehicles, trips, formData.tripDate);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [q, setQ] = useState("");
@@ -187,9 +263,14 @@ export default function VehicleRequest() {
 
   // Handle vehicle selection
   const handleVehicleSelect = (vehicleId) => {
+    const selectedVehicle = availableVehicles.find(
+      (vehicle) => (vehicle.vehicle_id ?? vehicle.vehicleId) === vehicleId
+    );
+
     setFormData((prev) => ({
       ...prev,
       vehicleId: vehicleId,
+      vehicleType: selectedVehicle?.type || prev.vehicleType,
     }));
 
     // Remove from available lists
@@ -289,7 +370,7 @@ export default function VehicleRequest() {
   };
 
   // Handle cancel
-  const handleCancel = () => {
+  const handleCancel = async () => {
     setFormData({
       tripDate: "",
       tripTime: "",
@@ -302,54 +383,26 @@ export default function VehicleRequest() {
       noOfPassengers: 1,
     });
     setMessage("");
+    setShowAvailables(false);
 
-    // Re-fetch availables to reset the lists
-    const fetchDrivers = async () => {
-      try {
-        const response = await fetch(apiUrl("/driver"));
-        const data = await response.json();
+    // Re-fetch availables to reset the lists (no date selected anymore)
+    const [drivers, vehicles, trips] = await Promise.all([
+      fetchDrivers(),
+      fetchVehicles(),
+      fetchActiveTrips(),
+    ]);
+    refreshAvailability(drivers, vehicles, trips, "");
+  };
 
-        const driversArray =
-          data.Drivers || data.drivers || data.data ||
-          (Array.isArray(data) ? data : []);
-
-        const availableDriversList = (driversArray || [])
-          .filter(
-            (driver) =>
-              driver.status === "Available" || driver.status === "Active",
-          );
-
-        setAvailableDrivers(availableDriversList);
-        setDriverNames(availableDriversList.map((driver) => driver.name || `${driver.firstName || ""} ${driver.lastName || ""}`.trim()).filter(Boolean));
-      } catch (error) {
-        console.error("Error fetching drivers:", error);
-      }
-    };
-
-    const fetchVehicles = async () => {
-      try {
-        const response = await fetch(apiUrl("/vehicle"));
-        const data = await response.json();
-
-        const vehiclesArray =
-          data.vehicles || data.Vehicles || data.data ||
-          (Array.isArray(data) ? data : []);
-
-        const availableVehiclesList = (vehiclesArray || [])
-          .filter(
-            (vehicle) =>
-              vehicle.status === "Available" || vehicle.status === "Active",
-          );
-
-        setAvailableVehicles(availableVehiclesList);
-        setVehicleIds(availableVehiclesList.map((vehicle) => vehicle.vehicle_id || vehicle.vehicleId).filter(Boolean));
-      } catch (error) {
-        console.error("Error fetching vehicles:", error);
-      }
-    };
-
-    fetchDrivers();
-    fetchVehicles();
+  // Handle "Search Availables" - re-filters drivers/vehicles for whichever
+  // trip date is currently selected, so a vehicle/driver already booked on
+  // a *different* day still shows up as a valid pick for this one. Active
+  // trips are re-fetched fresh each time, since new bookings may have been
+  // approved since the page loaded.
+  const handleSearchAvailables = async () => {
+    const trips = await fetchActiveTrips();
+    refreshAvailability(rawDrivers, rawVehicles, trips, formData.tripDate);
+    setShowAvailables(true);
   };
 
   return (
@@ -412,7 +465,7 @@ export default function VehicleRequest() {
               <button
                 type="button"
                 className="vr-search-btn"
-                onClick={() => setShowAvailables(true)}
+                onClick={handleSearchAvailables}
                 title="Search Availables"
               >
                 <FaSearch className="vr-search-icon" aria-hidden="true" />
@@ -489,6 +542,8 @@ export default function VehicleRequest() {
                     <option>Van</option>
                     <option>Bus</option>
                     <option>SUV</option>
+                    <option>Truck</option>
+                    <option>Motorbike</option>
                   </select>
                   <span className="vr-arrow-down">▾</span>
                 </div>

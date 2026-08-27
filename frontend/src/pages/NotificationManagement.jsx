@@ -280,7 +280,6 @@ export default function NotificationManagement() {
 
   const [tripSchedule, setTripSchedule] = useState([]);
   const [maintenanceAlerts, setMaintenanceAlerts] = useState([]);
-  const [expiredInsurance, setExpiredInsurance] = useState([]);
   const [expiredLicenses, setExpiredLicenses] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -374,33 +373,6 @@ export default function NotificationManagement() {
           );
         }
 
-        if (data.expiredInsurance) {
-          const now = new Date();
-          const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-          const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
-
-          const filtered = data.expiredInsurance.filter((item) => {
-            if (!item.expiryDate) return false;
-            const expDate = new Date(item.expiryDate);
-            if (isNaN(expDate.getTime())) return false;
-            return expDate >= todayStart && expDate <= maxExpiryDate;
-          });
-
-          setExpiredInsurance(
-            filtered
-              .map((item) => ({
-                vehicleId: item.vehicleId || "N/A",
-                vehicleType: item.vehicleType || "N/A",
-                expiryDate: item.expiryDate
-                  ? new Date(item.expiryDate).toLocaleDateString()
-                  : "N/A",
-                driver: item.driverName || item.driver || "N/A",
-                contact: item.contactNo || item.contact || "N/A",
-              }))
-              .filter((row) => !isRowEmpty(row))
-          );
-        }
-
         if (data.expiredLicenses) {
           const now = new Date();
           const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
@@ -473,26 +445,6 @@ export default function NotificationManagement() {
               .filter((row) => !isRowEmpty(row))
           );
 
-          setExpiredInsurance(
-            data
-              .filter((item) => {
-                if (item.type !== "insurance" || !item.expiryDate) return false;
-                const expDate = new Date(item.expiryDate);
-                if (isNaN(expDate.getTime())) return false;
-                return expDate >= todayStart && expDate <= maxExpiryDate;
-              })
-              .map((item) => ({
-                vehicleId: item.vehicleId || "N/A",
-                vehicleType: item.vehicleType || "N/A",
-                expiryDate: item.expiryDate
-                  ? new Date(item.expiryDate).toLocaleDateString()
-                  : "N/A",
-                driver: item.driver || item.driverName || "N/A",
-                contact: item.contact || item.contactNo || "N/A",
-              }))
-              .filter((row) => !isRowEmpty(row))
-          );
-
           setExpiredLicenses(
             data
               .filter((item) => {
@@ -554,18 +506,6 @@ export default function NotificationManagement() {
       data: maintenanceAlerts,
     },
     {
-      title: "Expired Vehicles Insurance",
-      searchPlaceholder: "Search Vehicle ID",
-      columns: [
-        "Vehicle ID",
-        "Vehicle Type",
-        "Insurance Expiry Date",
-        "Driver Name",
-        "Contact Number",
-      ],
-      data: expiredInsurance,
-    },
-    {
       title: "Expired Driver License",
       searchPlaceholder: "Search Driver Name",
       columns: ["Driver ID", "Driver Name", "License Expiry Date", "Contact Number"],
@@ -573,7 +513,7 @@ export default function NotificationManagement() {
     },
   ];
 
-  const [searches, setSearches] = useState(["", "", "", ""]);
+  const [searches, setSearches] = useState(["", "", ""]);
 
   const handleSearchChange = (index, value) => {
     const newSearches = [...searches];

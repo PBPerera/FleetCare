@@ -98,6 +98,59 @@
   background: #FFFFFF;
 }
 
+/* Date filter (calendar picker) */
+.searchbar-date-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchbar-date-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  white-space: nowrap;
+}
+
+.searchbar-date-input {
+  height: 47px;
+  padding: 10px 32px 10px 15px;
+  border: 1px solid var(--border-gray);
+  border-radius: 6px;
+  font-size: 14px;
+  background: #FFFFFF;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.searchbar-date-input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.searchbar-date-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--search-gray);
+  padding: 4px 6px;
+  line-height: 1;
+}
+
+.searchbar-date-clear:hover {
+  color: #ef4444;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .searchbar-container {
@@ -107,8 +160,18 @@
   }
 
   .searchbar-input-wrapper,
-  .searchbar-select {
+  .searchbar-select,
+  .searchbar-date-wrapper {
     max-width: 100%;
     width: 100%;
+  }
+
+  .searchbar-date-wrapper {
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+
+  .searchbar-date-input {
+    flex: 1;
   }
 }
