@@ -1,6 +1,7 @@
 import VehicleRequest from "../models/VehicleRequest.js";
 import Vehicle from "../models/Vehicle.js";
 import Driver from "../models/Driver.js";
+import Trip from "../models/Trip.js";
 import { createNotification } from "./notificationStaffController.js";
 
 // Create a new vehicle request
@@ -103,6 +104,40 @@ export const getVehicleRequestByRequestId = async (req, res) => {
   }
 };
 
+const syncTripStatusForRequest = async (vehicleRequest, status) => {
+  if (!vehicleRequest || !["Approved", "Rejected"].includes(status)) {
+    return null;
+  }
+
+  return Trip.findOneAndUpdate(
+    {
+      $or: [
+        { vehicleRequestId: vehicleRequest._id },
+        { requestId: vehicleRequest.requestId },
+      ],
+    },
+    {
+      requestId: vehicleRequest.requestId,
+      vehicleId: String(vehicleRequest.vehicleId),
+      driverName: vehicleRequest.driverName,
+      driverContact: vehicleRequest.driverContact,
+      pickupDestination: vehicleRequest.pickupDestination,
+      tripDate: vehicleRequest.tripDate,
+      tripTime: vehicleRequest.tripTime,
+      purpose: vehicleRequest.purpose,
+      vehicleType: vehicleRequest.vehicleType,
+      noOfPassengers: vehicleRequest.noOfPassengers,
+      status,
+      vehicleRequestId: vehicleRequest._id,
+    },
+    {
+      new: true,
+      upsert: true,
+      setDefaultsOnInsert: true,
+    },
+  );
+};
+
 // Update vehicle request status
 export const updateVehicleRequestStatus = async (req, res) => {
   try {
@@ -111,6 +146,12 @@ export const updateVehicleRequestStatus = async (req, res) => {
 
     if (!status || !["Pending", "Approved", "Rejected"].includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
+    }
+
+    // Get the vehicle request first to access vehicle and driver info
+    const vehicleRequest = await VehicleRequest.findById(id);
+    if (!vehicleRequest) {
+      return res.status(404).json({ message: "Vehicle request not found" });
     }
 
     const updateData = {
@@ -124,6 +165,44 @@ export const updateVehicleRequestStatus = async (req, res) => {
         new: true,
       },
     );
+
+    if (status === "Rejected") {
+      await Vehicle.findOneAndUpdate(
+        { vehicle_id: vehicleRequest.vehicleId },
+        { status: "Available" }
+      );
+
+      await Driver.findOneAndUpdate(
+        { name: vehicleRequest.driverName },
+        { status: "Available" }
+      );
+    }
+
+    if (status === "Approved") {
+      await Vehicle.findOneAndUpdate(
+        { vehicle_id: vehicleRequest.vehicleId },
+        {
+          status: "In Use",
+          tripStatus: "Assigned",
+          tripDate: vehicleRequest.tripDate,
+          tripTime: vehicleRequest.tripTime,
+        }
+      );
+
+      await Driver.findOneAndUpdate(
+        { name: vehicleRequest.driverName },
+        {
+          status: "In Use",
+          tripStatus: "Assigned",
+          tripDate: vehicleRequest.tripDate,
+          tripTime: vehicleRequest.tripTime,
+        }
+      );
+    }
+
+    if (["Approved", "Rejected"].includes(status)) {
+      await syncTripStatusForRequest(vehicleRequest, status);
+    }
 
     if (!updatedRequest) {
       return res.status(404).json({ message: "Vehicle request not found" });
@@ -159,14 +238,26 @@ export const approveVehicleRequest = async (req, res) => {
     // Update vehicle status to "In Use"
     await Vehicle.findOneAndUpdate(
       { vehicle_id: vehicleRequest.vehicleId },
-      { status: "In Use" }
+      {
+        status: "In Use",
+        tripStatus: "Assigned",
+        tripDate: vehicleRequest.tripDate,
+        tripTime: vehicleRequest.tripTime,
+      }
     );
 
     // Update driver status to "In Use"
     await Driver.findOneAndUpdate(
       { name: vehicleRequest.driverName },
-      { status: "In Use" }
+      {
+        status: "In Use",
+        tripStatus: "Assigned",
+        tripDate: vehicleRequest.tripDate,
+        tripTime: vehicleRequest.tripTime,
+      }
     );
+
+    await syncTripStatusForRequest(vehicleRequest, "Approved");
 
     // Create staff notification
     await createNotification({
@@ -214,8 +305,18 @@ export const rejectVehicleRequest = async (req, res) => {
       { new: true },
     );
 
-    // Note: When rejecting, we don't change vehicle/driver status back to Available
-    // because they might be assigned to other approved requests
+    // When rejecting, set vehicle/driver status back to Available
+    await Vehicle.findOneAndUpdate(
+      { vehicle_id: vehicleRequest.vehicleId },
+      { status: "Available" }
+    );
+
+    await Driver.findOneAndUpdate(
+      { name: vehicleRequest.driverName },
+      { status: "Available" }
+    );
+
+    await syncTripStatusForRequest(vehicleRequest, "Rejected");
 
     // Create staff notification
     await createNotification({

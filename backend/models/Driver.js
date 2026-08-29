@@ -55,6 +55,24 @@ const driverSchema = new mongoose.Schema(
       required: true,
       default: "Active",
     },
+    // Trip assignment state - separate from the driver's own condition
+    // (status above). Set to "Assigned" automatically when a vehicle
+    // request using this driver is approved; only reset back to
+    // "Available for Trip" by a staff member manually, once the trip
+    // is finished.
+    tripStatus: {
+      type: String,
+      enum: ["Available for Trip", "Assigned"],
+      default: "Available for Trip",
+    },
+    tripDate: {
+      type: Date,
+      default: null,
+    },
+    tripTime: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

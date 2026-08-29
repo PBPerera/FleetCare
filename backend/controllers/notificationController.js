@@ -91,6 +91,11 @@ import Service from "../models/Service.js";
 import Vehicle from "../models/Vehicle.js";
 import Driver from "../models/Driver.js";
 import Repair from "../models/Repair.js";
+import Notification from "../models/Notification.js";
+
+// Standard staff id used across the app for staff-facing notifications
+// (same one Vehicle Request approval/rejection notifications use).
+const STAFF_ID = "6961093b585ed584551b0864";
 
 export const getAllNotifications = async (req, res) => {
   try {
@@ -108,7 +113,11 @@ export const getAllNotifications = async (req, res) => {
       if (!trip.tripDate) return false;
       const tDate = new Date(trip.tripDate);
       if (isNaN(tDate.getTime())) return false;
-      return tDate >= todayStart && tDate <= maxExpiryDate;
+      if (tDate < todayStart || tDate > maxExpiryDate) return false;
+      const vId = (trip.vehicleId || "").trim();
+      const drv = (trip.driverName || "").trim();
+      if ((!vId || vId === "N/A") && (!drv || drv === "N/A")) return false;
+      return true;
     });
 
     const tripSchedule = filteredTrips.map((trip) => ({
@@ -123,26 +132,39 @@ export const getAllNotifications = async (req, res) => {
     // 2. Maintenance alerts for services and repairs (Show items starting 3 days before date until day ends)
     const [serviceRecords, repairRecords] = await Promise.all([
       Service.find().sort({ date: 1 }).limit(100),
-      Repair.find({ status: "Approved" }).sort({ requestDate: 1 }).limit(100),
+      Repair.find({ approvalStatus: { $ne: "Rejected" } }).sort({ requestDate: 1 }).limit(100),
     ]);
 
     const combinedMaintenance = [
-      ...serviceRecords.map((s) => ({ ...s.toObject(), maintenanceDate: s.date })),
-      ...repairRecords.map((r) => ({ ...r.toObject(), maintenanceDate: r.requestDate })),
+      ...serviceRecords.map((s) => ({ ...s.toObject(), maintenanceDate: s.shiftDate || s.date })),
+      ...repairRecords.map((r) => ({ ...r.toObject(), maintenanceDate: r.shiftDate || r.requestDate })),
     ];
 
     const filteredMaintenance = combinedMaintenance.filter((item) => {
       if (!item.maintenanceDate) return false;
       const mDate = new Date(item.maintenanceDate);
       if (isNaN(mDate.getTime())) return false;
-      return mDate >= todayStart && mDate <= maxExpiryDate;
+      if (mDate < todayStart || mDate > maxExpiryDate) return false;
+      const vId = (item.vehicleId || "").trim();
+      const drv = (item.driverName || "").trim();
+      const desc = (item.description || "").trim();
+      if (
+        (!vId || vId === "N/A") &&
+        (!drv || drv === "N/A") &&
+        (!desc || desc === "N/A" || desc === "No description")
+      ) {
+        return false;
+      }
+      return true;
     });
 
     const maintenanceAlerts = await Promise.all(
       filteredMaintenance.map(async (item) => {
-        let contactNo = "N/A";
-        if (item.driverName) {
-          const driver = await Driver.findOne({ name: item.driverName });
+        let contactNo = item.contactNo || item.contact || "N/A";
+        if (contactNo === "N/A" && item.driverName && item.driverName !== "N/A") {
+          const driver = await Driver.findOne({
+            name: { $regex: new RegExp(`^${item.driverName.trim().replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, "i") }
+          });
           if (driver && driver.phone_no) {
             contactNo = driver.phone_no;
           }
@@ -167,7 +189,10 @@ export const getAllNotifications = async (req, res) => {
       if (!vehicle.insurance_expiry) return false;
       const expDate = new Date(vehicle.insurance_expiry);
       if (isNaN(expDate.getTime())) return false;
-      return expDate >= todayStart && expDate <= maxExpiryDate;
+      if (expDate < todayStart || expDate > maxExpiryDate) return false;
+      const vId = String(vehicle.vehicle_id || vehicle.vehicleId || "").trim();
+      if (!vId || vId === "N/A") return false;
+      return true;
     });
 
     const expiredInsurance = await Promise.all(
@@ -201,6 +226,35 @@ export const getAllNotifications = async (req, res) => {
       })
     );
 
+    // Mirror each expiring-insurance alert into a real staff Notification
+    // document, the same way an approved/rejected request creates one -
+    // so it can be marked read/unread through the same endpoint. Upserted
+    // by vehicle so re-running this never spawns duplicates, and only the
+    // first insert sets isRead - a later run never un-reads an alert the
+    // staff already dismissed.
+    await Promise.all(
+      expiredInsurance.map((item) =>
+        Notification.findOneAndUpdate(
+          { type: "insurance", vehicleNumber: String(item.vehicleId) },
+          {
+            $set: {
+              userId: STAFF_ID,
+              role: "staff",
+              title: "Insurance Expiring Soon",
+              message: `Vehicle ${item.vehicleId} (${item.vehicleType})'s insurance expires on ${
+                item.expiryDate ? new Date(item.expiryDate).toLocaleDateString() : "N/A"
+              }.`,
+              driverName: item.driverName,
+              contactNumber: item.contactNo,
+              vehicleNumber: String(item.vehicleId),
+            },
+            $setOnInsert: { isRead: false, type: "insurance" },
+          },
+          { upsert: true }
+        )
+      )
+    );
+
     // 4. Expired driver license (Show items starting 3 days before expiry date until the day ends)
     const allDrivers = await Driver.find()
       .sort({ licenseExpiryDate: 1 })
@@ -210,7 +264,11 @@ export const getAllNotifications = async (req, res) => {
       if (!driver.licenseExpiryDate) return false;
       const expDate = new Date(driver.licenseExpiryDate);
       if (isNaN(expDate.getTime())) return false;
-      return expDate >= todayStart && expDate <= maxExpiryDate;
+      if (expDate < todayStart || expDate > maxExpiryDate) return false;
+      const dId = String(driver.driver_id || driver._id || "").trim();
+      const dName = String(driver.name || "").trim();
+      if ((!dId || dId === "N/A") && (!dName || dName === "N/A" || dName === "Unknown")) return false;
+      return true;
     });
 
     const expiredLicenses = expiredDrivers.map((driver) => ({

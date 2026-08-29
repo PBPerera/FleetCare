@@ -133,6 +133,7 @@
 
 import { React, useState, useRef, useEffect } from "react";
 import StaffSidebar from "../../components/StaffSidebar";
+import UserProfileMenu from "../../components/UserProfileMenu";
 import { Search } from "lucide-react";
 import {
   FaSearch,
@@ -158,6 +159,10 @@ export default function MyRequests() {
 
   // Vehicle requests state
   const [tripRequests, setTripRequests] = useState([]);
+  const [rawRequests, setRawRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
 
   const routeMap = {
     Dashboard: "/staff/dashboard",
@@ -172,62 +177,78 @@ export default function MyRequests() {
   const tableRef = useRef(null);
 
   // Fetch vehicle requests from database
-  useEffect(() => {
-    const fetchVehicleRequests = async () => {
-      try {
-        const response = await fetch(
-          apiUrl("/vehicleRequests"),
-        );
+  const fetchVehicleRequests = async () => {
+    try {
+      setRefreshing(true);
+      const response = await fetch(
+        apiUrl("/vehicleRequests"),
+      );
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch vehicle requests");
-        }
-
-        const data = await response.json();
-        console.log(data);
-
-        // Transform the data to match the table format
-        const formattedRequests = data.data.map((request) => ({
-          requestId: request.requestId,
-          vehicleId: request.vehicleId,
-          driverName: request.driverName,
-          contact: request.driverContact,
-          pickup:
-            request.pickupDestination.split(" to ")[0] ||
-            request.pickupDestination,
-          destination: request.pickupDestination.split(" to ")[1] || "",
-          tripDate: new Date(request.tripDate).toLocaleDateString("en-US"),
-          tripTime: request.tripTime,
-          purpose: request.purpose,
-          vehicleType: request.vehicleType,
-          noOfPassengers: request.noOfPassengers,
-          status: (
-            <>
-              <button className={`${request.status}-btn`} disabled>
-                {request.status}
-              </button>
-            </>
-          ),
-          delete: (
-            <>
-              <button
-                className="Delete-btn"
-                onClick={() => handleDeleteRequest(request._id)}
-              >
-                <FaTrashAlt />
-              </button>
-            </>
-          ),
-          _id: request._id,
-        }));
-
-        setTripRequests(formattedRequests);
-      } catch (err) {
-        console.error("Error fetching vehicle requests:", err);
+      if (!response.ok) {
+        throw new Error("Failed to fetch vehicle requests");
       }
-    };
 
-    fetchVehicleRequests();
+      const data = await response.json();
+      console.log(data);
+
+      // Store raw requests for later reference
+      setRawRequests(data.data);
+
+      // Transform the data to match the table format
+      const formattedRequests = data.data.map((request) => ({
+        requestId: request.requestId,
+        vehicleId: request.vehicleId,
+        driverName: request.driverName,
+        contact: request.driverContact,
+        pickup:
+          request.pickupDestination.split(" to ")[0] ||
+          request.pickupDestination,
+        destination: request.pickupDestination.split(" to ")[1] || "",
+        tripDate: new Date(request.tripDate).toLocaleDateString("en-US"),
+        tripTime: request.tripTime,
+        purpose: request.purpose,
+        vehicleType: request.vehicleType,
+        noOfPassengers: request.noOfPassengers,
+        status: request.status,
+        statusDisplay: (
+          <span className={`status-badge status-${request.status.toLowerCase()}`}>
+            {request.status}
+          </span>
+        ),
+        delete: (
+          <>
+            <button
+              className="Delete-btn"
+              onClick={() => handleDeleteRequest(request._id)}
+            >
+              <FaTrashAlt />
+            </button>
+          </>
+        ),
+        _id: request._id,
+      }));
+
+      setTripRequests(formattedRequests);
+      setError("");
+    } catch (err) {
+      console.error("Error fetching vehicle requests:", err);
+      setError("Failed to load requests");
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  // Fetch on mount and set up auto-refresh interval
+  useEffect(() => {
+    setLoading(true);
+    fetchVehicleRequests().then(() => setLoading(false));
+
+    // Auto-refresh every 10 seconds to catch admin approvals/rejections
+    const interval = setInterval(() => {
+      fetchVehicleRequests();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Handle delete request
@@ -611,6 +632,9 @@ export default function MyRequests() {
           </button>
 
           <div className="mr-header-title">My Requests</div>
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         {/* Content area */}
@@ -618,6 +642,11 @@ export default function MyRequests() {
           <section className="sd-page-title">
             <h1>My Requests</h1>
           </section>
+
+          {/* Loading/Error Messages */}
+          {loading && <div className="info-message">Loading requests...</div>}
+          {error && <div className="error-message">{error}</div>}
+
           {/* Toolbar */}
           <div className="mr-toolbar">
             <div className="mr-search">
@@ -638,8 +667,13 @@ export default function MyRequests() {
               </div>
             </div>
 
-            <button className="search-btn">
-              <FaSearch />
+            <button 
+              className="refresh-btn" 
+              onClick={() => fetchVehicleRequests()}
+              disabled={refreshing}
+              title="Refresh to see latest updates"
+            >
+              {refreshing ? "Refreshing..." : "🔄 Refresh"}
             </button>
           </div>
 
@@ -685,7 +719,7 @@ export default function MyRequests() {
                   </thead>
                   <tbody>
                     {tripRequests.map((trip, index) => (
-                      <tr key={index}>
+                      <tr key={trip._id || index}>
                         <td>{trip.requestId}</td>
                         <td>{trip.vehicleId}</td>
                         <td>{trip.driverName}</td>
@@ -701,7 +735,7 @@ export default function MyRequests() {
                         <td>{trip.purpose}</td>
                         <td>{trip.vehicleType}</td>
                         <td>{trip.noOfPassengers}</td>
-                        <td>{trip.status}</td>
+                        <td>{trip.statusDisplay}</td>
                         <td>{trip.delete}</td>
                       </tr>
                     ))}

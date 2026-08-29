@@ -428,6 +428,47 @@ import { MdInfoOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 
+// A ready-to-send WhatsApp reminder for an upcoming (within 3 days) trip,
+// pre-filled from the trip's own scheduled date/time/route so staff don't
+// have to type the details themselves - they can still edit it before
+// sending.
+function buildTripReminderMessage(driverName, trip) {
+  const dateStr = trip.tripDate
+    ? new Date(trip.tripDate).toLocaleDateString()
+    : "the scheduled date";
+  const timeStr = trip.tripTime || "the scheduled time";
+  const route = trip.pickupDestination || trip.destination || "the scheduled route";
+
+  return `Hi ${driverName}, reminder: you have a trip scheduled on ${dateStr} at ${timeStr} for ${route}. Please be ready.`;
+}
+
+// Ready-to-send reminder for an upcoming (within 3 days) vehicle
+// maintenance appointment, pre-filled from the actual service/repair
+// record.
+function buildMaintenanceReminderMessage(driverName, item) {
+  const dateStr = item.maintenanceDate
+    ? new Date(item.maintenanceDate).toLocaleDateString()
+    : "the scheduled date";
+  const vehicle = item.vehicleId && item.vehicleId !== "N/A" ? item.vehicleId : "your vehicle";
+  const desc =
+    item.description && item.description !== "N/A" && item.description !== "No description"
+      ? item.description
+      : "scheduled maintenance";
+  const company =
+    item.companyName && item.companyName !== "N/A" ? ` at ${item.companyName}` : "";
+
+  return `Hi ${driverName}, reminder: vehicle ${vehicle} has ${desc} scheduled on ${dateStr}${company}. Please plan accordingly.`;
+}
+
+// Ready-to-send reminder for a driver's license expiring within 3 days.
+function buildLicenseReminderMessage(driverName, item) {
+  const dateStr = item.licenceExpiryDate
+    ? new Date(item.licenceExpiryDate).toLocaleDateString()
+    : "soon";
+
+  return `Hi ${driverName}, reminder: your driving license expires on ${dateStr}. Please renew it as soon as possible.`;
+}
+
 export default function NotificationCenter() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -476,13 +517,6 @@ export default function NotificationCenter() {
       ],
     },
     {
-      title: "Vehicle Insurance Expiry Notifications for Drivers",
-      data: [
-        { name: "Saman Kumara", contact: "0763435761", message: "", phoneInput: "" },
-        { name: "Nimal Perera", contact: "0712345678", message: "", phoneInput: "" },
-      ],
-    },
-    {
       title: "Driver License Expiry Notifications for Drivers",
       data: [
         { name: "Saman Kumara", contact: "0763435761", message: "", phoneInput: "" },
@@ -515,12 +549,18 @@ export default function NotificationCenter() {
               return tDate >= todayStart && tDate <= maxExpiryDate;
             });
 
-            newTables[0].data = filtered.map(item => ({
-              name: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || item.driverContact || "N/A",
-              message: "",
-              phoneInput: ""
-            }));
+            newTables[0].data = filtered
+              .map(item => {
+                const name = item.driverName || item.driver || "N/A";
+                const contact = item.contactNo || item.contact || item.driverContact || "N/A";
+                return {
+                  name,
+                  contact,
+                  message: buildTripReminderMessage(name, item),
+                  phoneInput: contact !== "N/A" ? contact : ""
+                };
+              })
+              .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           if (data.maintenanceAlerts) {
@@ -529,39 +569,25 @@ export default function NotificationCenter() {
             const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
 
             const filtered = data.maintenanceAlerts.filter((item) => {
-              const mDateVal = item.maintenanceDate || item.date || item.requestDate;
+              const mDateVal = item.shiftDate || item.maintenanceDate || item.date || item.requestDate;
               if (!mDateVal) return true;
               const mDate = new Date(mDateVal);
               if (isNaN(mDate.getTime())) return true;
               return mDate >= todayStart && mDate <= maxExpiryDate;
             });
 
-            newTables[1].data = filtered.map(item => ({
-              name: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-              message: "",
-              phoneInput: ""
-            }));
-          }
-
-          if (data.expiredInsurance) {
-            const now = new Date();
-            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-            const maxExpiryDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3, 23, 59, 59, 999);
-
-            const filtered = data.expiredInsurance.filter((item) => {
-              if (!item.expiryDate) return false;
-              const expDate = new Date(item.expiryDate);
-              if (isNaN(expDate.getTime())) return false;
-              return expDate >= todayStart && expDate <= maxExpiryDate;
-            });
-
-            newTables[2].data = filtered.map(item => ({
-              name: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-              message: "",
-              phoneInput: ""
-            }));
+            newTables[1].data = filtered
+              .map(item => {
+                const name = item.driverName || item.driver || "N/A";
+                const contact = item.contactNo || item.contact || "N/A";
+                return {
+                  name,
+                  contact,
+                  message: buildMaintenanceReminderMessage(name, item),
+                  phoneInput: contact !== "N/A" ? contact : ""
+                };
+              })
+              .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           if (data.expiredLicenses) {
@@ -577,12 +603,18 @@ export default function NotificationCenter() {
               return expDate >= todayStart && expDate <= maxExpiryDate;
             });
 
-            newTables[3].data = filtered.map(item => ({
-              name: item.driverName || item.driver || "N/A",
-              contact: item.contactNo || item.contact || "N/A",
-              message: "",
-              phoneInput: ""
-            }));
+            newTables[2].data = filtered
+              .map(item => {
+                const name = item.driverName || item.driver || "N/A";
+                const contact = item.contactNo || item.contact || "N/A";
+                return {
+                  name,
+                  contact,
+                  message: buildLicenseReminderMessage(name, item),
+                  phoneInput: contact !== "N/A" ? contact : ""
+                };
+              })
+              .filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           // If the API returned an old-style flat array (just to be absolutely safe)
@@ -596,45 +628,54 @@ export default function NotificationCenter() {
               const tDate = new Date(i.tripDate);
               if (isNaN(tDate.getTime())) return false;
               return tDate >= todayStart && tDate <= maxExpiryDate;
-            }).map(item => ({
-              name: item.driver || item.driverName || "N/A",
-              contact: item.contact || item.driverContact || "N/A",
-              message: "", phoneInput: ""
-            }));
+            }).map(item => {
+              const name = item.driver || item.driverName || "N/A";
+              const contact = item.contact || item.driverContact || "N/A";
+              return {
+                name,
+                contact,
+                message: buildTripReminderMessage(name, item),
+                phoneInput: contact !== "N/A" ? contact : ""
+              };
+            }).filter(r => r.name !== "N/A" || r.contact !== "N/A");
+
             newTables[1].data = data.filter(i => {
               if (i.type !== "maintenance") return false;
-              const mDateVal = i.maintenanceDate || i.date || i.requestDate;
+              const mDateVal = i.shiftDate || i.maintenanceDate || i.date || i.requestDate;
               if (!mDateVal) return true;
               const mDate = new Date(mDateVal);
               if (isNaN(mDate.getTime())) return true;
               return mDate >= todayStart && mDate <= maxExpiryDate;
-            }).map(item => ({
-              name: item.driver || item.driverName || "N/A",
-              contact: item.contact || item.contactNo || "N/A",
-              message: "", phoneInput: ""
-            }));
+            }).map(item => {
+              const name = item.driver || item.driverName || "N/A";
+              const contact = item.contact || item.contactNo || "N/A";
+              const maintenanceDate = item.shiftDate || item.maintenanceDate || item.date || item.requestDate;
+              return {
+                name,
+                contact,
+                message: buildMaintenanceReminderMessage(name, { ...item, maintenanceDate }),
+                phoneInput: contact !== "N/A" ? contact : ""
+              };
+            }).filter(r => r.name !== "N/A" || r.contact !== "N/A");
+
             newTables[2].data = data.filter(i => {
-              if (i.type !== "insurance" || !i.expiryDate) return false;
-              const expDate = new Date(i.expiryDate);
-              if (isNaN(expDate.getTime())) return false;
-              return expDate >= todayStart && expDate <= maxExpiryDate;
-            }).map(item => ({
-              name: item.driver || item.driverName || "N/A",
-              contact: item.contact || item.contactNo || "N/A",
-              message: "", phoneInput: ""
-            }));
-            newTables[3].data = data.filter(i => {
               if (i.type !== "license") return false;
               const expiry = i.licenceExpiryDate || i.expiryDate;
               if (!expiry) return false;
               const expDate = new Date(expiry);
               if (isNaN(expDate.getTime())) return false;
               return expDate >= todayStart && expDate <= maxExpiryDate;
-            }).map(item => ({
-              name: item.driver || item.driverName || "N/A",
-              contact: item.contact || item.contactNo || "N/A",
-              message: "", phoneInput: ""
-            }));
+            }).map(item => {
+              const name = item.driver || item.driverName || "N/A";
+              const contact = item.contact || item.contactNo || "N/A";
+              const licenceExpiryDate = item.licenceExpiryDate || item.expiryDate;
+              return {
+                name,
+                contact,
+                message: buildLicenseReminderMessage(name, { ...item, licenceExpiryDate }),
+                phoneInput: contact !== "N/A" ? contact : ""
+              };
+            }).filter(r => r.name !== "N/A" || r.contact !== "N/A");
           }
 
           return newTables;

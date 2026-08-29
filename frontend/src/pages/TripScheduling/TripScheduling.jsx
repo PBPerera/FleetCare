@@ -289,6 +289,7 @@
 
 import { React, useState, useRef, useMemo, useEffect } from "react";
 import Sidebar from "../../components/Sidebar";
+import UserProfileMenu from "../../components/UserProfileMenu";
 import { Search } from "lucide-react";
 import { FaSearch, FaUserCircle, FaCalendarAlt } from "react-icons/fa";
 import {
@@ -477,6 +478,9 @@ export default function TripScheduling() {
           </button>
 
           <div className="ts-header-title">Trip Scheduling</div>
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         {/* Content area */}

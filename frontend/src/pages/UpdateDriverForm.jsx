@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import StaffSidebar from "../components/StaffSidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 import { apiUrl } from "../lib/apiBase";
 import "./staff-dashboard.css";
 
@@ -124,7 +125,9 @@ export default function UpdateDriverForm({ onSubmit }) {
           </button>
 
           <div className="sd-header-title">Update Driver Details</div>
-          <div className="sd-header-right" />
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
+          </div>
         </header>
 
         <div className="sd-content">

@@ -141,26 +141,22 @@
 
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import "./NotificationStaff.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt, FaPhoneAlt } from "react-icons/fa";
-import {
-  MdDashboard,
-  MdDirectionsCar,
-  MdNotifications,
-  MdAssignment,
-  MdInfoOutline,
-} from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { apiUrl } from "../lib/apiBase";
 
 import StaffSidebar from "../components/StaffSidebar";
+import UserProfileMenu from "../components/UserProfileMenu";
 
 export default function NotificationStaff() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [collapsed, setCollapsed] = useState(false);
+  const [activeSection, setActiveSection] = useState("approved");
+
+  const requestApprovedRef = useRef(null);
+  const insuranceExpiryRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -178,20 +174,44 @@ export default function NotificationStaff() {
   const staffId = "6961093b585ed584551b0864";
 
   // ✅ FETCH NOTIFICATIONS FROM BACKEND
+  // First hit the general notifications endpoint - as a side effect, it
+  // upserts a real Notification (type: "insurance") for every vehicle
+  // whose insurance is expiring within 3 days, the same way approving a
+  // request creates one. Only then fetch this staff's actual notification
+  // list, so any freshly-upserted insurance alerts are included with a
+  // real isRead state, trackable the same way as Request Approved ones.
   useEffect(() => {
-    fetch(apiUrl(`/notifications/staff/${staffId}`))
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("NOTIFICATIONS:", data); // 👈 DEBUG
-        setNotifications(data);
-      })
-      .catch((err) => {
-        console.error("Error fetching notifications:", err);
+    fetch(apiUrl("/notifications"))
+      .catch((err) => console.error("Error refreshing insurance alerts:", err))
+      .finally(() => {
+        fetch(apiUrl(`/notifications/staff/${staffId}`))
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("NOTIFICATIONS:", data); // 👈 DEBUG
+            setNotifications(Array.isArray(data) ? data : []);
+          })
+          .catch((err) => {
+            console.error("Error fetching notifications:", err);
+          });
       });
   }, [staffId]);
 
-  const handleUserClick = () => {
-    setIsMenuOpen(!isMenuOpen);
+  // Same list, split by type - each grid is just a filtered view of the
+  // same underlying Notification records, so read/unread tracking works
+  // identically for both.
+  const approvedNotifications = useMemo(
+    () => notifications.filter((n) => n.type !== "insurance"),
+    [notifications]
+  );
+  const insuranceNotifications = useMemo(
+    () => notifications.filter((n) => n.type === "insurance"),
+    [notifications]
+  );
+
+  const goToSection = (section) => {
+    setActiveSection(section);
+    const ref = section === "approved" ? requestApprovedRef : insuranceExpiryRef;
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const formatRelativeTime = (timestamp) => {
@@ -204,13 +224,17 @@ export default function NotificationStaff() {
   };
 
   // ✅ MARK AS READ (BACKEND + UI)
+  // Keeps the notification in the list (just styled as read) instead of
+  // removing it, so staff can still see what they've already dealt with.
   const handleMarkAsRead = async (id) => {
     try {
       await fetch(apiUrl(`/notifications/read/${id}`), {
         method: "PUT",
       });
 
-      setNotifications((prev) => prev.filter((n) => n._id !== id));
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
+      );
     } catch (error) {
       console.error("Mark as read error:", error);
     }
@@ -243,27 +267,57 @@ export default function NotificationStaff() {
             <span className="sd-burger" />
           </button>
           <div className="sd-header-title">Notifications</div>
-          <div className="sd-header-right">
-             <FaUserCircle size={26} onClick={handleUserClick} style={{cursor: "pointer"}}/>
+          <div className="sd-header-right" style={{ marginLeft: "auto" }}>
+            <UserProfileMenu />
           </div>
         </header>
 
         <div className="sd-content">
           <div className="notification-body">
-            {notifications.length === 0 ? (
-              <p className="no-notifications">No new notifications 🎉</p>
-            ) : (
+            {/* Quick-jump tabs */}
+            <div className="notification-tabs">
+              <button
+                type="button"
+                className={`notification-tab approved-tab ${activeSection === "approved" ? "active" : ""}`}
+                onClick={() => goToSection("approved")}
+              >
+                Request Approved
+                {approvedNotifications.some((n) => !n.isRead) && (
+                  <span className="notification-tab-dot" />
+                )}
+              </button>
+              <button
+                type="button"
+                className={`notification-tab insurance-tab ${activeSection === "insurance" ? "active" : ""}`}
+                onClick={() => goToSection("insurance")}
+              >
+                Vehicle Insurance Expiry
+                {insuranceNotifications.some((n) => !n.isRead) && (
+                  <span className="notification-tab-dot" />
+                )}
+              </button>
+            </div>
+
+            <section className="notification-section" ref={requestApprovedRef}>
+              <h3 className="notification-section-title">Request Approved</h3>
+              {approvedNotifications.length === 0 ? (
+                <p className="no-notifications">No new notifications 🎉</p>
+              ) : (
               <div className="notification-grid">
-                {notifications.map((note) => {
+                {approvedNotifications.map((note) => {
                   const timeLabel = note.time || formatRelativeTime(note.createdAt);
                   const isApproved = note.type === "approved";
                   const statusClass = note.type === "approved" ? "approved" : note.type === "rejected" ? "rejected" : "info";
+                  const readClass = note.isRead ? "is-read" : "is-unread";
 
                   return (
-                    <div key={note._id} className={`notification-card ${statusClass}`}>
+                    <div key={note._id} className={`notification-card ${statusClass} ${readClass}`}>
                       <div className="notification-card__content">
                         <div className="notification-card__header">
                           <h4>{note.title}</h4>
+                          <span className={`read-badge ${readClass}`}>
+                            {note.isRead ? "Read" : "New"}
+                          </span>
                         </div>
                         <div className="notification-card__body">
                           {isApproved ? (
@@ -292,38 +346,77 @@ export default function NotificationStaff() {
                             </>
                           )}
                         </div>
-                        <div className="notification-card__footer">
-                          <button
-                            className="mark-read-btn"
-                            onClick={() => handleMarkAsRead(note._id)}
-                          >
-                            Mark as Read
-                          </button>
-                        </div>
+                        {!note.isRead && (
+                          <div className="notification-card__footer">
+                            <button
+                              className="mark-read-btn"
+                              onClick={() => handleMarkAsRead(note._id)}
+                            >
+                              Mark as Read
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
                 })}
               </div>
-            )}
+              )}
+            </section>
+
+            <section className="notification-section" ref={insuranceExpiryRef}>
+              <h3 className="notification-section-title">Vehicle Insurance Expiry</h3>
+              {insuranceNotifications.length === 0 ? (
+                <p className="no-notifications">No insurance expiring in the next 3 days 🎉</p>
+              ) : (
+                <div className="notification-grid">
+                  {insuranceNotifications.map((note) => {
+                    const timeLabel = note.time || formatRelativeTime(note.createdAt);
+                    const readClass = note.isRead ? "is-read" : "is-unread";
+
+                    return (
+                      <div key={note._id} className={`notification-card warning ${readClass}`}>
+                        <div className="notification-card__content">
+                          <div className="notification-card__header">
+                            <h4>{note.title}</h4>
+                            <span className={`read-badge ${readClass}`}>
+                              {note.isRead ? "Read" : "New"}
+                            </span>
+                          </div>
+                          <div className="notification-card__body">
+                            <p className="notification-message">{note.message}</p>
+                            {note.driverName && note.driverName !== "Unassigned" && (
+                              <p className="notification-meta">
+                                <strong>Driver:</strong> {note.driverName}
+                              </p>
+                            )}
+                            {note.contactNumber && note.contactNumber !== "N/A" && (
+                              <p className="notification-meta">
+                                <strong>Contact:</strong> {note.contactNumber}
+                              </p>
+                            )}
+                            <p className="notification-meta time">({timeLabel})</p>
+                          </div>
+                          {!note.isRead && (
+                            <div className="notification-card__footer">
+                              <button
+                                className="mark-read-btn"
+                                onClick={() => handleMarkAsRead(note._id)}
+                              >
+                                Mark as Read
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
           </div>
         </div>
       </main>
-
-      {/* USER MENU */}
-      {isMenuOpen && (
-        <div className="user-menu">
-          <div className="menu-item">
-            <FaUserCircle /> View Profile
-          </div>
-          <div className="menu-item">
-            <MdInfoOutline /> About Us
-          </div>
-          <div className="menu-item">
-            <FaPhoneAlt /> Contact Us
-          </div>
-        </div>
-      )}
     </div>
   );
 }
