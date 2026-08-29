@@ -1,5 +1,6 @@
 // src/pages/RepairApprove.jsx
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar/SearchBar.jsx';
 import Table from '../components/DataTable/Table.jsx';
 import Button from '../components/Buttons/Button.jsx';
@@ -8,6 +9,7 @@ import Layout from '../components/Layout/Layout.jsx';
 import { MaintenanceContext } from '../Context/MaintenanceContext.jsx';
 
 export default function RepairApprove() {
+  const navigate = useNavigate();
   const { 
     state, 
     setFilters, 
@@ -82,6 +84,14 @@ export default function RepairApprove() {
       
       await updateRepair(id, cleanedData);
       alert('Repair updated successfully!');
+
+      // Shift Date is the last column in this table's progressive fill -
+      // it only becomes fillable once every column before it is done, so
+      // saving it here is what marks the approval process as complete.
+      // Once that happens, jump back to the main Repair table.
+      if (cleanedData.shiftDate) {
+        navigate('/maintenance');
+      }
     } catch (error) {
       alert('Error updating approval: ' + error.message);
     }
@@ -132,6 +142,7 @@ export default function RepairApprove() {
           onEdit={handleApprovalEdit}
           onDelete={handleApprovalDelete}
           progressiveFill={true}
+          showDelete={false}
         />
       </div>
     </Layout>
