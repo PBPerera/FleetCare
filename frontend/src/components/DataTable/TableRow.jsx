@@ -35,6 +35,9 @@ const TableRow = ({
   // the Repair table's later columns locked until an approval process
   // has finished. Defaults to "never locked".
   columnLock = null,
+  // When false, hides only the Delete button (Edit/Save stay untouched).
+  // Defaults to true so every other table keeps its existing behavior.
+  showDelete = true,
 }) => {
   const rowId = row._id || row.id;
   const isNewRow = !row.vehicleId || row.vehicleId === '';
@@ -107,6 +110,19 @@ const TableRow = ({
         onDelete(rowId);
       }
     }
+  };
+
+  // Custom-rendered columns (Approve/Reject, etc.) get their onAction
+  // wrapped so that any in-progress, unsaved edits in this row are saved
+  // first. Without this, clicking "Approve" mid-fill would approve the
+  // record using the old (blank) server data instead of what was just
+  // typed in, and the Pending Approval table would show empty fields.
+  const handleRenderAction = async (action, actionRow) => {
+    if (editMode && onEdit) {
+      await onEdit(rowId, editedData);
+      setEditMode(false);
+    }
+    onAction(action, actionRow || editedData);
   };
 
   const handleCancel = () => {
@@ -217,9 +233,11 @@ const TableRow = ({
         return (
           <td key={col.key} className={col.className || ''}>
             {col.render ? (
-              // Custom-rendered columns (e.g. Approve/Reject) always reflect
-              // the true server state, never the local edit-in-progress copy.
-              col.render(row, onAction)
+              // Custom-rendered columns (e.g. Approve/Reject) use editedData,
+              // which equals `row` whenever we're not mid-edit, and holds the
+              // live typed values while editing - so an action like Approve
+              // triggered mid-fill acts on what's on screen, not stale data.
+              col.render(editedData, handleRenderAction)
             ) : editMode && col.key !== '_id' && col.key !== 'id' && col.key !== 'maintenanceId' ? (
               locked ? (
                 <span className="cell-content locked-cell" title="Complete the previous fields first">
@@ -256,13 +274,15 @@ const TableRow = ({
                 >
                   ✏️ EDIT
                 </button>
-                <button 
-                  className="action-btn delete-btn"
-                  onClick={() => onAction && onAction('delete', row)}
-                  title="Delete"
-                >
-                  🗑️ DELETE
-                </button>
+                {showDelete && (
+                  <button 
+                    className="action-btn delete-btn"
+                    onClick={() => onAction && onAction('delete', row)}
+                    title="Delete"
+                  >
+                    🗑️ DELETE
+                  </button>
+                )}
               </>
             )}
           </div>
